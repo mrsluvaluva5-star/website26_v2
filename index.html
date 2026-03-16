@@ -59,11 +59,28 @@
     }
     .siteStamp { width: 90px; flex-shrink: 0; border-left: 2px solid #FBAED2; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; line-height: 1.6; padding: 8px; color: #FBAED2; }
     .siteNav { display: flex; flex-wrap: wrap; }
-    .siteNav a { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.14em; text-decoration: none; color: rgb(183,255,0); background: #000; padding: 7px 14px; border-right: 1px solid #FBAED2; display: block; }
+    .siteNav a { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.14em; text-decoration: none; color: rgb(183,255,0); background: #000; padding: 12px 22px; border-right: 1px solid #FBAED2; display: block; cursor: pointer; }
     .siteNav a:hover { background: #111; color: rgb(183,255,0); }
     .siteNav a:last-child { border-right: none; }
-    .siteNav a.live { color: #fff; background: rgb(255,79,123); cursor: pointer; }
-    .siteNav a.live:hover { background: #FBAED2; color: #000; }
+    .siteNav a.nav-about:hover { background: rgb(255,79,123); color: #fff; }
+    .siteNav a.nav-contact:hover { background: rgb(183,255,0); color: #000; }
+    .siteNav a.nav-works:hover { background: rgb(255,79,123); color: #fff; }
+    .siteNav-threads { position: relative; display: block; }
+    .siteNav-threads > a { border-right: 1px solid #FBAED2; }
+    .siteNav-threads:hover > a, .siteNav-threads.open > a { background: #7b2fff; color: #fff; }
+    .siteNav-threads-drop { display: none; position: absolute; top: 100%; left: 0; background: #000; border: 2px solid #7b2fff; box-shadow: 4px 4px 0 #7b2fff; z-index: 100; min-width: 100%; }
+    .siteNav-threads:hover .siteNav-threads-drop, .siteNav-threads.open .siteNav-threads-drop { display: block; }
+    .siteNav-threads-drop a { display: block; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.14em; text-decoration: none; color: rgb(183,255,0); background: #000; padding: 12px 22px; border-right: none; border-bottom: 1px solid #7b2fff; white-space: nowrap; cursor: pointer; }
+    .siteNav-threads-drop a:last-child { border-bottom: none; }
+    .siteNav-threads-drop a:hover { background: #7b2fff; color: #fff; }
+    .siteNav-interactive { position: relative; display: block; }
+    .siteNav-interactive > a { border-right: 1px solid #FBAED2; }
+    .siteNav-interactive:hover > a, .siteNav-interactive.open > a { background: #00c4cc; color: #000; }
+    .siteNav-interactive-drop { display: none; position: absolute; top: 100%; left: 0; background: #000; border: 2px solid #00c4cc; box-shadow: 4px 4px 0 #00c4cc; z-index: 100; min-width: 100%; }
+    .siteNav-interactive:hover .siteNav-interactive-drop, .siteNav-interactive.open .siteNav-interactive-drop { display: block; }
+    .siteNav-interactive-drop a { display: block; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.14em; text-decoration: none; color: rgb(183,255,0); background: #000; padding: 12px 22px; border-right: none; border-bottom: 1px solid #00c4cc; white-space: nowrap; cursor: pointer; }
+    .siteNav-interactive-drop a:last-child { border-bottom: none; }
+    .siteNav-interactive-drop a:hover { background: #00c4cc; color: #000; }
     .siteNote { margin: 0; padding: 6px 16px; font-size: 11px; font-style: italic; color: #fff; font-weight: 700; border-top: 1px solid #FBAED2; background: #000; }
 
     .headWrapper { width: 100%; height: 525px; border-left: 2px solid #FBAED2; border-right: 2px solid #FBAED2; border-bottom: 2px solid #FBAED2; box-shadow: 5px 5px 0 #FBAED2; margin-bottom: 28px; background: #000; overflow: hidden; position: relative; }
@@ -248,8 +265,8 @@
         <div class="siteStamp">working<br>archive<br>&#9670;</div>
       </div>
       <nav class="siteNav">
-        <a href="#">Index</a><a href="#">Works</a><a href="#">Threads</a>
-        <a href="#">Interactive</a><a href="about/index.html" class="live">About</a><a href="#">Contact</a>
+        <a href="site-index/index.html">Index</a><a href="#all-works" class="nav-works">Works</a><div class="siteNav-threads"><a href="#">Threads</a><div class="siteNav-threads-drop"><a href="#tshirt-shop">T-shirts</a><a href="#shoe-drop">Shoes</a></div></div>
+        <div class="siteNav-interactive"><a href="#">Interactive</a><div class="siteNav-interactive-drop"><a href="#mirror-head-zone">Noisy Head</a></div></div><a href="about/index.html" class="nav-about">About</a><a href="contact/index.html" class="nav-contact">Contact</a>
       </nav>
       <p class="siteNote">New experiments popped in rendomly.</p>
     </header>
@@ -554,7 +571,7 @@
       <a class="gif-card" href="sketches%20from%20the%20metaverse/sketch10.html" style="transform:rotate(2.5deg);"><div class="gif-thumb"><img src="sketches%20from%20the%20metaverse/gifs/sketch10.gif" alt="Sketch 10 cover" loading="lazy"></div><span class="gif-label">sketch 10</span></a>
     </div>
 
-    <div class="tap-section">
+    <div class="tap-section" id="tap-section">
       <div class="section-head"><h2 class="tap-title">// Tap Tap Tipety Tap</h2><div class="section-head-line"></div></div>
       <div class="tap-card">
         <!-- Tap Tap Tipety Tap Vimeo Embed -->
@@ -569,10 +586,10 @@
     </div>
 
     <div id="mirror-head-zone">
-    <div class="section-head" style="margin-top:28px;"><h2 style="background:#000;border-color:#FBAED2;color:#FBAED2;">// Reactive Music Head</h2><div class="section-head-line"></div></div>
+    <div class="section-head" style="margin-top:28px;"><h2 style="background:#000;border-color:#FBAED2;color:#FBAED2;">// Reactive Noisy Head</h2><div class="section-head-line"></div></div>
     <div style="background:#000;border:2px solid #FBAED2;box-shadow:5px 5px 0 #FBAED2;margin-bottom:28px;overflow:hidden;">
       <div style="position:relative;width:100%;aspect-ratio:16/9;">
-        <iframe id="mirrorHeadIframe" src="mirrorhead_final/index.html" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allow="camera; microphone" title="Reactive Music Head interactive experience"></iframe>
+        <iframe id="mirrorHeadIframe" src="mirrorhead_final/index.html" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allow="camera; microphone" title="Reactive Noisy Head interactive experience"></iframe>
         <button id="mirrorHeadLeave" onclick="leaveMirrorHead()" style="display:none;position:absolute;top:8px;right:8px;z-index:10;background:rgba(0,0,0,0.75);border:2px solid rgb(255,79,123);color:rgb(255,79,123);font-family:'Courier New',Courier,monospace;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 10px;cursor:pointer;box-shadow:2px 2px 0 rgb(255,79,123);">&#10005; LEAVE</button>
       </div>
       <p style="margin:0;padding:10px 16px;font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:700;color:#FBAED2;letter-spacing:0.1em;text-transform:uppercase;border-top:2px solid #FBAED2;">Interactive 3D reactive music head. Enable camera to begin &mdash; use LEAVE to return to start.</p>
@@ -730,7 +747,7 @@
     </div>
     <style>@keyframes wiggle{0%,100%{transform:rotate(0deg);}25%{transform:rotate(-12deg);}75%{transform:rotate(12deg);}}</style>
 
-    <div class="section-head"><h2 style="background:#2a0a0a;border-color:#8b0000;color:#FBAED2;">// Cordyceps</h2><div class="section-head-line"></div></div>
+    <div id="cordyceps" class="section-head"><h2 style="background:#2a0a0a;border-color:#8b0000;color:#FBAED2;">// Cordyceps</h2><div class="section-head-line"></div></div>
     <div class="slideshow" id="zombieSlideshow">
       <div class="slideshow-viewport">
         <div class="slideshow-track" id="zombieTrack">
@@ -862,7 +879,7 @@
     })();
     </script>
 
-    <div class="section-head"><h2>// all works</h2><div class="section-head-line"></div></div>
+    <div id="all-works" class="section-head"><h2>// all works</h2><div class="section-head-line"></div></div>
 
     <section class="feed">
       <article class="entry"><a class="thumbLink" href="late%20stage%20brologluglia/index.html"><img class="thumb-img" src="late%20stage%20brologluglia/latestagebrulogluglia.gif" alt="thumbnail"></a><div class="meta"><div class="date">2025</div><div class="title"><a href="late%20stage%20brologluglia/index.html">Late Stage Brologluglia</a></div><div class="note">Automated sculpture. Ten wax heads, hoovering up metaphorical resources.</div><div class="tags"><span class="tag">Sculpture</span><span class="tag lime">Video</span></div></div></article>
@@ -1136,6 +1153,26 @@
       setProgress();
       setState();
       renderLyrics(findLyricIndex(audio.currentTime||0));
+    })();
+  </script>
+
+  <script>
+    (function(){
+      var dropWrappers = document.querySelectorAll('.siteNav-threads, .siteNav-interactive');
+      dropWrappers.forEach(function(wrapper) {
+        var trigger = wrapper.querySelector(':scope > a');
+        trigger.addEventListener('click', function(e) {
+          e.preventDefault();
+          var isOpen = wrapper.classList.contains('open');
+          dropWrappers.forEach(function(w) { w.classList.remove('open'); });
+          if (!isOpen) wrapper.classList.add('open');
+        });
+      });
+      document.addEventListener('click', function(e) {
+        dropWrappers.forEach(function(wrapper) {
+          if (!wrapper.contains(e.target)) wrapper.classList.remove('open');
+        });
+      });
     })();
   </script>
 
