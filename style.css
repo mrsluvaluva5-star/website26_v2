@@ -1,0 +1,368 @@
+@import url('https://fonts.googleapis.com/css2?family=VT323&family=Special+Elite&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
+
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Space Mono', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #ff2fa6;
+  background: rgb(183, 255, 0);
+  cursor: crosshair;
+}
+
+#bgCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+#content {
+  padding: 24px 32px 60px;
+  max-width: 960px;
+}
+
+a {
+  color: #ff2fa6;
+  text-decoration: underline;
+}
+
+a:hover {
+  background: #ff2fa6;
+  color: #000;
+}
+
+/* ── MARQUEE ── */
+.marqueeBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: #000;
+  border-bottom: 2px solid #ff2fa6;
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  letter-spacing: 0.15em;
+  color: #ff2fa6;
+  padding: 3px 0;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/* push content below fixed marquee */
+#content {
+  margin-top: 36px;
+}
+
+/* ── HEADER ── */
+.siteHeader {
+  background: #000;
+  border: 2px solid #ff2fa6;
+  box-shadow: 5px 5px 0 #ff2fa6;
+  padding: 0;
+  margin-bottom: 20px;
+}
+
+.siteHeader-top {
+  display: flex;
+  align-items: stretch;
+  border-bottom: 2px solid #ff2fa6;
+}
+
+.siteTitle {
+  font-family: 'VT323', monospace;
+  font-size: clamp(52px, 9vw, 96px);
+  line-height: 1;
+  letter-spacing: -1px;
+  margin: 0;
+  padding: 10px 20px;
+  flex: 1;
+  color: #ff2fa6;
+  text-shadow: 3px 3px 0 rgb(183,255,0);
+  transition: text-shadow 0.1s;
+}
+
+.siteTitle:hover {
+  animation: titleGlitch 0.4s steps(2) infinite;
+}
+
+@keyframes titleGlitch {
+  0%   { text-shadow: 3px 3px 0 rgb(183,255,0); transform: none; }
+  25%  { text-shadow: -3px 2px 0 #fff; transform: translate(2px, 0); clip-path: inset(20% 0 50% 0); }
+  50%  { text-shadow: 3px -2px 0 rgb(183,255,0); transform: translate(-2px, 0); clip-path: inset(50% 0 10% 0); }
+  75%  { text-shadow: -2px 0 0 #ff2fa6; transform: none; clip-path: none; }
+}
+
+.siteStamp {
+  width: 110px;
+  flex-shrink: 0;
+  border-left: 2px solid #ff2fa6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: 'Special Elite', serif;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  line-height: 1.5;
+  padding: 8px;
+  color: #ff2fa6;
+}
+
+.siteStamp strong {
+  font-family: 'VT323', monospace;
+  font-size: 26px;
+  display: block;
+  line-height: 1;
+  margin: 2px 0;
+}
+
+/* ── NAV ── */
+.siteNav {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.siteNav a {
+  font-family: 'Special Elite', serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  color: #ff2fa6;
+  padding: 7px 16px;
+  border-right: 1px solid #ff2fa6;
+  margin: 0;
+  display: block;
+}
+
+.siteNav a:hover {
+  background: #ff2fa6;
+  color: #000;
+}
+
+.siteNav a:last-child {
+  border-right: none;
+}
+
+/* ── SITE NOTE ── */
+.siteNote {
+  margin: 0;
+  padding: 8px 16px;
+  font-family: 'Special Elite', serif;
+  font-size: 13px;
+  font-style: italic;
+  color: #ff2fa6;
+  border-top: 1px solid #ff2fa6;
+  opacity: 0.85;
+  max-width: 100%;
+}
+
+/* ── SECTION LABEL ── */
+.sectionLabel {
+  font-family: 'VT323', monospace;
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  color: rgb(183,255,0);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 10px;
+  background: #000;
+  display: inline-block;
+  padding: 1px 6px;
+  border: 1px solid #ff2fa6;
+}
+
+/* ── FEED ── */
+.feed {
+  max-width: 920px;
+}
+
+/* ── ENTRY ── */
+.entry {
+  background: #000;
+  border: 2px solid #ff2fa6;
+  box-shadow: 4px 4px 0 #ff2fa6;
+  display: flex;
+  gap: 0;
+  padding: 0;
+  margin-bottom: 16px;
+  transition: transform 0.12s, box-shadow 0.12s;
+  text-decoration: none;
+  color: inherit;
+}
+
+.entry:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 rgb(183,255,0);
+}
+
+.thumbLink {
+  display: block;
+  width: 200px;
+  flex: 0 0 200px;
+  border-right: 2px solid #ff2fa6;
+}
+
+.thumb {
+  width: 100%;
+  height: 100%;
+  min-height: 120px;
+  object-fit: cover;
+  display: block;
+}
+
+/* placeholder when no thumb image */
+.thumbPlaceholder {
+  width: 100%;
+  min-height: 120px;
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    #111,
+    #111 3px,
+    #000 3px,
+    #000 12px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'VT323', monospace;
+  font-size: 36px;
+  color: #ff2fa6;
+  opacity: 0.6;
+}
+
+.meta {
+  flex: 1;
+  padding: 14px 16px;
+}
+
+.date {
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  letter-spacing: 0.1em;
+  color: rgb(183,255,0);
+  margin-bottom: 4px;
+}
+
+.title {
+  font-family: 'Special Elite', serif;
+  font-size: 20px;
+  margin-bottom: 6px;
+  line-height: 1.2;
+}
+
+.title a {
+  text-decoration: none;
+  color: #ff2fa6;
+}
+
+.title a:hover {
+  background: #ff2fa6;
+  color: #000;
+}
+
+.note {
+  font-size: 12px;
+  opacity: 0.8;
+  max-width: 520px;
+  font-style: italic;
+}
+
+.tags {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.tag {
+  font-family: 'VT323', monospace;
+  font-size: 14px;
+  border: 1px solid #ff2fa6;
+  padding: 0 6px;
+  letter-spacing: 0.05em;
+  color: #ff2fa6;
+}
+
+.tag.lime {
+  border-color: rgb(183,255,0);
+  color: rgb(183,255,0);
+}
+
+/* ── FOOTER ── */
+.siteFooter {
+  background: #000;
+  border: 2px solid #ff2fa6;
+  box-shadow: 4px 4px 0 #ff2fa6;
+  margin-top: 26px;
+  padding: 12px 16px;
+  font-size: 11px;
+  font-family: 'Special Elite', serif;
+  font-style: italic;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hitCounter {
+  font-family: 'VT323', monospace;
+  font-size: 22px;
+  letter-spacing: 0.2em;
+  color: rgb(183, 255, 0);
+  border: 1px solid #ff2fa6;
+  padding: 0 8px;
+}
+
+.blinkText {
+  font-family: 'VT323', monospace;
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  animation: blink 1.1s step-end infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  #content {
+    padding: 50px 16px 40px;
+  }
+
+  .siteTitle {
+    font-size: 52px;
+    padding: 8px 14px;
+  }
+
+  .siteStamp {
+    display: none;
+  }
+
+  .entry {
+    flex-direction: column;
+  }
+
+  .thumbLink {
+    width: 100%;
+    flex: 0 0 auto;
+    border-right: none;
+    border-bottom: 2px solid #ff2fa6;
+  }
+
+  .thumb {
+    min-height: 160px;
+  }
+}

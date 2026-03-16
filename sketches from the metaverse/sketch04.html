@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>sketch 04 | Mrs Luva Luva</title>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    body { font-family: "Courier New", Courier, monospace; font-size: 14px; line-height: 1.6; color: #ff2fa6; background: #050505; }
+    a { color: #ff2fa6; text-decoration: underline; }
+    a:hover { background: #ff2fa6; color: #000; }
+    .page { max-width: 980px; margin: 0 auto; padding: 28px 28px 60px; }
+    .frame { background: rgba(0,0,0,0.82); border: 2px solid #ff2fa6; box-shadow: 5px 5px 0 #ff2fa6; }
+    .siteHeader { margin-bottom: 24px; }
+    .siteHeader-top { display: flex; align-items: stretch; border-bottom: 2px solid #ff2fa6; }
+    .siteTitle { font-family: Impact, "Arial Narrow", Arial, sans-serif; font-size: clamp(42px, 8vw, 88px); font-weight: 900; text-transform: uppercase; letter-spacing: 2px; line-height: 1; margin: 0; padding: 12px 20px; flex: 1; color: #ff2fa6; text-shadow: 4px 4px 0 rgb(183,255,0), -1px -1px 0 #000; }
+    .siteStamp { width: 90px; flex-shrink: 0; border-left: 2px solid #ff2fa6; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; line-height: 1.6; padding: 8px; color: #ff2fa6; }
+    .siteNote { margin: 0; padding: 6px 16px; font-size: 11px; font-style: italic; color: #ff2fa6; opacity: 0.7; }
+    .back-link { display: inline-block; margin-bottom: 18px; border: 2px solid #ff2fa6; box-shadow: 4px 4px 0 #ff2fa6; padding: 8px 12px; background: rgba(0,0,0,0.78); text-decoration: none; letter-spacing: 0.08em; }
+    .sketchShell { padding: 18px; }
+    .section-head { display: flex; align-items: center; gap: 12px; margin: 0 0 12px; }
+    .section-head h1 { font-size: 11px; color: #ff2fa6; margin: 0; letter-spacing: 0.15em; text-transform: uppercase; background: rgba(0,0,0,0.75); padding: 3px 8px; border: 1px solid #ff2fa6; white-space: nowrap; }
+    .section-head-line { flex: 1; height: 1px; background: #ff2fa6; opacity: 0.4; }
+    .sketchMeta { margin: 0 0 16px; font-size: 11px; color: rgb(183,255,0); letter-spacing: 0.12em; text-transform: uppercase; }
+    .videoFrame { border: 2px solid #ff2fa6; box-shadow: 4px 4px 0 rgba(0,0,0,0.8); background: #000; overflow: hidden; }
+    video { display: block; width: 100%; height: auto; max-height: 78vh; background: #000; }
+    .pageNote { margin: 14px 0 0; font-size: 11px; font-style: italic; opacity: 0.7; }
+    @media (max-width: 700px) {
+      .page { padding: 20px 14px 40px; }
+      .siteHeader-top { flex-direction: column; }
+      .siteStamp { width: auto; border-left: none; border-top: 2px solid #ff2fa6; }
+      .sketchShell { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="siteHeader frame">
+      <div class="siteHeader-top">
+        <h1 class="siteTitle">Mrs Luva&#8209;Luva</h1>
+        <div class="siteStamp">working<br>archive<br>&#9670;</div>
+      </div>
+      <p class="siteNote">Sketches from the Metaverse</p>
+    </header>
+
+    <a class="back-link" href="../index.html">&larr; back to index</a>
+
+    <main class="frame sketchShell">
+      <div class="section-head">
+        <h1>// sketch 04</h1>
+        <div class="section-head-line"></div>
+      </div>
+      <p class="sketchMeta">full sketch video</p>
+      <div class="videoFrame">
+        <div style="padding:63.53% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/848690828?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Eris and AI"></iframe></div>
+      </div>
+      <script src="https://player.vimeo.com/api/player.js"></script>
+    </main>
+  </div>
+</body>
+</html>
+

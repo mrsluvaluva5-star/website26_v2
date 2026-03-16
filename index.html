@@ -1,0 +1,1164 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mrs Luva Luva</title>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    body { font-family: "Courier New", Courier, monospace; font-size: 14px; line-height: 1.6; color: #FBAED2; background: transparent; cursor: url('cursors/gold.png') 34 34, auto; }
+    /* Custom section cursors */
+    .siteHeader, .siteHeader *,
+    #top-rocket-zone, #top-rocket-zone * { cursor: url('cursors/rocket.png') 34 0, crosshair; }
+    .sketches-grid, .scatter { cursor: url('cursors/brain.png') 27 0, crosshair; }
+    .sketches-grid *, .scatter * { cursor: url('cursors/brain.png') 27 0, crosshair; }
+    .track-player, .track-player * { cursor: url('cursors/containership.png') 34 34, crosshair; }
+    .tap-section, .tap-section *, .tap-section video { cursor: url('cursors/brain.png') 27 0, crosshair; }
+    .zombie-yt-embed, .zombie-yt-embed * { cursor: url('cursors/brain.png') 27 0, crosshair; }
+    #shoe-drop, #shoe-drop * { cursor: url('cursors/eviction.png') 34 0, crosshair; }
+    #tshirt-shop, #tshirt-shop * { cursor: url('cursors/eviction.png') 34 0, crosshair; }
+    #tshirt-shop .shoe-arrow,
+    #tshirt-shop button, #tshirt-shop select, #tshirt-shop input,
+    #tshirt-shop .shopify-buy__btn, #tshirt-shop .shopify-buy__option-select__select,
+    #tshirt-shop .shopify-buy__quantity { cursor: pointer; }
+    #coopers, #coopers * { cursor: url('cursors/containership.png') 34 34, crosshair; }
+    .slideshow, .slideshow *, #cordyceps-shop, #cordyceps-shop * { cursor: url('cursors/brain.png') 27 0, crosshair; }
+    #cordyceps-shop .shoe-arrow,
+    #cordyceps-shop button, #cordyceps-shop select, #cordyceps-shop input,
+    #cordyceps-shop .shopify-buy__btn, #cordyceps-shop .shopify-buy__option-select__select,
+    #cordyceps-shop .shopify-buy__quantity { cursor: pointer; }
+    .feed, .feed * { cursor: url('cursors/gold.png') 34 34, auto; }
+    #mirror-head-zone, #mirror-head-zone * { cursor: url('cursors/gold.png') 34 34, auto; }
+    #bgCanvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; }
+    #content { padding: 28px 28px 60px; max-width: 980px; }
+    a { color: #FBAED2; text-decoration: underline; }
+    a:hover { background: #FBAED2; color: #000; }
+
+    .siteHeader { background: #000; border: 2px solid #FBAED2; box-shadow: 5px 5px 0 #FBAED2; margin-bottom: 0; padding: 0; }
+    .siteHeader-top { display: flex; align-items: stretch; border-bottom: 2px solid #FBAED2; background: #000; }
+    .siteTitle {
+      font-family: Impact, "Arial Narrow", Arial, sans-serif;
+      font-size: clamp(48px, 9vw, 100px);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      line-height: 1;
+      margin: 0;
+      padding: 12px 20px;
+      flex: 1;
+      color: rgb(255,79,123);
+      background: #000;
+      text-shadow: 4px 4px 0 rgb(183,255,0), -1px -1px 0 #000;
+    }
+    .siteTitle:hover { animation: titleGlitch 0.4s steps(2) infinite; }
+    @keyframes titleGlitch {
+      0%   { text-shadow: 4px 4px 0 rgb(183,255,0); transform: none; }
+      25%  { text-shadow: -4px 2px 0 #fff; transform: translate(3px,0); clip-path: inset(15% 0 55% 0); }
+      50%  { text-shadow: 4px -2px 0 rgb(183,255,0); transform: translate(-3px,0); clip-path: inset(45% 0 15% 0); }
+      75%  { text-shadow: -2px 0 0 #FBAED2; transform: none; clip-path: none; }
+    }
+    .siteStamp { width: 90px; flex-shrink: 0; border-left: 2px solid #FBAED2; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; line-height: 1.6; padding: 8px; color: #FBAED2; }
+    .siteNav { display: flex; flex-wrap: wrap; }
+    .siteNav a { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.14em; text-decoration: none; color: rgb(183,255,0); background: #000; padding: 7px 14px; border-right: 1px solid #FBAED2; display: block; }
+    .siteNav a:hover { background: #111; color: rgb(183,255,0); }
+    .siteNav a:last-child { border-right: none; }
+    .siteNav a.live { color: #fff; background: rgb(255,79,123); cursor: pointer; }
+    .siteNav a.live:hover { background: #FBAED2; color: #000; }
+    .siteNote { margin: 0; padding: 6px 16px; font-size: 11px; font-style: italic; color: #fff; font-weight: 700; border-top: 1px solid #FBAED2; background: #000; }
+
+    .headWrapper { width: 100%; height: 525px; border-left: 2px solid #FBAED2; border-right: 2px solid #FBAED2; border-bottom: 2px solid #FBAED2; box-shadow: 5px 5px 0 #FBAED2; margin-bottom: 28px; background: #000; overflow: hidden; position: relative; }
+    .yt-bg { position: absolute; inset: 0; width: 100%; height: 100%; border: none; z-index: 0; pointer-events: none; }
+    .yt-bg iframe { position: absolute; inset: 0; width: 100% !important; height: 100% !important; border: none; pointer-events: none; }
+    #headMount { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+    #headMount canvas { background: transparent !important; }
+    .corner-note { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); font-family: Impact, "Arial Narrow", Arial, sans-serif; font-size: clamp(16px, 2.4vw, 26px); color: rgb(183,255,0); letter-spacing: 0.12em; pointer-events: none; z-index: 2; white-space: nowrap; text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 0 2px 8px rgba(0,0,0,0.9); background: rgba(0,0,0,0.55); padding: 6px 16px; border: 2px solid rgba(183,255,0,0.6); animation: corner-note-pulse 2.2s ease-in-out infinite; }
+    @keyframes corner-note-pulse { 0%,100% { opacity: 1; border-color: rgba(183,255,0,0.6); } 50% { opacity: 0.7; border-color: rgba(183,255,0,0.2); } }
+
+    .section-head { display: flex; align-items: center; gap: 14px; margin: 28px 0 16px; }
+    .section-head h2 { font-family: Impact, "Arial Narrow", Arial, sans-serif; font-size: 16px; color: #000; margin: 0; letter-spacing: 0.1em; text-transform: uppercase; background: #c4a0ff; padding: 5px 12px; border: 2px solid #9970e0; white-space: nowrap; }
+    .section-head-line { flex: 1; height: 1px; background: #FBAED2; opacity: 0.5; }
+    .sketches-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(420px, 500px); gap: 20px; align-items: start; margin-bottom: 8px; }
+    .sketches-copy { min-width: 0; }
+    .sketches-copy p { display: inline-block; margin: 0; padding: 5px 10px; background: #000; border: 2px solid #111; font-size: 12px; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: #FBAED2; font-style: normal; text-shadow: none; }
+    .track-player { position: sticky; top: 18px; padding: 0; z-index: 4; margin-top: 32px; }
+    .track-player-title { display: flex; align-items: stretch; gap: 10px; margin-bottom: 12px; }
+    .track-player-title-main { font-family: Impact, "Arial Narrow", Arial, sans-serif; font-size: clamp(20px, 3.2vw, 30px); font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; color: rgb(183,255,0); text-shadow: 3px 3px 0 #000, -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 0 3px 0 #000, 3px 0 0 #000, 0 -3px 0 #000, -3px 0 0 #000; line-height: 1.15; background: #000; padding: 10px 14px; display: flex; flex-direction: column; justify-content: center; flex: 1; }
+    .track-player-note { margin: 0 0 14px; font-size: 13px; font-style: italic; font-weight: 700; color: #000; }
+    .track-player-body { display: block; }
+    .turntable { position: relative; width: min(100%, 500px); aspect-ratio: 1366 / 768; margin: 0 auto 14px; overflow: hidden; }
+    .turntable-scene { position: absolute; inset: 0; }
+    .turntable-recordWrap { position: absolute; left: 50%; top: 50%; width: 56.223%; aspect-ratio: 1; transform: translate(-50%,-50%); pointer-events: none; z-index: 5; }
+    .turntable-record { display: block; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; animation: deck-spin 1.8s linear infinite; animation-play-state: paused; }
+    .turntable.is-playing .turntable-record { animation-play-state: running; }
+    .turntable-actor { position: absolute; pointer-events: none; z-index: 2; transform-origin: 50% 100%; }
+    .turntable-actor-left-mid { left: 8.35%; top: 30%; transform: translateY(-30%) scale(1.32); height: 33.85%; }
+    .turntable-actor-right-mid { right: 7.61%; top: 30%; transform: translateY(-30%) scale(1.32); height: 33.85%; }
+    .turntable-actor-left-low { left: 1.76%; bottom: 3.13%; transform: scale(1.32); height: 31.25%; }
+    .turntable-actor-right-low { right: 14.2%; bottom: 3.13%; transform: scale(1.32); height: 31.25%; }
+    .turntable-lyrics { position: absolute; left: 0; right: 0; bottom: 0; z-index: 12; padding: 12px 14px 16px; pointer-events: none; opacity: 1; transition: opacity .35s ease; }
+    .turntable-lyrics.off { opacity: 0; }
+    .turntable-lyrics-line { text-align: center; margin: 2px 0; text-shadow: 0 2px 8px rgba(0,0,0,.8); transition: opacity .18s ease, transform .18s ease; color: #fff; }
+    .turntable-lyrics-prev, .turntable-lyrics-next { font-size: 13px; opacity: .6; }
+    .turntable-lyrics-current { font-size: 16px; font-weight: 700; color: rgb(183,255,0); }
+    .turntable-armWrap { position: absolute; left: 13.32%; top: 59.24%; width: 15.08%; z-index: 10; touch-action: none; }
+    .turntable-arm { display: block; width: 100%; height: auto; user-select: none; -webkit-user-drag: none; pointer-events: none; filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.8)); }
+    .turntable-grab { position: absolute; border-radius: 50%; cursor: grab; z-index: 5; touch-action: none; background: rgba(0,0,0,0.001); }
+    .turntable-grab:active { cursor: grabbing; }
+    .turntable-button { border: 2px solid #FBAED2; background: transparent; padding: 0; cursor: pointer; box-shadow: 3px 3px 0 rgba(255,47,166,0.75); line-height: 0; flex-shrink: 0; }
+    .turntable-button img { display: block; width: 168px; height: auto; }
+    .turntable-button:hover, .turntable-button:focus-visible { outline: none; box-shadow: 4px 4px 0 rgb(183,255,0); transform: translate(-1px,-1px); }
+    .track-player-controls { min-width: 0; }
+    .track-player-status { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 10px; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; color: #000; }
+    #trackPlayerState { font-weight: 900; }
+    .track-player-light { position: relative; width: 18px; height: 12px; border: 2px solid rgba(0,0,0,0.75); border-radius: 50% / 60%; background: transparent; transition: border-color 180ms ease, box-shadow 180ms ease, opacity 180ms ease; }
+    .track-player-light::after { content: ''; position: absolute; left: 50%; top: 50%; width: 5px; height: 5px; border-radius: 50%; background: #000; transform: translate(-50%,-50%); }
+    .track-player.is-playing .track-player-light { border-color: #000; box-shadow: 0 0 0 rgba(0,0,0,0); animation: eye-flash 0.9s ease-in-out infinite; }
+    .track-player-bars { display: inline-flex; align-items: end; gap: 3px; height: 14px; }
+    .track-player-bars span { width: 4px; background: #000; animation: meter 1s ease-in-out infinite; animation-play-state: paused; }
+    .track-player-bars span:nth-child(1) { height: 5px; }
+    .track-player-bars span:nth-child(2) { height: 11px; animation-delay: 0.15s; }
+    .track-player-bars span:nth-child(3) { height: 8px; animation-delay: 0.3s; }
+    .track-player.is-playing .track-player-bars span { animation-play-state: running; }
+    .track-player-instruction { margin: 0 0 10px; font-size: 12px; line-height: 1.45; font-weight: 700; color: #000; }
+    .track-player-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .track-player-link { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: rgb(183,255,0); text-shadow: 2px 2px 0 #000, -1px -1px 0 #000; }
+    .track-player-link-fun { font-family: Impact, "Arial Narrow", Arial, sans-serif; font-size: 18px; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; color: rgb(183,255,0); background: #000; border: 2px solid #000; padding: 5px 14px; text-decoration: none; display: inline-flex; align-items: center; gap: 7px; text-shadow: 1px 1px 0 #000; animation: watch-pulse 2s ease-in-out infinite; }
+    .track-player-link-fun:hover, .track-player-link-fun:focus-visible { outline: none; color: rgb(183,255,0); background: #111; border-color: #111; box-shadow: 3px 3px 0 #000; transform: translate(-1px,-1px); animation-play-state: paused; }
+    .watch-eye { font-size: 16px; line-height: 1; color: rgb(183,255,0); animation: blink 1.1s step-end infinite; }
+    .track-progress { appearance: none; width: 100%; height: 12px; margin: 0 0 8px; background: linear-gradient(90deg, rgb(183,255,0) var(--progress, 0%), rgba(255,47,166,0.28) var(--progress, 0%)); border: 2px solid #FBAED2; border-radius: 0; }
+    .track-progress::-webkit-slider-thumb { appearance: none; width: 12px; height: 18px; background: #FBAED2; border: 1px solid #000; cursor: pointer; }
+    .track-progress::-moz-range-thumb { width: 12px; height: 18px; background: #FBAED2; border: 1px solid #000; cursor: pointer; }
+    .track-time { display: flex; justify-content: space-between; gap: 10px; font-size: 10px; letter-spacing: 0.1em; color: rgb(183,255,0); text-transform: uppercase; font-weight: 700; text-shadow: 2px 2px 0 #000, -1px -1px 0 #000; }
+    @keyframes deck-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes meter { 0%,100% { transform: scaleY(0.45); opacity: 0.55; } 50% { transform: scaleY(1); opacity: 1; } }
+    @keyframes eye-flash { 0%,100% { opacity: 1; } 50% { opacity: 0.38; } }
+    @keyframes watch-pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+    @keyframes watch-eye-blink { 0%,46%,54%,100% { transform: scaleY(1); opacity: 1; } 50% { transform: scaleY(0.12); opacity: 0.8; } }
+    .player-sketches-scatter { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin: 4px 0 0; }
+    .player-sketches-scatter .gif-card { margin: 0; }
+    .player-sketches-scatter .gif-thumb { width: auto; height: auto; aspect-ratio: 4/3; }
+    .sketches-full-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 12px; margin-top: 8px; }
+    .sketches-full-row .gif-card { margin: 0; }
+    .sketches-full-row .gif-thumb { width: auto; height: auto; aspect-ratio: 4/3; }
+    .tap-section { margin: 2px 0 24px; }
+    .tap-title { background: rgb(4, 207, 41) !important; color: rgb(242, 5, 215) !important; border-color: rgb(4, 207, 41) !important; }
+    .tap-card { background: rgba(0,0,0,0.84); border: 2px solid #FBAED2; box-shadow: 4px 4px 0 #FBAED2; padding: 10px; }
+    .tap-card video { display: block; width: 100%; max-width: 920px; margin: 0 auto; border: 2px solid #1b130f; background: #000; }
+    .tap-video-wrap { position: relative; display: block; max-width: 920px; margin: 0 auto; cursor: pointer; }
+    .tap-play-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); pointer-events: none; transition: transform 0.15s; }
+    .tap-video-wrap.is-playing .tap-play-btn { display: none; }
+    .tap-video-wrap:hover .tap-play-btn circle { opacity: 0.95; }
+
+    .scatter { padding: 10px 0 30px; }
+    .scatter-inner { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .scatter-inner .gif-card { margin: 0; }
+    .scatter-inner .gif-thumb { width: 100%; height: auto; aspect-ratio: 4/3; }
+    .gif-card { display: inline-block; text-decoration: none; margin: 10px; transition: transform 0.15s, filter 0.15s; position: relative; z-index: 1; }
+    .gif-card:hover { z-index: 10; transform: scale(1.12) rotate(-1.5deg) !important; filter: brightness(1.1); }
+    .gif-card:hover .gif-thumb { box-shadow: 5px 5px 0 rgb(183,255,0); border-color: rgb(183,255,0); }
+    .gif-thumb { display: block; overflow: hidden; border: 3px solid #5a1a8c; box-shadow: 5px 5px 0 #2a065a; width: 180px; height: 135px; background: repeating-linear-gradient(45deg,#1a0838 0,#1a0838 3px,#2d1055 3px,#2d1055 12px); transition: box-shadow 0.15s, border-color 0.15s; }
+    .gif-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .gif-label { background: #c4a0ff; color: #000; font-family: Impact, "Arial Narrow", Arial, sans-serif; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 6px; border: 2px solid #9970e0; border-top: none; display: block; text-align: center; }
+
+    .feed { max-width: 920px; }
+    .entry { background: linear-gradient(135deg, #2a1b14 0%, #0f0c0a 68%); border: 2px solid #1b130f; box-shadow: 4px 4px 0 #0a0706; display: flex; margin-bottom: 14px; transition: transform 0.12s, box-shadow 0.12s; }
+    .entry:nth-child(even) { box-shadow: 4px 4px 0 #0a0706; border-color: #1b130f; }
+    .entry:hover { transform: translate(-3px,-3px); box-shadow: 5px 5px 0 #000; }
+    .entry:nth-child(even):hover { transform: translate(-3px,-3px); box-shadow: 5px 5px 0 #000; }
+    .thumbLink { display: block; width: 180px; flex: 0 0 180px; border-right: 2px solid #1b130f; text-decoration: none; }
+    .entry:nth-child(even) .thumbLink { border-right-color: #1b130f; }
+    .thumb-placeholder { width: 100%; min-height: 110px; height: 100%; background: repeating-linear-gradient(45deg,rgba(255,47,166,0.12),rgba(255,47,166,0.12) 3px,transparent 3px,transparent 12px); display: flex; align-items: center; justify-content: center; font-size: 32px; color: rgba(255,47,166,0.5); }
+    .entry:nth-child(even) .thumb-placeholder { background: repeating-linear-gradient(45deg,rgba(183,255,0,0.1),rgba(183,255,0,0.1) 3px,transparent 3px,transparent 12px); color: rgba(183,255,0,0.45); }
+    .thumb-img { display: block; width: 100%; height: 100%; min-height: 110px; object-fit: cover; }
+    .meta { flex: 1; padding: 14px 16px; }
+    .date { font-family: Impact, "Arial Narrow", Arial, sans-serif; font-size: 13px; letter-spacing: 0.18em; color: #FBAED2; margin-bottom: 4px; text-transform: uppercase; text-shadow: 1px 1px 0 #000; }
+    .title { font-family: "Times New Roman", Times, serif; font-style: italic; font-size: 26px; margin-bottom: 6px; line-height: 1.15; font-weight: 700; }
+    .title a { text-decoration: none; color: #FBAED2; }
+    .title a:hover { background: #FBAED2; color: #000; }
+    .note { font-size: 13px; font-style: italic; color: #FBAED2; font-weight: 700; }
+    .tags { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px; }
+    .tag { font-size: 11px; font-weight: 700; border: 1px solid #FBAED2; padding: 1px 7px; color: #FBAED2; letter-spacing: 0.08em; }
+    .tag.lime { border-color: #FBAED2; color: #FBAED2; }
+    .tag.red  { border-color: #FBAED2; color: #FBAED2; }
+
+    .siteFooter { background: rgba(0,0,0,0.78); border: 2px solid #FBAED2; box-shadow: 4px 4px 0 #FBAED2; margin-top: 26px; padding: 12px 16px; font-size: 11px; font-style: italic; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+
+    .shoe-track { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 48px; scrollbar-width: none; }
+    .shoe-track::-webkit-scrollbar { display: none; }
+    .shoe-card { flex: 0 0 160px; scroll-snap-align: start; text-decoration: none; background: #0a0a0a; border: 2px solid #FBAED2; box-shadow: 3px 3px 0 #FBAED2; transition: transform 0.12s, box-shadow 0.12s; display: flex; flex-direction: column; }
+    .shoe-card:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 rgb(183,255,0); border-color: rgb(183,255,0); }
+    .shoe-img-wrap { width: 100%; aspect-ratio: 6/5; background: repeating-linear-gradient(45deg,#1a0838 0,#1a0838 3px,#2d1055 3px,#2d1055 12px); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .shoe-img-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .shoe-img-placeholder { font-size: 48px; line-height: 1; opacity: 0.7; }
+    .shoe-label { font-family: "Courier New",Courier,monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #FBAED2; padding: 5px 8px 2px; }
+    .shoe-name { font-family: "Courier New",Courier,monospace; font-size: 10px; font-style: italic; font-weight: 700; color: #fff; padding: 2px 8px 8px; letter-spacing: 0.03em; line-height: 1.3; }
+    .shoe-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: #000; border: 2px solid #FBAED2; color: #FBAED2; font-size: 16px; width: 36px; height: 36px; cursor: pointer; z-index: 2; display: flex; align-items: center; justify-content: center; padding: 0; box-shadow: 3px 3px 0 #FBAED2; }
+    .shoe-arrow:hover { background: #FBAED2; color: #000; }
+    .shoe-arrow-l { left: 6px; }
+    .shoe-arrow-r { right: 6px; }
+    .hitCounter { font-size: 16px; letter-spacing: 0.2em; color: rgb(183,255,0); border: 1px solid #FBAED2; padding: 0 8px; }
+
+    .zombie-yt-embed { position: relative; width: 100%; aspect-ratio: 16/9; background: #000; border: 2px solid #FBAED2; box-shadow: 3px 3px 0 #FBAED2; overflow: hidden; margin-bottom: 28px; }
+    .zombie-yt-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+    .slideshow { position: relative; background: #000; border: 2px solid #FBAED2; box-shadow: 5px 5px 0 #FBAED2; margin-bottom: 14px; user-select: none; overflow: hidden; }
+    .slideshow-viewport { overflow: hidden; position: relative; }
+    .slideshow-track { display: flex; transition: transform 0.35s cubic-bezier(.4,0,.2,1); will-change: transform; }
+    .slideshow-slide { flex: 0 0 100%; height: 80vh; max-height: 700px; overflow: hidden; background: #000; display: flex; flex-direction: column; }
+    .slideshow-slide img { display: block; width: 100%; flex: 1; min-height: 0; object-fit: contain; background: #000; }
+    .slideshow-btn { position: absolute; top: 50%; transform: translateY(-50%); background: #000; border: 2px solid #FBAED2; color: #FBAED2; font-size: 18px; width: 40px; height: 40px; cursor: pointer; z-index: 4; display: flex; align-items: center; justify-content: center; padding: 0; box-shadow: 3px 3px 0 #FBAED2; transition: background 0.1s, color 0.1s; }
+    .slideshow-btn:hover { background: #FBAED2; color: #000; }
+    .slideshow-btn-l { left: 8px; }
+    .slideshow-btn-r { right: 8px; }
+    .slideshow-dots { display: flex; justify-content: center; gap: 8px; padding: 10px 0 12px; background: #000; border-top: 1px solid #FBAED2; }
+    .slideshow-dot { width: 10px; height: 10px; border-radius: 50%; background: transparent; border: 2px solid #FBAED2; cursor: pointer; transition: background 0.15s; padding: 0; }
+    .slideshow-dot.active { background: rgb(183,255,0); border-color: rgb(183,255,0); }
+    .slideshow-counter { position: absolute; bottom: 8px; right: 10px; font-family: "Courier New", Courier, monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: rgb(183,255,0); text-shadow: 1px 1px 0 #000, -1px -1px 0 #000; pointer-events: none; z-index: 4; }
+    .slideshow-caption { display: block; background: #0a0a0a; border-top: 1px solid #FBAED2; padding: 7px 14px 6px; font-family: "Courier New", Courier, monospace; font-size: 12px; font-style: italic; color: #FBAED2; letter-spacing: 0.04em; text-align: center; }
+    .blinkText { font-size: 11px; animation: blink 1.1s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    @keyframes haiku-bob { 0%,100% { transform: translateY(-50%) translateY(0); } 50% { transform: translateY(-50%) translateY(-8px); } }
+    .haiku-container { position: absolute; pointer-events: none; z-index: 3; top: 50%; height: 100%; transform: translateY(-50%); animation: haiku-bob 8s ease-in-out infinite; }
+    .haiku-word { position: absolute; font-family: "Courier New", monospace; font-weight: bold; pointer-events: none; color: #ffff00; text-shadow: 0 0 8px rgba(255,255,0,0.8), 0 0 16px rgba(255,255,0,0.5), 0 1px 3px rgba(0,0,0,0.8); white-space: nowrap; user-select: none; }
+    @media (max-width: 840px) {
+      .sketches-grid { grid-template-columns: 1fr; }
+      .track-player { position: static; max-width: 500px; }
+      .turntable-lyrics { padding: 10px 12px 12px; }
+      .turntable-lyrics-prev, .turntable-lyrics-next { font-size: 12px; }
+      .turntable-lyrics-current { font-size: 15px; }
+      .tap-card { padding: 8px; }
+    }
+    @media (max-width: 520px) {
+      .track-player { max-width: none; }
+      .turntable { width: min(100%, 420px); }
+      .turntable-button img { width: 62px; }
+      .turntable-lyrics { padding: 8px 10px 10px; }
+      .turntable-lyrics-line { margin: 1px 0; text-shadow: 0 1px 6px rgba(0,0,0,.85); }
+      .turntable-lyrics-prev, .turntable-lyrics-next { font-size: 11px; }
+      .turntable-lyrics-current { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+  <div id="content">
+
+    <header class="siteHeader">
+      <div class="siteHeader-top">
+        <h1 class="siteTitle">Mrs Luva&#8209;Luva</h1>
+        <div class="siteStamp">working<br>archive<br>&#9670;</div>
+      </div>
+      <nav class="siteNav">
+        <a href="#">Index</a><a href="#">Works</a><a href="#">Threads</a>
+        <a href="#">Interactive</a><a href="about/index.html" class="live">About</a><a href="#">Contact</a>
+      </nav>
+      <p class="siteNote">New experiments popped in rendomly.</p>
+    </header>
+
+    <div id="top-rocket-zone">
+    <div class="headWrapper">
+      <div id="yt-bg" class="yt-bg"></div>
+      <div id="headMount"></div>
+      <span class="corner-note">&#9758; Tap the Head to Generate a Haiku</span>
+    </div>
+    <div id="skidrow-strip" style="background:rgb(255,79,123);padding:4px 16px;border-left:2px solid #FBAED2;border-right:2px solid #FBAED2;border-bottom:2px solid #FBAED2;box-shadow:5px 5px 0 #FBAED2;margin-top:-7px;margin-bottom:0;">
+      <p style="margin:0;font-family:'Courier New',Courier,monospace;font-weight:900;font-size:11px;color:rgb(183,255,0);letter-spacing:0.02em;-webkit-text-stroke:0.5px rgb(183,255,0);">While building this website I've been watching another world of lives being lived at the same moments. Suns rising and falling out of sync with mine. People whose lives are at heightened stakes, stuck in survival mode, fallen through the cracks without being caught. The reality, where this depth of poverty in the wealthiest of nations is accepted as part of the structure, seems a madness of late capitalism.  To inhabit this reality we must accept increasing amounts of dissonance, which is to collectively exist in a state of madness.</p>
+    </div>
+    </div><!-- /top-rocket-zone -->
+
+    <script type="importmap">{"imports":{"three":"/head/js/three.module.js"}}</script>
+    <script type="module">
+      import * as THREE from 'three';
+      import { APP } from '/head/js/app.js';
+      window.THREE = THREE;
+      const mount = document.getElementById('headMount');
+      const loader = new THREE.FileLoader();
+      loader.load('/head/app.json', function(text) {
+        const player = new APP.Player();
+        const json = JSON.parse(text);
+        json.scene.object.background = null;
+        delete json.scene.object.fog;
+        var headObj = json.scene.object.children.find(c => c.name === 'Head');
+        if (headObj) {
+          headObj.matrix[0] = 1.25;
+          headObj.matrix[5] = 1.25;
+          headObj.matrix[10] = 1.25;
+        }
+        player.load(json);
+        const w = mount.parentElement.offsetWidth;
+        player.setSize(w, 525);
+        player.play();
+        const canvas = player.dom;
+        canvas.style.width = '100%';
+        canvas.style.height = '525px';
+        mount.appendChild(canvas);
+        window.addEventListener('resize', function() {
+          player.setSize(mount.parentElement.offsetWidth, 525);
+        });
+      });
+    </script>
+
+  <script>
+  (function(){
+    var ytVideos=['NsmJg4oSDVg','d_dzN9-VO14','9fBsxUqZYRM'];
+    var ytIdx=0, ytPlayer=null;
+    var tag=document.createElement('script');
+    tag.src='https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+    window.onYouTubeIframeAPIReady=function(){
+      ytPlayer=new YT.Player('yt-bg',{
+        width:'100%',height:'100%',
+        videoId:ytVideos[ytIdx],
+        playerVars:{autoplay:1,mute:1,controls:0,loop:1,playlist:ytVideos[ytIdx],modestbranding:1,rel:0,showinfo:0},
+        events:{
+          onError:function(){
+            ytIdx++;
+            if(ytIdx<ytVideos.length){
+              ytPlayer.loadVideoById({videoId:ytVideos[ytIdx],suggestedQuality:'hd720'});
+            }
+          },
+          onStateChange:function(e){
+            if(e.data===YT.PlayerState.ENDED)ytPlayer.playVideo();
+          }
+        }
+      });
+    };
+  })();
+  </script>
+
+  <script>
+  (function(){
+    var haikus=[
+      "tent zip opens slow / the market closed above you / profit has no floor",
+      "i see them below / my gaze slides to the middle / distance every time",
+      "tarpaulin blue sky / a rocket punches through it / you cannot punch back",
+      "cop lights sweep the tents / move along means move along / nowhere is along",
+      "i could look but wont / the peripheral is where / i keep the bodies",
+      "free market free fall / sidewalk becomes your address / freedom is the joke",
+      "the GDP climbs / the shelter line wraps the block / both are measured growth",
+      "spoon bends in the flame / the invisible hand shakes / no one shakes yours back",
+      "they rezoned your block / glass towers need clean sightlines / you were in the way",
+      "i float above them / transparent to their looking / opaque to my own",
+      "hand outstretched for change / the coins add up to nothing / like your savings did",
+      "wealth just trickles down / through the grate where someone sleeps / it lands on no one",
+      "i know they are there / i have adjusted my neck / three degrees away",
+      "bootstrap theory / hard to pull when you sold them / for another hit",
+      "someone films your tent / poverty is content now / the algorithm eats",
+      "almost looked again / the tent flap moved and i felt / something like a face",
+      "cleared the encampment / by tuesday the count was back / nowhere disappears",
+      "i did not design / the system that feeds me well / i just live in it",
+      "eviction notice / taped to a tent pole at dawn / landlord still gets paid",
+      "i donated once / the tax receipt came back fast / faster than the check",
+      "shelter full tonight / the waiting list has a list / no one waits that long",
+      "median home price / rose four percent this quarter / your tent was not priced",
+      "detox has a list / the list has another list / you are on both lists",
+      "police report says / unknown male no fixed address / found unresponsive",
+      "i support reform / systemic long-term reform / after my breakfast",
+      "housing first they said / the funding did not agree / you agreed to wait",
+      "i read a report / systemic root causes were / identified good",
+      "i pay someone else / to think about this for me / they send a report",
+      "tent city census / they counted then lost the file / you were always lost",
+      "the nonprofit had / its best fundraising quarter / the problem grew too",
+      "city council votes / to study the studying / of studying this",
+      "under the freeway / no camping the sign says but / the sign does not sleep",
+      "i have not been there / i have seen it from above / which is where i live"
+    ];
+    var order=[],idx=0,clickCount=0;
+    var slots={
+      a:{key:'a',left:0.60,width:0.25,duration:'7s',container:null,style:null},
+      b:{key:'b',left:0.05,width:0.25,duration:'9s',container:null,style:null}
+    };
+    function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=b[i];b[i]=b[j];b[j]=t;}return b;}
+    function next(){if(idx>=order.length){order=shuffle(haikus.map(function(_,i){return i;}));idx=0;}return haikus[order[idx++]];}
+    function ensureSlots(wrapper){
+      Object.keys(slots).forEach(function(key){
+        var slot=slots[key];
+        if(slot.container)return;
+        var cont=document.createElement('div');
+        cont.className='haiku-container haiku-container-'+slot.key;
+        cont.style.left=Math.round(wrapper.offsetWidth*slot.left)+'px';
+        cont.style.width=Math.round(wrapper.offsetWidth*slot.width)+'px';
+        cont.style.animationDuration=slot.duration;
+        wrapper.appendChild(cont);
+        slot.container=cont;
+      });
+    }
+    function layoutSlots(wrapper){
+      Object.keys(slots).forEach(function(key){
+        var slot=slots[key];
+        if(!slot.container)return;
+        slot.container.style.left=Math.round(wrapper.offsetWidth*slot.left)+'px';
+        slot.container.style.width=Math.round(wrapper.offsetWidth*slot.width)+'px';
+      });
+    }
+    function clearSlot(slot){
+      if(slot.style&&slot.style.parentNode)slot.style.parentNode.removeChild(slot.style);
+      slot.style=null;
+      if(slot.container)slot.container.innerHTML='';
+    }
+    function spawn(wrapper,slot){
+      clearSlot(slot);
+      var haiku=next();
+      var lines=[];haiku.split('/').forEach(function(l){var w=l.trim().toLowerCase().split(/\s+/).filter(Boolean);for(var i=0;i<w.length;i+=3)lines.push(w.slice(i,i+3));});
+      var wh=wrapper.offsetHeight;
+      var cont=slot.container;
+      var contWidth=cont.offsetWidth;
+      var allSpans=[];
+      lines.forEach(function(line,li){
+        line.forEach(function(word){
+          var s=document.createElement('span');
+          s.className='haiku-word';
+          s.textContent=word;
+          s.style.color='#ffff00';
+          s.style.fontSize=(18+Math.floor(Math.random()*3))+'px';
+          s.style.visibility='hidden';
+          s.style.left='0'; s.style.top='0';
+          s.style.opacity='0'; s.style.transition='none';
+          cont.appendChild(s);
+          allSpans.push({span:s,li:li});
+        });
+      });
+      requestAnimationFrame(function(){
+        var gap=8, lineSpacing=35;
+        var lineGroups=lines.map(function(_,li){return allSpans.filter(function(x){return x.li===li;});});
+        var lineH=allSpans[0]?allSpans[0].span.offsetHeight:22;
+        var totalH=lineGroups.length*lineH+(lineGroups.length-1)*lineSpacing;
+        var baseTop=Math.round((wh-totalH)*0.5);
+        var spawnCX=contWidth*0.5, spawnCY=wh*0.5-baseTop;
+        var kf='';
+        lineGroups.forEach(function(spans,li){
+          var totalW=spans.reduce(function(acc,x){return acc+x.span.offsetWidth;},0)+gap*Math.max(0,spans.length-1);
+          var curX=Math.max(0,Math.round((contWidth-totalW)*0.5));
+          var baseY=baseTop+li*(lineH+lineSpacing);
+          spans.forEach(function(x){
+            var sw=x.span.offsetWidth, sh=x.span.offsetHeight;
+            var jY=(Math.random()-0.5)*8;
+            var rot=(Math.random()-0.5)*4;
+            var finalLeft=curX, finalTop=baseY+jY;
+            var oX=spawnCX-(finalLeft+sw*0.5), oY=spawnCY-(finalTop+sh*0.5);
+            x.span.style.left=finalLeft+'px';
+            x.span.style.top=finalTop+'px';
+            x.span.style.transform='translate('+oX+'px,'+oY+'px) rotate(0deg)';
+            x.span.style.visibility='visible';
+            x.rot=rot;
+            var fdx=(Math.random()-0.5)*8, fdy=(Math.random()-0.5)*6, fdr=(Math.random()-0.5)*3;
+            var fdur=3+Math.random()*3, fdel=-(Math.random()*(3+Math.random()*3));
+            x.anim='hf'+Math.random().toString(36).slice(2,9);
+            kf+='@keyframes '+x.anim+'{0%,100%{transform:translate(0,0) rotate('+rot+'deg);}50%{transform:translate('+fdx+'px,'+fdy+'px) rotate('+(rot+fdr)+'deg);}}\n';
+            x.fdur=fdur; x.fdel=fdel;
+            curX+=sw+gap;
+          });
+        });
+        var styleEl=document.createElement('style');
+        styleEl.textContent=kf;
+        document.head.appendChild(styleEl);
+        slot.style=styleEl;
+        allSpans.forEach(function(x,i){
+          var delay=i*(50+Math.random()*50);
+          var dur=600+Math.random()*200;
+          setTimeout(function(){
+            x.span.style.transition='transform '+dur+'ms ease-out, opacity 250ms ease-in';
+            x.span.style.transform='translate(0,0) rotate('+x.rot+'deg)';
+            x.span.style.opacity='1';
+            setTimeout(function(){
+              x.span.style.transition='none';
+              x.span.style.animation=x.anim+' '+x.fdur+'s ease-in-out '+x.fdel+'s infinite';
+            },dur+50);
+          },delay);
+        });
+      });
+    }
+    var wrapper=document.querySelector('.headWrapper');
+    if(wrapper){
+      ensureSlots(wrapper);
+      layoutSlots(wrapper);
+      window.addEventListener('resize',function(){layoutSlots(wrapper);});
+      wrapper.addEventListener('click',function(){
+        clickCount++;
+        var slot=clickCount%2===1?slots.a:slots.b;
+        layoutSlots(wrapper);
+        spawn(wrapper,slot);
+      });
+    }
+  })();
+  </script>
+
+    <div class="sketches-grid">
+      <div class="sketches-copy">
+        <div class="section-head">
+          <h2>// sketches from the metaverse</h2>
+          <div class="section-head-line"></div>
+        </div>
+        <p>2021-2024 - click to see full work</p>
+        <div class="player-sketches-scatter">
+          <a class="gif-card" href="sketches%20from%20the%20metaverse/sketch01.html" style="transform:rotate(-3deg);margin-top:12px;"><div class="gif-thumb"><img src="sketches%20from%20the%20metaverse/gifs/sketch01.gif" alt="Sketch 01 cover" loading="lazy"></div><span class="gif-label">sketch 01</span></a>
+          <a class="gif-card" href="sketches%20from%20the%20metaverse/sketch02.html" style="transform:rotate(2deg);margin-top:4px;"><div class="gif-thumb"><img src="sketches%20from%20the%20metaverse/gifs/sketch02.gif" alt="Sketch 02 cover" loading="lazy"></div><span class="gif-label">sketch 02</span></a>
+          <a class="gif-card" href="sketches%20from%20the%20metaverse/sketch03.html" style="transform:rotate(1.5deg);margin-top:8px;"><div class="gif-thumb"><img src="sketches%20from%20the%20metaverse/gifs/sketch03.gif" alt="Sketch 03 cover" loading="lazy"></div><span class="gif-label">sketch 03</span></a>
+          <a class="gif-card" href="sketches%20from%20the%20metaverse/sketch04.html" style="transform:rotate(-2deg);margin-top:2px;"><div class="gif-thumb"><img src="sketches%20from%20the%20metaverse/gifs/sketch04.gif" alt="Sketch 04 cover" loading="lazy"></div><span class="gif-label">sketch 04</span></a>
+          <a class="gif-card" href="sketches%20from%20the%20metaverse/sketch05.html" style="transform:rotate(2.5deg);margin-top:10px;"><div class="gif-thumb"><img src="sketches%20from%20the%20metaverse/gifs/sketch05.gif" alt="Sketch 05 cover" loading="lazy"></div><span class="gif-label">sketch 05</span></a>
+          <a class="gif-card" href="sketches%20from%20the%20metaverse/sketch06.html" style="transform:rotate(-1.5deg);margin-top:6px;"><div class="gif-thumb"><img src="sketches%20from%20the%20metaverse/gifs/sketch06.gif" alt="Sketch 06 cover" loading="lazy"></div><span class="gif-label">sketch 06</span></a>
+        </div>
+      </div>
+      <aside class="track-player" id="trackPlayer" aria-labelledby="track-player-heading">
+        <div class="track-player-title">
+          <button class="turntable-button" id="turntableButton" type="button" aria-controls="siteTrackAudio" aria-describedby="turntableInstruction">
+            <img id="turntableButtonIcon" src="Lookslikemine/play.webp" alt="Play track">
+          </button>
+          <span class="track-player-title-main" id="track-player-heading">What We Gave<br>Now Re-Designed</span>
+        </div>
+        <p class="track-player-note">Interactive record player for <em>'What We Gave Now Redesigned'</em>.</p>
+        <div class="track-player-body">
+          <div class="turntable" id="turntable">
+            <div class="turntable-scene">
+              <img class="turntable-actor turntable-actor-left-mid" src="Lookslikemine/left%20comp%201.webp" data-poster="Lookslikemine/left%20comp%201.webp" data-gif="Lookslikemine/left%20comp%201.gif" alt="">
+              <img class="turntable-actor turntable-actor-right-mid" src="Lookslikemine/right%20comp%201.webp" data-poster="Lookslikemine/right%20comp%201.webp" data-gif="Lookslikemine/right%20comp%201.gif" alt="">
+              <img class="turntable-actor turntable-actor-left-low" src="Lookslikemine/signingleftside_1_1_1.webp" data-poster="Lookslikemine/signingleftside_1_1_1.webp" data-gif="Lookslikemine/signingleftside_1_1_1.gif" alt="">
+              <img class="turntable-actor turntable-actor-right-low" src="Lookslikemine/signingrightside.webp" data-poster="Lookslikemine/signingrightside.webp" data-gif="Lookslikemine/signingrightside.gif" alt="">
+              <div class="turntable-recordWrap">
+                <img class="turntable-record" id="turntableRecord" src="Lookslikemine/vinyl.webp" alt="Vinyl record">
+              </div>
+              <div class="turntable-armWrap" id="turntableArmWrap" aria-hidden="true">
+                <img class="turntable-arm" id="turntableArm" src="Lookslikemine/arm.webp" alt="">
+                <div class="turntable-grab" id="turntableGrab" title="Drag to cue"></div>
+              </div>
+              <div class="turntable-lyrics off" id="turntableLyrics" aria-live="polite" aria-atomic="true">
+                <div class="turntable-lyrics-line turntable-lyrics-prev" id="turntableLyricPrev"></div>
+                <div class="turntable-lyrics-line turntable-lyrics-current" id="turntableLyricCurrent"></div>
+                <div class="turntable-lyrics-line turntable-lyrics-next" id="turntableLyricNext"></div>
+              </div>
+            </div>
+          </div>
+          <div class="track-player-controls">
+            <div class="track-player-status">
+              <span class="track-player-light" aria-hidden="true"></span>
+              <span id="trackPlayerState">Stopped</span>
+              <span class="track-player-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+            </div>
+            <p class="track-player-instruction" id="turntableInstruction">Press play to start the track. Move the record arm across the disc to jump to different parts of the song.</p>
+            <input class="track-progress" id="trackProgress" type="range" min="0" max="100" value="0" step="0.1" aria-label="Track position">
+            <div class="track-time">
+              <span id="trackCurrent">00:00</span>
+              <span id="trackDuration">loading</span>
+            </div>
+            <div class="track-player-actions">
+              <a class="track-player-link-fun" href="Lookslikemine/index.html"><span class="watch-eye">&#128065;</span> WATCH &#9654; LOOKS LIKE MINE</a>
+            </div>
+          </div>
+        </div>
+        <audio id="siteTrackAudio" src="Lookslikemine/track.mp3" preload="metadata"></audio>
+      </aside>
+    </div>
+    <div class="sketches-full-row">
+      <a class="gif-card" href="sketches%20from%20the%20metaverse/sketch07.html" style="transform:rotate(-2deg);"><div class="gif-thumb"><img src="sketches%20from%20the%20metaverse/gifs/sketch07.gif" alt="Sketch 07 cover" loading="lazy"></div><span class="gif-label">sketch 07</span></a>
+      <a class="gif-card" href="sketches%20from%20the%20metaverse/sketch08.html" style="transform:rotate(3deg);"><div class="gif-thumb"><img src="sketches%20from%20the%20metaverse/gifs/sketch08.gif" alt="Sketch 08 cover" loading="lazy"></div><span class="gif-label">sketch 08</span></a>
+      <a class="gif-card" href="sketches%20from%20the%20metaverse/sketch09.html" style="transform:rotate(-1.5deg);"><div class="gif-thumb"><img src="sketches%20from%20the%20metaverse/gifs/sketch09.gif" alt="Sketch 09 cover" loading="lazy"></div><span class="gif-label">sketch 09</span></a>
+      <a class="gif-card" href="sketches%20from%20the%20metaverse/sketch10.html" style="transform:rotate(2.5deg);"><div class="gif-thumb"><img src="sketches%20from%20the%20metaverse/gifs/sketch10.gif" alt="Sketch 10 cover" loading="lazy"></div><span class="gif-label">sketch 10</span></a>
+    </div>
+
+    <div class="tap-section">
+      <div class="section-head"><h2 class="tap-title">// Tap Tap Tipety Tap</h2><div class="section-head-line"></div></div>
+      <div class="tap-card">
+        <!-- Tap Tap Tipety Tap Vimeo Embed -->
+        <div style="padding:56.25% 0 0 0;position:relative;">
+          <iframe src="https://player.vimeo.com/video/1162526443?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Tap Tap Tipety Tap"></iframe>
+        </div>
+        <script src="https://player.vimeo.com/api/player.js"></script>
+      </div>
+      <div style="background:#ff6a00;padding:10px 16px;margin-top:10px;border:2px solid #ff6a00;box-shadow:4px 4px 0 rgb(183,255,0);">
+        <p style="margin:0;font-family:'Courier New',Courier,monospace;font-weight:900;font-size:13px;color:rgb(183,255,0);line-height:1.6;-webkit-text-stroke:0.4px rgb(183,255,0);">A woman accidentally turns herself into a homogenous lump, which is harvested by Lucky Cat to be sold at the LLM supermarket. The film playfully addresses the changing human psyche under late capitalism, where emotions are commodified as brand content, identities flatten into meme like simplifications, and our data becomes a tradable commodity.</p>
+      </div>
+    </div>
+
+    <div id="mirror-head-zone">
+    <div class="section-head" style="margin-top:28px;"><h2 style="background:#000;border-color:#FBAED2;color:#FBAED2;">// Reactive Music Head</h2><div class="section-head-line"></div></div>
+    <div style="background:#000;border:2px solid #FBAED2;box-shadow:5px 5px 0 #FBAED2;margin-bottom:28px;overflow:hidden;">
+      <div style="position:relative;width:100%;aspect-ratio:16/9;">
+        <iframe id="mirrorHeadIframe" src="mirrorhead_final/index.html" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allow="camera; microphone" title="Reactive Music Head interactive experience"></iframe>
+        <button id="mirrorHeadLeave" onclick="leaveMirrorHead()" style="display:none;position:absolute;top:8px;right:8px;z-index:10;background:rgba(0,0,0,0.75);border:2px solid rgb(255,79,123);color:rgb(255,79,123);font-family:'Courier New',Courier,monospace;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 10px;cursor:pointer;box-shadow:2px 2px 0 rgb(255,79,123);">&#10005; LEAVE</button>
+      </div>
+      <p style="margin:0;padding:10px 16px;font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:700;color:#FBAED2;letter-spacing:0.1em;text-transform:uppercase;border-top:2px solid #FBAED2;">Interactive 3D reactive music head. Enable camera to begin &mdash; use LEAVE to return to start.</p>
+    <script>
+    function leaveMirrorHead(){
+      var iframe=document.getElementById('mirrorHeadIframe');
+      iframe.src='mirrorhead_final/index.html';
+      document.getElementById('mirrorHeadLeave').style.display='none';
+    }
+    window.addEventListener('message',function(e){
+      if(e.data==='mirrorhead:active'){
+        document.getElementById('mirrorHeadLeave').style.display='';
+      }
+    });
+    </script>
+    </div>
+    </div>
+
+    <div class="section-head" style="margin-top:28px;"><h2 style="background:rgb(255,79,123);border-color:rgb(220,30,90);color:rgb(183,255,0);">SHOE DROP</h2><div class="section-head-line"></div></div>
+    <div id="shoe-drop" style="position:relative;background:#000;border:2px solid #FBAED2;box-shadow:5px 5px 0 #FBAED2;padding:14px 0 14px;margin-bottom:28px;">
+      <p style="margin:0 0 10px;padding:0 16px;font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:700;color:#FBAED2;letter-spacing:0.1em;text-transform:uppercase;">Buy a Hand Painted Shoe · Painted by Mrs Luva-Luva (me) · one of a kind · ships worldwide</p>
+      <div style="position:relative;">
+        <button class="shoe-arrow shoe-arrow-l" onclick="shoeScroll(-1)" aria-label="scroll left">&#9664;</button>
+        <div class="shoe-track" id="shoeTrack">
+          <a class="shoe-card" href="https://mrsluvaluva.myshopify.com/products/shoe-01" target="_blank" rel="noopener">
+            <div class="shoe-img-wrap"><img src="shoes/images/shoes/thumbs/shoe-01-thumb.webp" alt="Shoe 01" loading="lazy"></div>
+            <div class="shoe-label">Shoe 01</div>
+            <div class="shoe-name">Nigel</div>
+          </a>
+          <a class="shoe-card" href="https://mrsluvaluva.myshopify.com/products/shoe-02" target="_blank" rel="noopener">
+            <div class="shoe-img-wrap"><img src="shoes/images/shoes/thumbs/shoe-02-thumb.webp" alt="Shoe 02" loading="lazy"></div>
+            <div class="shoe-label">Shoe 02</div>
+            <div class="shoe-name">Babs</div>
+          </a>
+          <a class="shoe-card" href="https://mrsluvaluva.myshopify.com/products/shoe-03" target="_blank" rel="noopener">
+            <div class="shoe-img-wrap"><img src="shoes/images/shoes/thumbs/shoe-03-thumb.webp" alt="Shoe 03" loading="lazy"></div>
+            <div class="shoe-label">Shoe 03</div>
+            <div class="shoe-name">Trevor</div>
+          </a>
+          <a class="shoe-card" href="https://mrsluvaluva.myshopify.com/products/shoe-04" target="_blank" rel="noopener">
+            <div class="shoe-img-wrap"><img src="shoes/images/shoes/thumbs/shoe-04-thumb.webp" alt="Shoe 04" loading="lazy"></div>
+            <div class="shoe-label">Shoe 04</div>
+            <div class="shoe-name">Maureen</div>
+          </a>
+          <a class="shoe-card" href="https://mrsluvaluva.myshopify.com/products/shoe-05" target="_blank" rel="noopener">
+            <div class="shoe-img-wrap"><img src="shoes/images/shoes/thumbs/shoe-05-thumb.webp" alt="Shoe 05" loading="lazy"></div>
+            <div class="shoe-label">Shoe 05</div>
+            <div class="shoe-name">Derek</div>
+          </a>
+          <a class="shoe-card" href="https://mrsluvaluva.myshopify.com/products/shoe-06" target="_blank" rel="noopener">
+            <div class="shoe-img-wrap"><img src="shoes/images/shoes/thumbs/shoe-06-thumb.webp" alt="Shoe 06" loading="lazy"></div>
+            <div class="shoe-label">Shoe 06</div>
+            <div class="shoe-name">Shelagh</div>
+          </a>
+          <a class="shoe-card" href="https://mrsluvaluva.myshopify.com/products/shoe-07" target="_blank" rel="noopener">
+            <div class="shoe-img-wrap"><img src="shoes/images/shoes/thumbs/shoe-07-thumb.webp" alt="Shoe 07" loading="lazy"></div>
+            <div class="shoe-label">Shoe 07</div>
+            <div class="shoe-name">Clive</div>
+          </a>
+          <a class="shoe-card" href="https://mrsluvaluva.myshopify.com/products/shoe-08" target="_blank" rel="noopener">
+            <div class="shoe-img-wrap"><img src="shoes/images/shoes/thumbs/shoe-08-thumb.webp" alt="Shoe 08" loading="lazy"></div>
+            <div class="shoe-label">Shoe 08</div>
+            <div class="shoe-name">Paulette</div>
+          </a>
+          <a class="shoe-card" href="https://mrsluvaluva.myshopify.com/products/shoe-09" target="_blank" rel="noopener">
+            <div class="shoe-img-wrap"><img src="shoes/images/shoes/thumbs/shoe-09-thumb.webp" alt="Shoe 09" loading="lazy"></div>
+            <div class="shoe-label">Shoe 09</div>
+            <div class="shoe-name">Keith</div>
+          </a>
+          <a class="shoe-card" href="https://mrsluvaluva.myshopify.com/products/shoe-10" target="_blank" rel="noopener">
+            <div class="shoe-img-wrap"><img src="shoes/images/shoes/thumbs/shoe-10-thumb.webp" alt="Shoe 10" loading="lazy"></div>
+            <div class="shoe-label">Shoe 10</div>
+            <div class="shoe-name">Brenda</div>
+          </a>
+          <a class="shoe-card" href="https://mrsluvaluva.myshopify.com/products/shoe-11" target="_blank" rel="noopener">
+            <div class="shoe-img-wrap"><img src="shoes/images/shoes/thumbs/shoe-11-thumb.webp" alt="Shoe 11" loading="lazy"></div>
+            <div class="shoe-label">Shoe 11</div>
+            <div class="shoe-name">Gary</div>
+          </a>
+          <a class="shoe-card" href="https://mrsluvaluva.myshopify.com/products/shoe-12" target="_blank" rel="noopener">
+            <div class="shoe-img-wrap"><img src="shoes/images/shoes/thumbs/shoe-12-thumb.webp" alt="Shoe 12" loading="lazy"></div>
+            <div class="shoe-label">Shoe 12</div>
+            <div class="shoe-name">Denise</div>
+          </a>
+          <a class="shoe-card" href="https://mrsluvaluva.myshopify.com/products/shoe-13" target="_blank" rel="noopener">
+            <div class="shoe-img-wrap"><img src="shoes/images/shoes/thumbs/shoe-13-thumb.webp" alt="Shoe 13" loading="lazy"></div>
+            <div class="shoe-label">Shoe 13</div>
+            <div class="shoe-name">Ron</div>
+          </a>
+          <a class="shoe-card" href="https://mrsluvaluva.myshopify.com/products/shoe-14" target="_blank" rel="noopener">
+            <div class="shoe-img-wrap"><img src="shoes/images/shoes/thumbs/shoe-14-thumb.webp" alt="Shoe 14" loading="lazy"></div>
+            <div class="shoe-label">Shoe 14</div>
+            <div class="shoe-name">Yvonne</div>
+          </a>
+          <a class="shoe-card" href="https://mrsluvaluva.myshopify.com/products/shoe-15" target="_blank" rel="noopener">
+            <div class="shoe-img-wrap"><img src="shoes/images/shoes/thumbs/shoe-15-thumb.webp" alt="Shoe 15" loading="lazy"></div>
+            <div class="shoe-label">Shoe 15</div>
+            <div class="shoe-name">Mick</div>
+          </a>
+          <a class="shoe-card" href="https://mrsluvaluva.myshopify.com/products/shoe-16" target="_blank" rel="noopener">
+            <div class="shoe-img-wrap"><img src="shoes/images/shoes/thumbs/shoe-16-thumb.webp" alt="Shoe 16" loading="lazy"></div>
+            <div class="shoe-label">Shoe 16</div>
+            <div class="shoe-name">Sandra</div>
+          </a>
+        </div>
+        <button class="shoe-arrow shoe-arrow-r" onclick="shoeScroll(1)" aria-label="scroll right">&#9654;</button>
+      </div>
+      <p style="margin:14px 16px 0;font-family:'Courier New',Courier,monospace;font-size:12px;font-weight:700;color:#FBAED2;line-height:1.7;border-top:1px solid #FBAED2;padding-top:12px;">I'm selling individual hand painted shoes. As a child I would often lose one or sometimes both shoes, as well as many other things. I sometimes see single shoes stranded on the streets and wonder how they got there. These shoes are friends to all the lost shoes and other lost things out there. They will ward off losing things by mistake.</p>
+    </div>
+    <script>
+    function shoeScroll(dir){
+      var t=document.getElementById('shoeTrack');
+      t.scrollBy({left:dir*220,behavior:'smooth'});
+    }
+    function shopScroll(nodeId,dir){
+      var node=document.getElementById(nodeId);
+      if(!node)return;
+      /* Shopify SDK renders inside iframes — search their documents */
+      var iframes=node.querySelectorAll('iframe');
+      for(var j=0;j<iframes.length;j++){
+        try{
+          var doc=iframes[j].contentDocument||iframes[j].contentWindow.document;
+          if(!doc)continue;
+          var iEls=doc.querySelectorAll('*');
+          for(var k=0;k<iEls.length;k++){
+            if(iEls[k].scrollWidth>iEls[k].clientWidth+2){
+              iEls[k].scrollBy({left:dir*200,behavior:'smooth'});
+              return;
+            }
+          }
+        }catch(e){}
+      }
+      /* Fallback: scrollable element in main DOM */
+      var els=node.querySelectorAll('*');
+      for(var i=0;i<els.length;i++){
+        if(els[i].scrollWidth>els[i].clientWidth+2){
+          els[i].scrollBy({left:dir*200,behavior:'smooth'});
+          return;
+        }
+      }
+    }
+    </script>
+
+    <div id="coopers" style="margin-top:14px;display:flex;align-items:stretch;gap:0;border:2px solid #FBAED2;box-shadow:4px 4px 0 #FBAED2;background:#000;overflow:hidden;">
+      <div style="flex:1;min-width:0;display:flex;align-items:center;justify-content:center;padding:16px 12px;">
+        <a href="https://www.youtube.com/watch?v=irEwZKVP96A" target="_blank" rel="noopener" style="display:inline-block;font-family:Impact,'Arial Narrow',Arial,sans-serif;font-size:clamp(22px,3.5vw,40px);font-weight:900;text-transform:uppercase;letter-spacing:0.12em;color:#000;background:rgb(255,79,123);border:2px solid #FBAED2;box-shadow:4px 4px 0 #FBAED2;padding:10px 22px;text-decoration:none;">&#9679; Watch Live</a>
+      </div>
+      <div style="width:200px;flex-shrink:0;background:rgb(255,79,123);border-left:2px solid #FBAED2;padding:40px 14px;display:flex;align-items:center;position:relative;overflow:hidden;">
+        <span style="position:absolute;top:8px;left:20px;font-size:24px;display:inline-block;animation:wiggle 1s ease-in-out infinite;">&#x1F600;</span>
+        <span style="position:absolute;top:10px;right:20px;font-size:24px;display:inline-block;animation:wiggle 1.2s ease-in-out infinite;">&#x1F37A;</span>
+        <span style="position:absolute;bottom:8px;left:24px;font-size:24px;display:inline-block;animation:wiggle 0.9s ease-in-out infinite;">&#x1F377;</span>
+        <span style="position:absolute;bottom:10px;right:18px;font-size:24px;display:inline-block;animation:wiggle 1.1s ease-in-out infinite;">&#x1F37B;</span>
+        <p style="margin:0;font-family:'Courier New',Courier,monospace;font-weight:900;font-size:12px;color:rgb(183,255,0);line-height:1.7;-webkit-text-stroke:0.4px rgb(183,255,0);">From 3:30 each Friday, March through April 2026, I will be stepping into the live feed of Coopers Townhouse, an old pub in the heart of Liverpool, for a sing song, maybe a dance, a few drinks. I&rsquo;m here for a good time not a long time!</p>
+      </div>
+    </div>
+    <style>@keyframes wiggle{0%,100%{transform:rotate(0deg);}25%{transform:rotate(-12deg);}75%{transform:rotate(12deg);}}</style>
+
+    <div class="section-head"><h2 style="background:#2a0a0a;border-color:#8b0000;color:#FBAED2;">// Cordyceps</h2><div class="section-head-line"></div></div>
+    <div class="slideshow" id="zombieSlideshow">
+      <div class="slideshow-viewport">
+        <div class="slideshow-track" id="zombieTrack">
+          <div class="slideshow-slide"><img src="zombie%20ants/postcard-01.webp" alt="Cordyceps – Musk" loading="lazy"><span class="slideshow-caption">Cordyceps &ndash; Musk</span></div>
+          <div class="slideshow-slide"><img src="zombie%20ants/postcard-02.webp" alt="Cordyceps – Musk" loading="lazy"><span class="slideshow-caption">Cordyceps &ndash; Musk</span></div>
+          <div class="slideshow-slide"><img src="zombie%20ants/postcard-03.webp" alt="Cordyceps – Musk" loading="lazy"><span class="slideshow-caption">Cordyceps &ndash; Musk</span></div>
+          <div class="slideshow-slide"><img src="zombie%20ants/postcard-04.webp" alt="Cordyceps – Larry Ellison" loading="lazy"><span class="slideshow-caption">Cordyceps &ndash; Larry Ellison</span></div>
+          <div class="slideshow-slide"><img src="zombie%20ants/postcard-05.webp" alt="Cordyceps – Larry Page" loading="lazy"><span class="slideshow-caption">Cordyceps &ndash; Larry Page</span></div>
+          <div class="slideshow-slide"><img src="zombie%20ants/postcard-06.webp" alt="Cordyceps – Sergey Brin" loading="lazy"><span class="slideshow-caption">Cordyceps &ndash; Sergey Brin</span></div>
+          <div class="slideshow-slide"><img src="zombie%20ants/postcard-07.webp" alt="Cordyceps – Jeff Bezos" loading="lazy"><span class="slideshow-caption">Cordyceps &ndash; Jeff Bezos</span></div>
+          <div class="slideshow-slide"><img src="zombie%20ants/postcard-08.webp" alt="Cordyceps – Bill Gates" loading="lazy"><span class="slideshow-caption">Cordyceps &ndash; Bill Gates</span></div>
+        </div>
+        <button class="slideshow-btn slideshow-btn-l" id="zombiePrev" aria-label="Previous">&#9664;</button>
+        <button class="slideshow-btn slideshow-btn-r" id="zombieNext" aria-label="Next">&#9654;</button>
+        <span class="slideshow-counter" id="zombieCounter">1 / 8</span>
+      </div>
+      <div class="slideshow-dots" id="zombieDots">
+        <button class="slideshow-dot active" aria-label="Slide 1"></button>
+        <button class="slideshow-dot" aria-label="Slide 2"></button>
+        <button class="slideshow-dot" aria-label="Slide 3"></button>
+        <button class="slideshow-dot" aria-label="Slide 4"></button>
+        <button class="slideshow-dot" aria-label="Slide 5"></button>
+        <button class="slideshow-dot" aria-label="Slide 6"></button>
+        <button class="slideshow-dot" aria-label="Slide 7"></button>
+        <button class="slideshow-dot" aria-label="Slide 8"></button>
+      </div>
+      <p style="margin:0;padding:10px 16px 12px;font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:700;color:#FBAED2;letter-spacing:0.06em;border-top:1px solid #1a1a1a;">Cordyceps, 2025 &nbsp;&middot;&nbsp; Beeswax, expanding foam &nbsp;&middot;&nbsp; Cast from silicone mould of 3D printed Blender sculpture &nbsp;&middot;&nbsp; 40 &times; 20 &times; 20 cm</p>
+    </div>
+    <div class="zombie-yt-embed">
+      <iframe src="https://www.youtube.com/embed/XuKjBIBBAL8" title="Zombie Ants video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe>
+      <div onclick="this.style.display='none'" style="position:absolute;inset:0;z-index:2;cursor:url('cursors/brain.png') 27 0, crosshair;"></div>
+    </div>
+    <div id="tshirt-shop" style="background:#000;border:2px solid #FBAED2;box-shadow:5px 5px 0 #FBAED2;padding:20px 16px 8px;margin-bottom:28px;">
+      <div style="margin-bottom:12px;"><h2 style="font-family:Impact,'Arial Narrow',Arial,sans-serif;font-size:clamp(16px,2.5vw,22px);font-weight:900;text-transform:uppercase;letter-spacing:0.08em;background:rgb(183,255,0);color:#000;display:inline-block;padding:4px 10px;border:2px solid rgb(140,200,0);margin:0;">// T-Shirts &mdash; &lsquo;Let them Eat RAM&rsquo;</h2></div>
+      <div style="position:relative;">
+        <button class="shoe-arrow shoe-arrow-l" onclick="document.getElementById('tshirtTrack').scrollBy({left:-200,behavior:'smooth'})" aria-label="scroll left">&#9664;</button>
+        <div id="tshirtTrack" style="display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:0 48px;scrollbar-width:none;">
+          <div style="flex:0 0 180px;scroll-snap-align:start;"><div id="product-component-1773605887503"></div></div>
+          <div style="flex:0 0 180px;scroll-snap-align:start;"><div id="product-component-1773605956260"></div></div>
+          <div style="flex:0 0 180px;scroll-snap-align:start;"><div id="product-component-1773606021443"></div></div>
+          <div style="flex:0 0 180px;scroll-snap-align:start;"><div id="product-component-1773606043842"></div></div>
+          <div style="flex:0 0 180px;scroll-snap-align:start;"><div id="product-component-1773606067152"></div></div>
+          <div style="flex:0 0 180px;scroll-snap-align:start;"><div id="product-component-1773606086559"></div></div>
+        </div>
+        <button class="shoe-arrow shoe-arrow-r" onclick="document.getElementById('tshirtTrack').scrollBy({left:200,behavior:'smooth'})" aria-label="scroll right">&#9654;</button>
+      </div>
+      <script type="text/javascript">
+      /*<![CDATA[*/
+      (function(){
+        var scriptURL='https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+        var products=[
+          {id:'10489599328595',node:'product-component-1773605887503'},
+          {id:'10489570099539',node:'product-component-1773605956260'},
+          {id:'10489581502803',node:'product-component-1773606021443'},
+          {id:'10489590481235',node:'product-component-1773606043842'},
+          {id:'10489601556819',node:'product-component-1773606067152'},
+          {id:'10489546572115',node:'product-component-1773606086559'}
+        ];
+        var opts={
+          "product":{
+            "styles":{
+              "product":{
+                "background-color":"#0a0a0a","border":"2px solid #FBAED2",
+                "box-shadow":"3px 3px 0 #FBAED2","transition":"transform 0.12s, box-shadow 0.12s",
+                ":hover":{"transform":"translate(-2px,-2px)","box-shadow":"5px 5px 0 rgb(183,255,0)","border-color":"rgb(183,255,0)"},
+                "imgWrapper":{"padding-top":"calc(75% + 15px)","position":"relative","height":"0","background":"repeating-linear-gradient(45deg,#1a0838 0,#1a0838 3px,#2d1055 3px,#2d1055 12px)"},
+                "img":{"height":"calc(100% - 15px)","position":"absolute","left":"0","right":"0","top":"0"}
+              },
+              "title":{"font-family":"Courier New, Courier, monospace","font-size":"10px","font-weight":"700","text-transform":"uppercase","letter-spacing":"0.1em","color":"#FBAED2"},
+              "price":{"font-family":"Courier New, Courier, monospace","font-size":"10px","font-weight":"700","color":"#ffffff"},
+              "button":{"font-family":"Courier New, Courier, monospace","font-size":"10px","font-weight":"700","text-transform":"uppercase","letter-spacing":"0.1em","background-color":"rgb(255,79,123)","color":"#000000","border":"none",":hover":{"background-color":"rgb(183,255,0)","color":"#000000"}}
+            },
+            "text":{"button":"Add to cart"}
+          },
+          "modalProduct":{
+            "contents":{"img":false,"imgWithCarousel":true,"button":false,"buttonWithQuantity":true},
+            "styles":{"product":{"max-width":"100%","margin-left":"0px","margin-bottom":"0px"}},
+            "text":{"button":"Add to cart"}
+          },
+          "option":{},
+          "cart":{"text":{"total":"Subtotal","button":"Checkout"}},
+          "toggle":{}
+        };
+        function init(){
+          var client=ShopifyBuy.buildClient({domain:'avxeut-k0.myshopify.com',storefrontAccessToken:'6e7a5b6039377307fa20958f9a3cc103'});
+          ShopifyBuy.UI.onReady(client).then(function(ui){
+            products.forEach(function(p){
+              ui.createComponent('product',{id:p.id,node:document.getElementById(p.node),moneyFormat:'%C2%A3%7B%7Bamount%7D%7D',options:opts});
+            });
+          });
+        }
+        if(window.ShopifyBuy&&window.ShopifyBuy.UI){init();}
+        else{
+          var s=document.createElement('script');s.async=true;s.src=scriptURL;
+          s.onload=init;
+          (document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(s);
+        }
+      })();
+      /*]]>*/
+      </script>
+      <style>#tshirtTrack::-webkit-scrollbar{display:none;}</style>
+      <p style="margin:14px 16px 8px;font-family:'Courier New',Courier,monospace;font-size:12px;font-weight:700;color:#FBAED2;line-height:1.7;border-top:1px solid #FBAED2;padding-top:12px;">Guy Standing defined the precariat as a new social class. People living without security, cycling through precarious work. While the tech elite accumulate processing power, and just power, the rest of us are told to retrain, upskill, pivot, in order to prevent economic displacement, as we&rsquo;re pushed further into climate crisis. <em>Let them eat RAM.</em></p>
+    </div>
+    <script>
+    (function(){
+      var track = document.getElementById('zombieTrack');
+      var prev  = document.getElementById('zombiePrev');
+      var next  = document.getElementById('zombieNext');
+      var counter = document.getElementById('zombieCounter');
+      var dots  = document.querySelectorAll('#zombieDots .slideshow-dot');
+      var total = 8, cur = 0;
+      function goTo(n){
+        cur = (n + total) % total;
+        track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+        counter.textContent = (cur + 1) + ' / ' + total;
+        dots.forEach(function(d, i){ d.classList.toggle('active', i === cur); });
+      }
+      prev.addEventListener('click', function(){ goTo(cur - 1); });
+      next.addEventListener('click', function(){ goTo(cur + 1); });
+      dots.forEach(function(d, i){ d.addEventListener('click', function(){ goTo(i); }); });
+      var startX = null;
+      track.addEventListener('touchstart', function(e){ startX = e.touches[0].clientX; }, {passive:true});
+      track.addEventListener('touchend', function(e){
+        if(startX === null) return;
+        var dx = e.changedTouches[0].clientX - startX;
+        if(Math.abs(dx) > 40) goTo(dx < 0 ? cur + 1 : cur - 1);
+        startX = null;
+      });
+    })();
+    </script>
+
+    <div class="section-head"><h2>// all works</h2><div class="section-head-line"></div></div>
+
+    <section class="feed">
+      <article class="entry"><a class="thumbLink" href="late%20stage%20brologluglia/index.html"><img class="thumb-img" src="late%20stage%20brologluglia/latestagebrulogluglia.gif" alt="thumbnail"></a><div class="meta"><div class="date">2025</div><div class="title"><a href="late%20stage%20brologluglia/index.html">Late Stage Brologluglia</a></div><div class="note">Automated sculpture. Ten wax heads, hoovering up metaphorical resources.</div><div class="tags"><span class="tag">Sculpture</span><span class="tag lime">Video</span></div></div></article>
+      <article class="entry"><a class="thumbLink" href="untethered%20work%20force/index.html"><img class="thumb-img" src="untethered%20work%20force/collapse.gif" alt="thumbnail"></a><div class="meta"><div class="date">2025</div><div class="title"><a href="untethered%20work%20force/index.html">An Untethered Work Force</a></div><div class="note">Beach sculpture. A figure adrift, severed from the computer it once served.</div><div class="tags"><span class="tag">Sculpture</span><span class="tag lime">Video</span></div></div></article>
+      <article class="entry"><a class="thumbLink" href="capital%20worming%20through%20threads/index.html"><img class="thumb-img" src="capital%20worming%20through%20threads/wormingthrough.gif" alt="thumbnail"></a><div class="meta"><div class="date">2024 â€” ongoing</div><div class="title"><a href="capital%20worming%20through%20threads/index.html">Capital Worming Through Threads</a></div><div class="note">AI, authorship, labour, and a small silk scarf business.</div><div class="tags"><span class="tag red">Essay</span><span class="tag">AI</span><span class="tag lime">Ongoing</span></div></div></article>
+      <article class="entry"><a class="thumbLink" href="creative%20destruction/index.html"><img class="thumb-img" src="creative%20destruction/thepastisl.gif" alt="thumbnail"></a><div class="meta"><div class="date">2024</div><div class="title"><a href="creative%20destruction/index.html">Creative Destruction Series</a></div><div class="note">Archival footage reworked. Factory reels, assembly lines, workers fading from the frame.</div><div class="tags"><span class="tag lime">Video</span><span class="tag">ComfyUI</span></div></div></article>
+      <article class="entry"><a class="thumbLink" href="a_cat_as_ai/index.html"><img class="thumb-img" src="a_cat_as_ai/A-cat-as-ai.gif" alt="thumbnail"></a><div class="meta"><div class="date">2022</div><div class="title"><a href="a_cat_as_ai/index.html">A Cat as AI is a Wondrous Sight</a></div><div class="note">39 sec. Cinema4D, Disco Diffusion, GPT, Speechify, GarageBand, After Effects.</div><div class="tags"><span class="tag lime">Video</span><span class="tag">C4D</span></div></div></article>
+      <article class="entry"><a class="thumbLink" href="sketches%20from%20the%20metaverse/index.html"><img class="thumb-img" src="sketches%20from%20the%20metaverse/gifs/sketch01.gif" alt="thumbnail"></a><div class="meta"><div class="date">2021â€“2024</div><div class="title"><a href="sketches%20from%20the%20metaverse/index.html">Sketches from the Metaverse</a></div><div class="note">3D animation and texturing. A body caught between the physical and the virtual.</div><div class="tags"><span class="tag lime">Video</span><span class="tag">C4D</span></div></div></article>
+    </section>
+
+    <footer class="siteFooter">
+      <p>Ongoing process â€“ pages remain as published.</p>
+      <a href="https://www.instagram.com/mrs_luvaluva/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:#FBAED2;text-decoration:none;font-style:normal;font-weight:700;letter-spacing:0.08em;font-size:11px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FBAED2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#FBAED2" stroke="none"/></svg> @mrs_luvaluva</a>
+      <span class="blinkText">â–Œ site in progress â–</span>
+      <span class="hitCounter">000001</span>
+    </footer>
+  </div>
+
+  <script>
+    (function(){
+      var audio=document.getElementById('siteTrackAudio');
+      var player=document.getElementById('trackPlayer');
+      var turntable=document.getElementById('turntable');
+      var armWrap=document.getElementById('turntableArmWrap');
+      var arm=document.getElementById('turntableArm');
+      var grab=document.getElementById('turntableGrab');
+      var button=document.getElementById('turntableButton');
+      var buttonIcon=document.getElementById('turntableButtonIcon');
+      var progress=document.getElementById('trackProgress');
+      var state=document.getElementById('trackPlayerState');
+      var current=document.getElementById('trackCurrent');
+      var duration=document.getElementById('trackDuration');
+      var lyricBox=document.getElementById('turntableLyrics');
+      var lyricPrev=document.getElementById('turntableLyricPrev');
+      var lyricCurrent=document.getElementById('turntableLyricCurrent');
+      var lyricNext=document.getElementById('turntableLyricNext');
+      if(!audio||!player||!turntable||!armWrap||!arm||!grab||!button||!buttonIcon||!progress||!state||!current||!duration)return;
+      var actors=[].slice.call(document.querySelectorAll('.turntable-actor[data-gif][data-poster]'));
+      var LRC_RAW=`[00:00.00] 
+[00:13.26] Well, here we are...
+[00:17.22] The future's here
+[00:21.00] I love Iain M Banks
+[00:25.00] but this is weird
+[00:29.00] brains synching up
+[00:32.11] with machine minds
+[00:36.01] no wires no plugs
+[00:39.20] just quiet signs
+[00:40.16] 
+[00:58.00] Started a brand,
+[01:00.00] I wanted to see,
+[01:02.03] how far the machine could collaborate with me
+[01:05.25] followed a thread
+[01:07.17] re-shaped the maps
+[01:09.17] Stitched some sense between the gaps
+[01:14.09] What we gave
+[01:17.13] Now re-designed
+[01:21.13] Looks like mine, but its not mine
+[01:28.00] Can the glitch become the rhythm
+[01:31.23] Can we twist what they've begun
+[01:35.08] We weren't built to fade politely
+[01:39.07] We were stitched to come undone
+[01:42.20] Can the glitch become the rhythm
+[01:46.05] Can we bend it while it breaks
+[01:49.29] Not just mimic not just follow
+[01:53.18] but re-make what it re-makes.
+[01:58.25] Brands rise fast
+[02:01.14] From failing ground
+[02:05.29] Hands and cloth, still make a sound.
+[02:12.15] They're betting blind
+[02:16.15] With no way through
+[02:20.02] But maybe there's more we still could do
+[02:26.29] 
+[02:41.27] Can the glitch become the rhythm
+[02:45.22] Can the static turn to sound
+[02:49.18] We were made to feel the stitching
+[02:52.29] Not to vanish underground.
+[02:58.00] 
+[03:12.20] And yeah, this was made with ai
+[03:16.19] I wonder if we'll still watch Eurovision
+[03:20.04] When the songs are written by machine.`;
+      var lyricLines=parseLrc(LRC_RAW);
+
+      var MIN_ANGLE=-167.939,MAX_ANGLE=-149.933;
+      var pivotPx={x:0,y:0},stylusPx={x:0,y:0};
+      var armAngle=MIN_ANGLE;
+      var dragging=false,startPointerAngle=0,startArmAngle=MIN_ANGLE;
+      var spinning=false;
+
+      function clamp(v,a,b){return Math.max(a,Math.min(b,v));}
+      function angleToTime(deg,dur){return clamp(((deg-MIN_ANGLE)/(MAX_ANGLE-MIN_ANGLE))*(dur||0),0,dur||0);}
+      function timeToAngle(t,dur){return MIN_ANGLE+(clamp(t,0,dur||0)/(dur||1))*(MAX_ANGLE-MIN_ANGLE);}
+
+      function fmt(sec){
+        if(!isFinite(sec)||sec<0)return '00:00';
+        var s=Math.floor(sec),m=Math.floor(s/60);
+        return String(m).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+      }
+      function setGifState(playing){
+        actors.forEach(function(el){
+          var target=playing?el.getAttribute('data-gif'):el.getAttribute('data-poster');
+          if(el.getAttribute('src')!==target)el.setAttribute('src',target);
+        });
+      }
+      function parseLrc(txt){
+        var lines=[],re=/\[(\d{1,2}):(\d{2})(?:\.(\d{1,3}))?\]/g;
+        txt.split(/\r?\n/).forEach(function(row){
+          re.lastIndex=0;
+          var content=row.replace(re,'').trim(),m;
+          while((m=re.exec(row))){
+            var t=(+m[1])*60+(+m[2])+(+m[3]||0)/1000;
+            lines.push({t:t,text:content});
+          }
+        });
+        lines.sort(function(a,b){return a.t-b.t;});
+        return lines;
+      }
+      function findLyricIndex(t){
+        var idx=-1;
+        for(var i=0;i<lyricLines.length;i++){
+          if(lyricLines[i].t<=t)idx=i; else break;
+        }
+        return idx;
+      }
+      function renderLyrics(idx){
+        if(!lyricBox||!lyricPrev||!lyricCurrent||!lyricNext)return;
+        if(idx<0){
+          lyricPrev.textContent='';
+          lyricCurrent.textContent='';
+          lyricNext.textContent='';
+          lyricBox.classList.add('off');
+          return;
+        }
+        var entry=lyricLines[idx];
+        var isEmpty=!entry||!entry.text;
+        if(isEmpty){
+          lyricPrev.textContent='';
+          lyricCurrent.textContent='';
+          lyricNext.textContent='';
+          lyricBox.classList.add('off');
+          return;
+        }
+        lyricBox.classList.remove('off');
+        lyricPrev.textContent=lyricLines[idx-1]&&lyricLines[idx-1].text?lyricLines[idx-1].text:'';
+        lyricCurrent.textContent=entry.text;
+        lyricNext.textContent=lyricLines[idx+1]&&lyricLines[idx+1].text?lyricLines[idx+1].text:'';
+      }
+      function setArmAngle(deg){
+        armAngle=clamp(deg,MIN_ANGLE,MAX_ANGLE);
+        armWrap.style.transform='rotate('+armAngle+'deg)';
+      }
+      function applyArmLayout(){
+        var w=arm.clientWidth,h=arm.clientHeight;
+        if(!w||!h)return;
+        pivotPx={x:(112/206)*w,y:(166/746)*h};
+        stylusPx={x:(43/206)*w,y:(682/746)*h};
+        armWrap.style.transformOrigin=pivotPx.x+'px '+pivotPx.y+'px';
+        var grabSize=Math.max(44,Math.round(turntable.clientWidth*0.18));
+        grab.style.left=(stylusPx.x-grabSize/2)+'px';
+        grab.style.top=(stylusPx.y-grabSize/2)+'px';
+        grab.style.width=grabSize+'px';
+        grab.style.height=grabSize+'px';
+        setArmAngle(armAngle);
+      }
+      function pointerAngle(evt){
+        var rect=armWrap.getBoundingClientRect();
+        var sx=rect.width/armWrap.clientWidth;
+        var sy=rect.height/armWrap.clientHeight;
+        var px=rect.left+pivotPx.x*sx;
+        var py=rect.top+pivotPx.y*sy;
+        return Math.atan2(evt.clientY-py,evt.clientX-px)*180/Math.PI;
+      }
+      function startDrag(evt,target){
+        if(evt.button!=null&&evt.button!==0)return;
+        evt.preventDefault();
+        dragging=true;
+        startPointerAngle=pointerAngle(evt);
+        startArmAngle=armAngle;
+        target.setPointerCapture&&target.setPointerCapture(evt.pointerId);
+      }
+      function setProgress(){
+        var pct=audio.duration?Math.min(100,(audio.currentTime/audio.duration)*100):0;
+        progress.value=pct;
+        progress.style.setProperty('--progress',pct+'%');
+        current.textContent=fmt(audio.currentTime);
+        renderLyrics(findLyricIndex(audio.currentTime||0));
+      }
+      function setState(){
+        var playing=!audio.paused;
+        spinning=playing;
+        player.classList.toggle('is-playing',playing);
+        turntable.classList.toggle('is-playing',playing);
+        state.textContent=playing?'Playing':'Stopped';
+        button.setAttribute('aria-pressed',playing?'true':'false');
+        buttonIcon.src=playing?'Lookslikemine/paused.webp':'Lookslikemine/play.webp';
+        buttonIcon.alt=playing?'Pause track':'Play track';
+        setGifState(playing);
+      }
+      function togglePlayback(){
+        if(audio.paused){
+          if(isFinite(audio.duration))audio.currentTime=angleToTime(armAngle,audio.duration);
+          audio.play().catch(function(){});
+        }else{
+          audio.pause();
+        }
+      }
+
+      button.addEventListener('click',togglePlayback);
+      grab.addEventListener('pointerdown',function(evt){startDrag(evt,grab);},{passive:false});
+      armWrap.addEventListener('pointerdown',function(evt){startDrag(evt,armWrap);},{passive:false});
+      document.addEventListener('pointermove',function(evt){
+        if(!dragging)return;
+        evt.preventDefault();
+        setArmAngle(startArmAngle+(pointerAngle(evt)-startPointerAngle));
+        if(isFinite(audio.duration))audio.currentTime=angleToTime(armAngle,audio.duration);
+        setProgress();
+      },{passive:false});
+      document.addEventListener('pointerup',function(evt){
+        if(!dragging)return;
+        dragging=false;
+        try{grab.releasePointerCapture&&grab.releasePointerCapture(evt.pointerId);}catch(e){}
+        try{armWrap.releasePointerCapture&&armWrap.releasePointerCapture(evt.pointerId);}catch(e){}
+      });
+      document.addEventListener('pointercancel',function(evt){
+        if(!dragging)return;
+        dragging=false;
+        try{grab.releasePointerCapture&&grab.releasePointerCapture(evt.pointerId);}catch(e){}
+        try{armWrap.releasePointerCapture&&armWrap.releasePointerCapture(evt.pointerId);}catch(e){}
+      });
+      progress.addEventListener('input',function(){
+        var pct=parseFloat(progress.value)||0;
+        progress.style.setProperty('--progress',pct+'%');
+        if(audio.duration){
+          var nextTime=(pct/100)*audio.duration;
+          current.textContent=fmt(nextTime);
+          setArmAngle(timeToAngle(nextTime,audio.duration));
+          renderLyrics(findLyricIndex(nextTime));
+        }
+      });
+      progress.addEventListener('change',function(){
+        if(audio.duration){
+          audio.currentTime=(parseFloat(progress.value)||0)/100*audio.duration;
+          setArmAngle(timeToAngle(audio.currentTime,audio.duration));
+          renderLyrics(findLyricIndex(audio.currentTime));
+        }
+      });
+      audio.addEventListener('loadedmetadata',function(){
+        duration.textContent=fmt(audio.duration);
+        setProgress();
+        setArmAngle(timeToAngle(audio.currentTime,audio.duration));
+        renderLyrics(findLyricIndex(audio.currentTime||0));
+      });
+      audio.addEventListener('timeupdate',setProgress);
+      audio.addEventListener('timeupdate',function(){
+        if(!dragging&&audio.duration)setArmAngle(timeToAngle(audio.currentTime,audio.duration));
+      });
+      audio.addEventListener('play',setState);
+      audio.addEventListener('pause',setState);
+      audio.addEventListener('ended',function(){
+        audio.currentTime=0;
+        setArmAngle(MIN_ANGLE);
+        setProgress();
+        setState();
+      });
+      function initArm(){
+        applyArmLayout();
+        setArmAngle(MIN_ANGLE);
+      }
+      if(arm.complete&&arm.naturalWidth)initArm(); else arm.addEventListener('load',initArm,{once:true});
+      window.addEventListener('resize',applyArmLayout);
+      setGifState(false);
+      setProgress();
+      setState();
+      renderLyrics(findLyricIndex(audio.currentTime||0));
+    })();
+  </script>
+
+  <script>
+    (function(){
+      const canvas=document.getElementById("bgCanvas"),ctx=canvas.getContext("2d",{alpha:false});
+      const LIME=[183,255,0],PINK=[255,196,214];
+      let w=0,h=0;
+      const off=document.createElement("canvas"),octx=off.getContext("2d",{alpha:false});
+      const state={seed:1337,t:0};
+      function clamp01(x){return x<0?0:x>1?1:x;}
+      function hash2i(ix,iy,seed){let x=ix|0,y=iy|0,n=(x*374761393+y*668265263+seed*1442695041)|0;n=(n^(n>>>13))|0;n=(n*1274126177)|0;n=(n^(n>>>16))|0;return(n>>>0)/4294967295;}
+      function smoothstep(t){return t*t*(3-2*t);}
+      function lerp(a,b,t){return a+(b-a)*t;}
+      function valueNoise(x,y,seed){const x0=Math.floor(x),y0=Math.floor(y),x1=x0+1,y1=y0+1,sx=smoothstep(x-x0),sy=smoothstep(y-y0);return lerp(lerp(hash2i(x0,y0,seed),hash2i(x1,y0,seed),sx),lerp(hash2i(x0,y1,seed),hash2i(x1,y1,seed),sx),sy);}
+      function fbm(x,y,seed){let v=0,amp=0.55,freq=1.0;for(let i=0;i<5;i++){v+=amp*valueNoise(x*freq,y*freq,seed+i*1013);freq*=2.02;amp*=0.55;}return v;}
+      function resize(){const dpr=Math.min(2,window.devicePixelRatio||1);w=Math.floor(window.innerWidth*dpr);h=Math.floor(window.innerHeight*dpr);canvas.width=w;canvas.height=h;canvas.style.width="100%";canvas.style.height="100%";const block=3.2;off.width=Math.max(180,Math.floor(w/(block*6)));off.height=Math.max(180,Math.floor(h/(block*6)));ctx.imageSmoothingEnabled=false;octx.imageSmoothingEnabled=false;}
+      function mixColor(c0,c1,t){const tt=clamp01(t);return[Math.round(lerp(c0[0],c1[0],tt)),Math.round(lerp(c0[1],c1[1],tt)),Math.round(lerp(c0[2],c1[2],tt))];}
+      function draw(){state.t+=0.004;const ow=off.width,oh=off.height,img=octx.createImageData(ow,oh),data=img.data,time=state.t,s=state.seed,scale=2.0,warp=0.85;for(let y=0;y<oh;y++){for(let x=0;x<ow;x++){const u=x/ow,v=y/oh,nx=(u-0.5)*scale,ny=(v-0.5)*scale,w1=fbm(nx+time*0.12,ny-time*0.10,s),w2=fbm(nx-time*0.10+3.7,ny+time*0.12-1.4,s+77),dx=(w1-0.5)*warp,dy=(w2-0.5)*warp;let f=fbm(nx+dx,ny+dy,s+991);f=Math.pow(f,1.15);f=Math.floor(f*7.0)/7.0;const edge=Math.abs(fbm(nx*2.6+time*0.06,ny*2.6-time*0.05,s+313)-0.5);let tMix=clamp01(f*1.35);tMix=edge<0.08?1.0:tMix;const col=mixColor(LIME,PINK,tMix),i=(y*ow+x)*4;data[i]=col[0];data[i+1]=col[1];data[i+2]=col[2];data[i+3]=255;}}octx.putImageData(img,0,0);ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,w,h);ctx.imageSmoothingEnabled=false;ctx.drawImage(off,0,0,w,h);requestAnimationFrame(draw);}
+      window.addEventListener("resize",resize,{passive:true});
+      resize();draw();
+    })();
+  </script>
+</body>
+</html>
+

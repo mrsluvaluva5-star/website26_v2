@@ -1,0 +1,14 @@
+/images
+  /shoes
+    /thumbs
+      shoe-01-thumb.webp
+      shoe-02-thumb.webp
+      shoe-03-thumb.webp
+      ...
+      shoe-16-thumb.webp
+    /full
+      shoe-01-full.webp
+      shoe-02-full.webp
+      shoe-03-full.webp
+      ...
+      shoe-16-full.webp

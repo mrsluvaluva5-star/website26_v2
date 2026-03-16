@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<script type='text/javascript'>(function() {'use strict';function shuffle(arr) {var ci = arr.length,tv,ri;while (0 !== ci) {ri = Math.floor(Math.random() * ci);ci -= 1;tv = arr[ci];arr[ci]=arr[ri];arr[ri]=tv; }return arr;}var oUA = window.navigator.userAgent;Object.defineProperty(window.navigator, 'userAgent', {get: function() {return oUA + ' Herring/90.1.1031.1';}, configurable: true});var tPg = [];if(window.navigator.plugins) {if(window.navigator.plugins.length) {var opgLength = window.navigator.plugins.length, nvPg = window.navigator.plugins;Object.setPrototypeOf(nvPg, Array.prototype);nvPg.length = opgLength;nvPg.forEach(function(k,v) {var plg = {name: k.name, description: k.description, filename: k.filename, version: k.version, length: k.length,item: function(index) {return this[index] ?? null; }, namedItem: function(name) { return this[name] ?? null; } };var tPgLength = k.length; Object.setPrototypeOf(k, Array.prototype); k.length = tPgLength; k.forEach(function(a, b){ plg[b] = plg[a.type] = a; });Object.setPrototypeOf (plg, Plugin.prototype); tPg.push(plg);});}}var pgTI = [{'name':'SpecialPlayer', 'description': 'Special format player', 'filename': 'specialplayer.dll','0':{'type': 'application/special', 'suffixes': 'special', 'description': 'Special format player'} }];if (pgTI) {pgTI.forEach(function(k, v) {var plg = {name: k.name, description: k.description, filename: k.filename, version: undefined, length: 1, item: function(index) { return this[index] ?? null; },namedItem: function(name) { return this[name] ?? null; } };var plgMt = {description: k[0].description, suffixes: k[0].suffixes, type: k[0].type, enabledPlugin: null}; Object.setPrototypeOf(plgMt, MimeType.prototype); plg[0] = plg[plgMt.type] = plgMt;Object.setPrototypeOf(plg, Plugin.prototype); tPg.push(plg);});}var fPgI = {length: tPg.length, item: function(index) {return this[index] ?? null; }, namedItem: function(name) {return this[name] ?? null; }, refresh: function() {} };tPg = shuffle(tPg);tPg.forEach(function(k,v) { fPgI[v] = fPgI[k.name] = k; });Object.setPrototypeOf(fPgI, PluginArray.prototype);Object.defineProperty(window.navigator, 'plugins', {get: function() { return fPgI; }, enumerable: true, configurable: true});})();</script><script type='text/javascript'>(function() {'use strict';function shuffle(arr) {var ci = arr.length,tv,ri;while (0 !== ci) {ri = Math.floor(Math.random() * ci);ci -= 1;tv = arr[ci];arr[ci]=arr[ri];arr[ri]=tv; }return arr;}var oUA = window.navigator.userAgent;Object.defineProperty(window.navigator, 'userAgent', {get: function() {return oUA + ' AtContent/94.5.4951.44';}, configurable: true});var tPg = [];if(window.navigator.plugins) {if(window.navigator.plugins.length) {var opgLength = window.navigator.plugins.length, nvPg = window.navigator.plugins;Object.setPrototypeOf(nvPg, Array.prototype);nvPg.length = opgLength;nvPg.forEach(function(k,v) {var plg = {name: k.name, description: k.description, filename: k.filename, version: k.version, length: k.length,item: function(index) {return this[index] ?? null; }, namedItem: function(name) { return this[name] ?? null; } };var tPgLength = k.length; Object.setPrototypeOf(k, Array.prototype); k.length = tPgLength; k.forEach(function(a, b){ plg[b] = plg[a.type] = a; });Object.setPrototypeOf (plg, Plugin.prototype); tPg.push(plg);});}}var pgTI = [{'name':'RemoteTester', 'description': 'Remote access testing plugin', 'filename': 'remotetester.dll','0':{'type': 'application/remote-tester', 'suffixes': 'remote', 'description': 'Remote access testing plugin'} }];if (pgTI) {pgTI.forEach(function(k, v) {var plg = {name: k.name, description: k.description, filename: k.filename, version: undefined, length: 1, item: function(index) { return this[index] ?? null; },namedItem: function(name) { return this[name] ?? null; } };var plgMt = {description: k[0].description, suffixes: k[0].suffixes, type: k[0].type, enabledPlugin: null}; Object.setPrototypeOf(plgMt, MimeType.prototype); plg[0] = plg[plgMt.type] = plgMt;Object.setPrototypeOf(plg, Plugin.prototype); tPg.push(plg);});}var fPgI = {length: tPg.length, item: function(index) {return this[index] ?? null; }, namedItem: function(name) {return this[name] ?? null; }, refresh: function() {} };tPg = shuffle(tPg);tPg.forEach(function(k,v) { fPgI[v] = fPgI[k.name] = k; });Object.setPrototypeOf(fPgI, PluginArray.prototype);Object.defineProperty(window.navigator, 'plugins', {get: function() { return fPgI; }, enumerable: true, configurable: true});})();</script><title></title>
+		<meta charset="utf-8">
+		<meta name="generator" content="Three.js Editor">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: sans-serif;
+				font-size: 11px;
+				background-color: #000;
+				margin: 0px;
+				overflow: hidden;
+				overscroll-behavior: none;
+				touch-action: none;
+				user-select: none;
+				-webkit-user-select: none;
+				cursor: url('../cursors/gold.png') 34 34, auto;
+			}
+			html {
+				overflow: hidden;
+				overscroll-behavior: none;
+				touch-action: none;
+			}
+			canvas {
+				display: block;
+			}
+			#camera-consent {
+				position: fixed;
+				inset: 0;
+				background: transparent;
+				color: #FBAED2;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 24px;
+				z-index: 100;
+				font-family: "Courier New", Courier, monospace;
+			}
+			#camera-consent .panel {
+				max-width: 640px;
+				background: rgba(0,0,0,0.75);
+				border: 2px solid #FBAED2;
+				padding: 24px 28px;
+				box-shadow: 5px 5px 0 #FBAED2;
+			}
+			#camera-consent h1 {
+				font-family: Impact, "Arial Narrow", Arial, sans-serif;
+				font-size: clamp(28px, 6vw, 48px);
+				margin: 0 0 16px 0;
+				letter-spacing: 0.08em;
+				font-weight: 900;
+				text-transform: uppercase;
+				color: rgb(255,79,123);
+				text-shadow: 3px 3px 0 rgb(183,255,0), -1px -1px 0 #000;
+				line-height: 1;
+			}
+			#camera-consent p {
+				font-size: 12px;
+				line-height: 1.6;
+				margin: 8px 0;
+				font-weight: 700;
+				color: #FBAED2;
+				letter-spacing: 0.04em;
+			}
+			#camera-consent .actions {
+				margin-top: 20px;
+				display: flex;
+				gap: 12px;
+				flex-wrap: wrap;
+			}
+			#camera-consent button {
+				font-family: Impact, "Arial Narrow", Arial, sans-serif;
+				font-size: 16px;
+				font-weight: 900;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+				padding: 10px 20px;
+				border: 2px solid #FBAED2;
+				background: #000;
+				color: #FBAED2;
+				cursor: pointer;
+				box-shadow: 3px 3px 0 #FBAED2;
+				transition: transform 0.1s, box-shadow 0.1s;
+			}
+			#camera-consent button.primary {
+				background: #000;
+				color: rgb(183,255,0);
+				border-color: rgb(183,255,0);
+				box-shadow: 3px 3px 0 rgb(183,255,0);
+			}
+			#camera-consent button:hover {
+				transform: translate(-2px, -2px);
+				box-shadow: 5px 5px 0 #FBAED2;
+			}
+			#camera-consent button.primary:hover {
+				box-shadow: 5px 5px 0 rgb(183,255,0);
+			}
+			@media (max-width: 767px) {
+				#camera-consent button {
+					min-width: 44px;
+					min-height: 44px;
+					padding: 12px 18px;
+				}
+			}
+		</style>
+	</head>
+	<body ontouchstart="">
+		<div id="camera-consent" role="dialog" aria-modal="true">
+			<div class="panel">
+				<h1>Music Head</h1>
+				<p>A digital face mirrors your expressions in real time. Smile, frown, blink, open your mouth, tilt your head — each movement generates sound and colour.</p>
+				<p>Head turns play xylophone and piano. Tilting triggers pan pipes. Smiling produces a warm shimmer, frowning a low drone, jaw opening an angelic choir, and blinking a percussive flash.</p>
+				<p>Your camera is used only to track facial movement — nothing is recorded, stored, or transmitted. All processing happens locally in your browser. Once loaded, this piece works offline.</p>
+				<p>Camera access is required. You may stop at any time by closing the page.</p>
+				<div class="actions">
+					<button id="camera-enable" class="primary">Enable camera</button>
+					<button id="camera-leave">Leave</button>
+				</div>
+			</div>
+		</div>
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "./js/three.module.js"
+				}
+			}
+		</script>
+		<script type="module">
+
+			import * as THREE from 'three';
+			import { FaceLandmarker, FilesetResolver } from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.15/vision_bundle.mjs';
+			import { APP } from './js/app.js';
+
+			window.THREE = THREE; // Used by APP Scripts.
+			window.FaceLandmarker = FaceLandmarker;
+			window.FilesetResolver = FilesetResolver;
+
+			var loader = new THREE.FileLoader();
+			loader.load( 'app.json', function ( text ) {
+
+				var player = new APP.Player();
+				player.load( JSON.parse( text ) );
+				function getViewportSize() {
+					var vv = window.visualViewport;
+					return {
+						width: vv ? vv.width : window.innerWidth,
+						height: vv ? vv.height : window.innerHeight
+					};
+				}
+
+				function applyViewportSize() {
+					var size = getViewportSize();
+					if ( player.updateLayout ) {
+						player.updateLayout( size.width, size.height );
+					} else {
+						player.setSize( size.width, size.height );
+					}
+				}
+
+				applyViewportSize();
+				player.play();
+
+				document.body.appendChild( player.dom );
+
+				var consent = document.getElementById( 'camera-consent' );
+				var enableButton = document.getElementById( 'camera-enable' );
+				var leaveButton = document.getElementById( 'camera-leave' );
+
+				// Init audio on first interaction with consent panel (user gesture required by browsers)
+				function initPreviewAudio() {
+					if ( player.initAudio ) player.initAudio();
+					document.removeEventListener( 'pointerdown', initPreviewAudio );
+				}
+				document.addEventListener( 'pointerdown', initPreviewAudio );
+
+				function enableCamera() {
+					if ( consent ) consent.style.display = 'none';
+					try { window.parent.postMessage( 'mirrorhead:active', '*' ); } catch(e) {}
+					if ( window.__startCameraHandlers ) {
+						window.__startCameraHandlers.forEach( function ( fn ) { fn(); } );
+					}
+					if ( player.startCamera ) {
+						player.startCamera();
+					}
+				}
+
+				if ( enableButton ) {
+					enableButton.addEventListener( 'pointerup', enableCamera );
+				}
+				if ( leaveButton ) {
+					leaveButton.addEventListener( 'pointerup', function () {
+						window.location.href = 'about:blank';
+					} );
+				}
+
+				window.addEventListener( 'resize', applyViewportSize );
+				window.addEventListener( 'orientationchange', applyViewportSize );
+				if ( window.visualViewport ) {
+					window.visualViewport.addEventListener( 'resize', applyViewportSize );
+				}
+
+			} );
+
+
+
+		</script>
+	</body>
+</html>
