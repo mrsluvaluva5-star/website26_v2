@@ -97,16 +97,46 @@
 			#camera-consent button.primary:hover {
 				box-shadow: 5px 5px 0 rgb(183,255,0);
 			}
+			#page-exit {
+				position: fixed;
+				top: 16px;
+				right: 16px;
+				z-index: 120;
+				display: none;
+				font-family: "Courier New", Courier, monospace;
+				font-size: 11px;
+				font-weight: 700;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+				padding: 10px 14px;
+				border: 2px solid #FBAED2;
+				background: rgba(0,0,0,0.84);
+				color: #FBAED2;
+				cursor: pointer;
+				box-shadow: 3px 3px 0 #FBAED2;
+			}
+			#page-exit:hover {
+				transform: translate(-2px, -2px);
+				box-shadow: 5px 5px 0 #FBAED2;
+			}
 			@media (max-width: 767px) {
 				#camera-consent button {
 					min-width: 44px;
 					min-height: 44px;
 					padding: 12px 18px;
 				}
+				#page-exit {
+					top: 12px;
+					right: 12px;
+					min-width: 44px;
+					min-height: 44px;
+					padding: 12px 14px;
+				}
 			}
 		</style>
 	</head>
 	<body ontouchstart="">
+		<button id="page-exit" type="button" aria-label="Leave Noisy Head">Exit</button>
 		<div id="camera-consent" role="dialog" aria-modal="true">
 			<div class="panel">
 				<h1>Noisy Head</h1>
@@ -136,6 +166,11 @@
 			window.THREE = THREE;
 			window.FaceLandmarker = FaceLandmarker;
 			window.FilesetResolver = FilesetResolver;
+
+			var searchParams = new URLSearchParams( window.location.search );
+			var isEmbedded = searchParams.get( 'embed' ) === '1';
+			var shouldAutostart = searchParams.get( 'autostart' ) === '1';
+			var returnTo = searchParams.get( 'returnTo' ) || '../index.html#mirror-head-zone';
 
 			// Buffer the enable message in case it arrives before app.json finishes loading
 			var pendingEnable = false;
@@ -180,6 +215,17 @@
 				var consent = document.getElementById( 'camera-consent' );
 				var enableButton = document.getElementById( 'camera-enable' );
 				var leaveButton = document.getElementById( 'camera-leave' );
+				var pageExitButton = document.getElementById( 'page-exit' );
+				if ( consent && ! isEmbedded ) {
+					consent.style.display = 'flex';
+				}
+				if ( pageExitButton ) {
+					pageExitButton.style.display = isEmbedded ? 'none' : 'block';
+				}
+
+				function leaveExperience() {
+					window.location.href = isEmbedded ? 'about:blank' : returnTo;
+				}
 
 				function enableCamera() {
 					if ( player.initAudio ) player.initAudio();
@@ -204,9 +250,14 @@
 					enableButton.addEventListener( 'pointerup', enableCamera );
 				}
 				if ( leaveButton ) {
-					leaveButton.addEventListener( 'pointerup', function () {
-						window.location.href = 'about:blank';
-					} );
+					leaveButton.addEventListener( 'pointerup', leaveExperience );
+				}
+				if ( pageExitButton ) {
+					pageExitButton.addEventListener( 'pointerup', leaveExperience );
+				}
+
+				if ( shouldAutostart ) {
+					requestAnimationFrame( enableCamera );
 				}
 
 				window.addEventListener( 'resize', applyViewportSize );

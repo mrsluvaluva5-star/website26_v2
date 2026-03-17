@@ -636,7 +636,7 @@
         <p style="margin:0;font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:700;color:#FBAED2;letter-spacing:0.06em;">Camera access required &mdash; nothing is recorded or transmitted.</p>
       </div>
       <div style="position:relative;width:100%;aspect-ratio:16/9;">
-        <iframe id="mirrorHeadIframe" src="mirrorhead_final/index.html" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allow="camera; microphone" title="Noisy Head interactive experience"></iframe>
+        <iframe id="mirrorHeadIframe" src="mirrorhead_final/index.html?embed=1" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allow="camera; microphone" title="Noisy Head interactive experience"></iframe>
         <div id="mirrorHeadOverlay" style="position:absolute;inset:0;z-index:10;display:flex;align-items:flex-end;justify-content:flex-start;padding:12px;gap:8px;pointer-events:none;">
           <button id="mirrorEnableBtn" style="pointer-events:auto;font-family:Impact,'Arial Narrow',Arial,sans-serif;font-size:15px;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;padding:10px 20px;border:2px solid rgb(183,255,0);background:rgba(0,0,0,0.8);color:rgb(183,255,0);cursor:pointer;box-shadow:3px 3px 0 rgb(183,255,0);">Enable Camera</button>
           <button id="mirrorLeaveBtn" onclick="leaveMirrorHead()" style="display:none;pointer-events:auto;font-family:'Courier New',Courier,monospace;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:10px 14px;border:2px solid rgb(255,79,123);background:rgba(0,0,0,0.8);color:rgb(255,79,123);cursor:pointer;box-shadow:2px 2px 0 rgb(255,79,123);">&#10005; Leave</button>
@@ -656,22 +656,16 @@
     }
     function leaveMirrorHead(){
       var iframe=document.getElementById('mirrorHeadIframe');
-      iframe.src='mirrorhead_final/index.html';
+      iframe.src='mirrorhead_final/index.html?embed=1';
       mirrorShowIdle();
     }
     function quitMirrorHead(){
       var iframe=document.getElementById('mirrorHeadIframe');
-      iframe.src='mirrorhead_final/index.html';
+      iframe.src='mirrorhead_final/index.html?embed=1';
       mirrorShowIdle();
     }
     document.getElementById('mirrorEnableBtn').addEventListener('click',function(){
-      var iframe=document.getElementById('mirrorHeadIframe');
-      iframe.onload=function(){
-        iframe.contentWindow.postMessage('mirrorhead:enableCamera','*');
-        iframe.onload=null;
-      };
-      iframe.src='mirrorhead_final/index.html';
-      mirrorShowActive();
+      window.location.href='mirrorhead_final/index.html?autostart=1&returnTo=' + encodeURIComponent('../index.html#mirror-head-zone');
     });
     window.addEventListener('message',function(e){
       if(e.data==='mirrorhead:active') mirrorShowActive();
@@ -1271,4 +1265,3 @@
   <a href="#top" style="display:block;text-align:center;padding:22px 16px;background:#000;border-top:2px solid #FBAED2;font-family:Impact,'Arial Narrow',Arial,sans-serif;font-size:clamp(18px,4vw,28px);font-weight:900;text-transform:uppercase;letter-spacing:0.14em;color:rgb(183,255,0);text-decoration:none;text-shadow:2px 2px 0 rgb(255,79,123);">&#8593; Back to Top &#8593;</a>
 </body>
 </html>
-
