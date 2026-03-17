@@ -1279,19 +1279,19 @@ var APP = {
 
 			// ── Xylophone (yaw – left / right)
 			vizContainer.appendChild( buildNoteRow(
-				'xylophone \u2194', xyloNoteLabels, 'rgba(255,180,50,0.9)', vizXyloEls,
+				'xylophone head turn \u2194', xyloNoteLabels, 'rgba(255,180,50,0.9)', vizXyloEls,
 				function( i, n ) { return Math.round( 56 - ( 56 - 28 ) * ( i / ( n - 1 ) ) ); }
 			) );
 
 			// ── Piano (pitch – nod up / down)
 			vizContainer.appendChild( buildNoteRow(
-				'piano \u2195', pianoNoteLabels, 'rgba(220,220,255,0.9)', vizPianoEls,
+				'piano head nod \u2195', pianoNoteLabels, 'rgba(220,220,255,0.9)', vizPianoEls,
 				function() { return 48; }
 			) );
 
 			// ── Pan pipes (roll – head tilt)
 			vizContainer.appendChild( buildNoteRow(
-				'pan pipes \u21bb', panPipeNoteLabels, 'rgba(100,220,180,0.9)', vizPipeEls,
+				'pan pipes head tilt \u21bb', panPipeNoteLabels, 'rgba(100,220,180,0.9)', vizPipeEls,
 				function( i, n ) { return Math.round( 72 - ( 72 - 30 ) * ( i / ( n - 1 ) ) ); }
 			) );
 
@@ -1338,8 +1338,8 @@ var APP = {
 			choirSec.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:8px;';
 
 			var choirLbl = document.createElement( 'div' );
-			choirLbl.textContent = 'choir';
-			choirLbl.style.cssText = 'font-size:12px;color:rgba(255,255,255,0.7);letter-spacing:1px;text-transform:uppercase;width:44px;text-align:right;';
+			choirLbl.textContent = 'mouth open';
+			choirLbl.style.cssText = 'font-size:12px;color:rgba(255,255,255,0.7);letter-spacing:1px;text-transform:uppercase;width:88px;text-align:right;';
 
 			var choirTrack = document.createElement( 'div' );
 			choirTrack.style.cssText = 'width:120px;height:11px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.35);border-radius:6px;overflow:hidden;';
@@ -1368,8 +1368,16 @@ var APP = {
 			vizContainer.appendChild( blinkSec );
 
 			dom.appendChild( vizContainer );
+			refreshVizVisibility();
 
 			// bgAnim + vizLoop already started from play()
+
+		}
+
+		function refreshVizVisibility() {
+
+			if ( ! vizContainer ) return;
+			vizContainer.style.display = ( isMobileUI && previewActive ) ? 'none' : 'flex';
 
 		}
 
@@ -1747,6 +1755,7 @@ var APP = {
 		this.startCamera = function () {
 
 			previewActive = false;
+			refreshVizVisibility();
 			initFaceTracking();
 			initAudio();
 
@@ -1963,6 +1972,8 @@ var APP = {
 					dom.appendChild( debugPanel );
 				}
 			}
+
+			refreshVizVisibility();
 
 		}
 
