@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact – Mrs Luva-Luva</title>
+  <style>
+    body { font-family: "Courier New", Courier, monospace; font-size: 14px; line-height: 1.6; color: #FBAED2; background: #000; margin: 0; padding: 28px; }
+    a { color: #FBAED2; }
+    a:hover { background: #FBAED2; color: #000; }
+    .back { display: inline-block; margin-bottom: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+    h1 { font-family: Impact, "Arial Narrow", Arial, sans-serif; font-size: clamp(28px, 5vw, 48px); font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: rgb(255,79,123); text-shadow: 3px 3px 0 rgb(183,255,0), -1px -1px 0 #000; line-height: 1.1; margin: 0 0 8px; }
+    .subtitle { font-size: 12px; font-weight: 700; color: rgb(183,255,0); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 24px; }
+    .contact-block { max-width: 560px; margin-bottom: 28px; border: 2px solid #FBAED2; box-shadow: 5px 5px 0 #FBAED2; background: #0a0a0a; padding: 20px; }
+    label { display: block; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.14em; color: rgb(183,255,0); margin-bottom: 5px; }
+    input, textarea { display: block; width: 100%; background: #000; border: 2px solid #FBAED2; color: #FBAED2; font-family: "Courier New", Courier, monospace; font-size: 13px; padding: 8px 10px; box-sizing: border-box; outline: none; margin-bottom: 16px; }
+    input:focus, textarea:focus { border-color: rgb(183,255,0); }
+    textarea { resize: vertical; min-height: 120px; }
+    .submit-btn { background: rgb(255,79,123); border: 2px solid #FBAED2; color: rgb(183,255,0); font-family: Impact, "Arial Narrow", Arial, sans-serif; font-size: 18px; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; padding: 9px 24px; cursor: pointer; box-shadow: 4px 4px 0 #FBAED2; }
+    .submit-btn:hover { background: #FBAED2; color: #000; box-shadow: 4px 4px 0 rgb(183,255,0); transform: translate(-1px,-1px); }
+    .direct-email { margin-top: 16px; font-size: 12px; font-weight: 700; border-top: 1px solid rgba(251,174,210,0.3); padding-top: 14px; }
+    .direct-email a { color: rgb(183,255,0); }
+    #successMsg { display: none; font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: rgb(183,255,0); padding: 14px 0; }
+  </style>
+</head>
+<body>
+  <a class="back" href="../index.html">&larr; Back to site</a>
+  <h1>Contact</h1>
+  <div class="subtitle">Mrs Luva&#8209;Luva</div>
+
+  <div class="contact-block">
+    <div id="successMsg">&#9670; Message sent &mdash; thank you!</div>
+    <form id="contactForm" action="https://formspree.io/mrsluvaluva@me.com" method="POST">
+      <label for="contactName">Name</label>
+      <input type="text" id="contactName" name="name" placeholder="Your name" required>
+
+      <label for="contactEmail">Email</label>
+      <input type="email" id="contactEmail" name="email" placeholder="your@email.com" required>
+
+      <label for="contactMsg">Message</label>
+      <textarea id="contactMsg" name="message" placeholder="Say hello..." required></textarea>
+
+      <button type="submit" class="submit-btn">&#9654; Send</button>
+
+      <div class="direct-email">Or email directly: <a href="mailto:mrsluvaluva@me.com">mrsluvaluva@me.com</a></div>
+    </form>
+  </div>
+
+  <a class="back" href="../index.html">&larr; Back to site</a>
+
+  <script>
+    (function(){
+      var form = document.getElementById('contactForm');
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
+          .then(function(r){ return r.json(); })
+          .then(function(r){
+            if(r.ok || r.next){
+              form.style.display = 'none';
+              document.getElementById('successMsg').style.display = 'block';
+            } else { alert('Something went wrong. Please email mrsluvaluva@me.com directly.'); }
+          })
+          .catch(function(){ alert('Could not send. Please email mrsluvaluva@me.com directly.'); });
+      });
+    })();
+  </script>
+</body>
+</html>

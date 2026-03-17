@@ -59,18 +59,54 @@
     }
     .siteStamp { width: 90px; flex-shrink: 0; border-left: 2px solid #FBAED2; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em; line-height: 1.6; padding: 8px; color: #FBAED2; }
     .siteNav { display: flex; flex-wrap: wrap; }
-    .siteNav a { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.14em; text-decoration: none; color: rgb(183,255,0); background: #000; padding: 7px 14px; border-right: 1px solid #FBAED2; display: block; }
+    .siteNav a { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.14em; text-decoration: none; color: rgb(183,255,0); background: #000; padding: 12px 22px; border-right: 1px solid #FBAED2; display: block; cursor: pointer; }
     .siteNav a:hover { background: #111; color: rgb(183,255,0); }
     .siteNav a:last-child { border-right: none; }
-    .siteNav a.live { color: #fff; background: rgb(255,79,123); cursor: pointer; }
-    .siteNav a.live:hover { background: #FBAED2; color: #000; }
+    .siteNav a.nav-about:hover { background: rgb(255,79,123); color: #fff; }
+    .siteNav a.nav-contact:hover { background: rgb(183,255,0); color: #000; }
+    .siteNav a.nav-works:hover { background: rgb(255,79,123); color: #fff; }
+    .siteNav-threads { position: relative; display: block; }
+    .siteNav-threads > a { border-right: 1px solid #FBAED2; }
+    .siteNav-threads:hover > a, .siteNav-threads.open > a { background: #7b2fff; color: #fff; }
+    .siteNav-threads-drop { display: none; position: absolute; top: 100%; left: 0; background: #000; border: 2px solid #7b2fff; box-shadow: 4px 4px 0 #7b2fff; z-index: 100; min-width: 100%; }
+    .siteNav-threads:hover .siteNav-threads-drop, .siteNav-threads.open .siteNav-threads-drop { display: block; }
+    .siteNav-threads-drop a { display: block; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.14em; text-decoration: none; color: rgb(183,255,0); background: #000; padding: 12px 22px; border-right: none; border-bottom: 1px solid #7b2fff; white-space: nowrap; cursor: pointer; }
+    .siteNav-threads-drop a:last-child { border-bottom: none; }
+    .siteNav-threads-drop a:hover { background: #7b2fff; color: #fff; }
+    .siteNav-interactive { position: relative; display: block; }
+    .siteNav-interactive > a { border-right: 1px solid #FBAED2; }
+    .siteNav-interactive:hover > a, .siteNav-interactive.open > a { background: #00c4cc; color: #000; }
+    .siteNav-interactive-drop { display: none; position: absolute; top: 100%; left: 0; background: #000; border: 2px solid #00c4cc; box-shadow: 4px 4px 0 #00c4cc; z-index: 100; min-width: 100%; }
+    .siteNav-interactive:hover .siteNav-interactive-drop, .siteNav-interactive.open .siteNav-interactive-drop { display: block; }
+    .siteNav-interactive-drop a { display: block; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.14em; text-decoration: none; color: rgb(183,255,0); background: #000; padding: 12px 22px; border-right: none; border-bottom: 1px solid #00c4cc; white-space: nowrap; cursor: pointer; }
+    .siteNav-interactive-drop a:last-child { border-bottom: none; }
+    .siteNav-interactive-drop a:hover { background: #00c4cc; color: #000; }
     .siteNote { margin: 0; padding: 6px 16px; font-size: 11px; font-style: italic; color: #fff; font-weight: 700; border-top: 1px solid #FBAED2; background: #000; }
 
     .headWrapper { width: 100%; height: 525px; border-left: 2px solid #FBAED2; border-right: 2px solid #FBAED2; border-bottom: 2px solid #FBAED2; box-shadow: 5px 5px 0 #FBAED2; margin-bottom: 28px; background: #000; overflow: hidden; position: relative; }
     .yt-bg { position: absolute; inset: 0; width: 100%; height: 100%; border: none; z-index: 0; pointer-events: none; }
     .yt-bg iframe { position: absolute; inset: 0; width: 100% !important; height: 100% !important; border: none; pointer-events: none; }
+    @media (max-width: 768px) {
+      iframe.yt-bg {
+        width: 177.78vh !important;
+        min-width: 100% !important;
+        height: 56.25vw !important;
+        min-height: 100% !important;
+        position: absolute !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+      }
+    }
     #headMount { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
     #headMount canvas { background: transparent !important; }
+    @media (max-width: 767px) {
+      #headRotateHint { display: flex; flex-direction: row; align-items: center; gap: 8px; padding: 6px 14px; opacity: 1; transition: opacity 0.6s ease; }
+      #headRotateHint.fade-out { opacity: 0; pointer-events: none; }
+      #headRotateHint svg { width: 36px; height: 36px; flex-shrink: 0; }
+      #headRotateHint span { font-family: 'Courier New', Courier, monospace; font-size: 12px; font-weight: 700; color: #FBAED2; letter-spacing: 0.12em; text-transform: lowercase; }
+    }
+    @media (min-width: 768px) { #headRotateHint { display: none; } }
     .corner-note { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); font-family: Impact, "Arial Narrow", Arial, sans-serif; font-size: clamp(16px, 2.4vw, 26px); color: rgb(183,255,0); letter-spacing: 0.12em; pointer-events: none; z-index: 2; white-space: nowrap; text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 0 2px 8px rgba(0,0,0,0.9); background: rgba(0,0,0,0.55); padding: 6px 16px; border: 2px solid rgba(183,255,0,0.6); animation: corner-note-pulse 2.2s ease-in-out infinite; }
     @keyframes corner-note-pulse { 0%,100% { opacity: 1; border-color: rgba(183,255,0,0.6); } 50% { opacity: 0.7; border-color: rgba(183,255,0,0.2); } }
 
@@ -181,7 +217,8 @@
     .tag.lime { border-color: #FBAED2; color: #FBAED2; }
     .tag.red  { border-color: #FBAED2; color: #FBAED2; }
 
-    .siteFooter { background: rgba(0,0,0,0.78); border: 2px solid #FBAED2; box-shadow: 4px 4px 0 #FBAED2; margin-top: 26px; padding: 12px 16px; font-size: 11px; font-style: italic; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .siteFooter { position: relative; z-index: 1; background: #000; border: 2px solid #FBAED2; box-shadow: 4px 4px 0 #FBAED2; margin: 26px 0 0; padding: 12px 16px; font-size: 11px; color: #FBAED2; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+    .siteFooter p { margin: 0; color: #FBAED2; font-style: italic; }
 
     .shoe-track { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 48px; scrollbar-width: none; }
     .shoe-track::-webkit-scrollbar { display: none; }
@@ -214,7 +251,7 @@
     .slideshow-dot.active { background: rgb(183,255,0); border-color: rgb(183,255,0); }
     .slideshow-counter { position: absolute; bottom: 8px; right: 10px; font-family: "Courier New", Courier, monospace; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: rgb(183,255,0); text-shadow: 1px 1px 0 #000, -1px -1px 0 #000; pointer-events: none; z-index: 4; }
     .slideshow-caption { display: block; background: #0a0a0a; border-top: 1px solid #FBAED2; padding: 7px 14px 6px; font-family: "Courier New", Courier, monospace; font-size: 12px; font-style: italic; color: #FBAED2; letter-spacing: 0.04em; text-align: center; }
-    .blinkText { font-size: 11px; animation: blink 1.1s step-end infinite; }
+    .blinkText { font-size: 11px; color: #FBAED2; font-family: 'Courier New', Courier, monospace; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; animation: blink 1.1s step-end infinite; }
     @keyframes blink { 50% { opacity: 0; } }
     @keyframes haiku-bob { 0%,100% { transform: translateY(-50%) translateY(0); } 50% { transform: translateY(-50%) translateY(-8px); } }
     .haiku-container { position: absolute; pointer-events: none; z-index: 3; top: 50%; height: 100%; transform: translateY(-50%); animation: haiku-bob 8s ease-in-out infinite; }
@@ -238,7 +275,7 @@
     }
   </style>
 </head>
-<body>
+<body id="top">
   <canvas id="bgCanvas" aria-hidden="true"></canvas>
   <div id="content">
 
@@ -248,20 +285,30 @@
         <div class="siteStamp">working<br>archive<br>&#9670;</div>
       </div>
       <nav class="siteNav">
-        <a href="#">Index</a><a href="#">Works</a><a href="#">Threads</a>
-        <a href="#">Interactive</a><a href="about/index.html" class="live">About</a><a href="#">Contact</a>
+        <a href="site-index/index.html">Index</a><a href="#all-works" class="nav-works">Works</a><div class="siteNav-threads"><a href="#">Threads</a><div class="siteNav-threads-drop"><a href="#tshirt-shop">T-shirts</a><a href="#shoe-drop">Shoes</a></div></div>
+        <div class="siteNav-interactive"><a href="#">Interactive</a><div class="siteNav-interactive-drop"><a href="#mirror-head-zone">Noisy Head</a></div></div><a href="about/index.html" class="nav-about">About</a><a href="contact/index.html" class="nav-contact">Contact</a>
       </nav>
       <p class="siteNote">New experiments popped in rendomly.</p>
     </header>
 
     <div id="top-rocket-zone">
+    <div id="headRotateHint" aria-hidden="true">
+      <svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 26 C10 14 20 6 32 8" stroke="#FBAED2" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <polyline points="29,4 32,8 28,11" stroke="#FBAED2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M42 26 C42 38 32 46 20 44" stroke="#FBAED2" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <polyline points="23,48 20,44 24,41" stroke="#FBAED2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </svg>
+      <span>drag to rotate</span>
+    </div>
     <div class="headWrapper">
       <div id="yt-bg" class="yt-bg"></div>
-      <div id="headMount"></div>
+      <div id="headMount">
       <span class="corner-note">&#9758; Tap the Head to Generate a Haiku</span>
-    </div>
-    <div id="skidrow-strip" style="background:rgb(255,79,123);padding:4px 16px;border-left:2px solid #FBAED2;border-right:2px solid #FBAED2;border-bottom:2px solid #FBAED2;box-shadow:5px 5px 0 #FBAED2;margin-top:-7px;margin-bottom:0;">
-      <p style="margin:0;font-family:'Courier New',Courier,monospace;font-weight:900;font-size:11px;color:rgb(183,255,0);letter-spacing:0.02em;-webkit-text-stroke:0.5px rgb(183,255,0);">While building this website I've been watching another world of lives being lived at the same moments. Suns rising and falling out of sync with mine. People whose lives are at heightened stakes, stuck in survival mode, fallen through the cracks without being caught. The reality, where this depth of poverty in the wealthiest of nations is accepted as part of the structure, seems a madness of late capitalism.  To inhabit this reality we must accept increasing amounts of dissonance, which is to collectively exist in a state of madness.</p>
+      </div>
+    </div><!-- /headWrapper -->
+    <div id="skidrow-strip" style="background:rgb(255,79,123);padding:4px 16px;border-left:2px solid #FBAED2;border-right:2px solid #FBAED2;border-bottom:2px solid #FBAED2;box-shadow:5px 5px 0 #FBAED2;margin-bottom:0;">
+      <p style="margin:0;font-family:'Courier New',Courier,monospace;font-weight:900;font-size:11px;color:rgb(183,255,0);letter-spacing:0.02em;-webkit-text-stroke:0.5px rgb(183,255,0);">While building this website from my atomised state, I've been watching another world of lives being lived at the same moments. Suns rising and falling out of sync with mine. Lives unfolding at heightened stakes, stuck in survival mode, fallen through the cracks without being caught. To inhabit our reality we must accept increasing amounts of dissonance, and collectively exist in a state of agreed madness.</p>
     </div>
     </div><!-- /top-rocket-zone -->
 
@@ -295,6 +342,18 @@
           player.setSize(mount.parentElement.offsetWidth, 525);
         });
       });
+      // Touch hint: only active on mobile
+      if (window.innerWidth < 768) {
+        var hint = document.getElementById('headRotateHint');
+        function dismissHint() {
+          if (!hint) return;
+          hint.classList.add('fade-out');
+          setTimeout(function() { if (hint) hint.style.display = 'none'; }, 650);
+          document.removeEventListener('touchstart', dismissHint);
+        }
+        setTimeout(dismissHint, 3000);
+        document.addEventListener('touchstart', dismissHint, { once: true, passive: true });
+      }
     </script>
 
   <script>
@@ -306,7 +365,7 @@
     document.head.appendChild(tag);
     window.onYouTubeIframeAPIReady=function(){
       ytPlayer=new YT.Player('yt-bg',{
-        width:'100%',height:'100%',
+        width:'',height:'',
         videoId:ytVideos[ytIdx],
         playerVars:{autoplay:1,mute:1,controls:0,loop:1,playlist:ytVideos[ytIdx],modestbranding:1,rel:0,showinfo:0},
         events:{
@@ -554,7 +613,7 @@
       <a class="gif-card" href="sketches%20from%20the%20metaverse/sketch10.html" style="transform:rotate(2.5deg);"><div class="gif-thumb"><img src="sketches%20from%20the%20metaverse/gifs/sketch10.gif" alt="Sketch 10 cover" loading="lazy"></div><span class="gif-label">sketch 10</span></a>
     </div>
 
-    <div class="tap-section">
+    <div class="tap-section" id="tap-section">
       <div class="section-head"><h2 class="tap-title">// Tap Tap Tipety Tap</h2><div class="section-head-line"></div></div>
       <div class="tap-card">
         <!-- Tap Tap Tipety Tap Vimeo Embed -->
@@ -569,23 +628,53 @@
     </div>
 
     <div id="mirror-head-zone">
-    <div class="section-head" style="margin-top:28px;"><h2 style="background:#000;border-color:#FBAED2;color:#FBAED2;">// Reactive Music Head</h2><div class="section-head-line"></div></div>
-    <div style="background:#000;border:2px solid #FBAED2;box-shadow:5px 5px 0 #FBAED2;margin-bottom:28px;overflow:hidden;">
-      <div style="position:relative;width:100%;aspect-ratio:16/9;">
-        <iframe id="mirrorHeadIframe" src="mirrorhead_final/index.html" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allow="camera; microphone" title="Reactive Music Head interactive experience"></iframe>
-        <button id="mirrorHeadLeave" onclick="leaveMirrorHead()" style="display:none;position:absolute;top:8px;right:8px;z-index:10;background:rgba(0,0,0,0.75);border:2px solid rgb(255,79,123);color:rgb(255,79,123);font-family:'Courier New',Courier,monospace;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:5px 10px;cursor:pointer;box-shadow:2px 2px 0 rgb(255,79,123);">&#10005; LEAVE</button>
+    <div style="background:#000;border:2px solid #FBAED2;box-shadow:5px 5px 0 #FBAED2;margin-top:28px;margin-bottom:28px;overflow:hidden;">
+      <div style="padding:20px 20px 18px;border-bottom:2px solid #FBAED2;">
+        <h2 style="font-family:Impact,'Arial Narrow',Arial,sans-serif;font-size:clamp(28px,6vw,48px);margin:0 0 14px;letter-spacing:0.08em;font-weight:900;text-transform:uppercase;color:rgb(255,79,123);text-shadow:3px 3px 0 rgb(183,255,0),-1px -1px 0 #000;line-height:1;">Noisy Head</h2>
+        <p style="margin:0 0 6px;font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:700;color:#FBAED2;letter-spacing:0.06em;">A digital face mirrors your expressions in real time. Smile, frown, blink, open your mouth, tilt your head &mdash; each movement generates sound and colour.</p>
+        <p style="margin:0 0 6px;font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:700;color:#FBAED2;letter-spacing:0.06em;">Turn left &amp; right for xylophone &middot; nod up &amp; down for piano &middot; tilt side to side for pan pipes &middot; smile for a warm shimmer &middot; frown for a low drone &middot; open mouth for a choir &middot; blink for a percussive flash.</p>
+        <p style="margin:0;font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:700;color:#FBAED2;letter-spacing:0.06em;">Camera access required &mdash; nothing is recorded or transmitted.</p>
       </div>
-      <p style="margin:0;padding:10px 16px;font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:700;color:#FBAED2;letter-spacing:0.1em;text-transform:uppercase;border-top:2px solid #FBAED2;">Interactive 3D reactive music head. Enable camera to begin &mdash; use LEAVE to return to start.</p>
+      <div style="position:relative;width:100%;aspect-ratio:16/9;">
+        <iframe id="mirrorHeadIframe" src="mirrorhead_final/index.html" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allow="camera; microphone" title="Noisy Head interactive experience"></iframe>
+        <div id="mirrorHeadOverlay" style="position:absolute;inset:0;z-index:10;display:flex;align-items:flex-end;justify-content:flex-start;padding:12px;gap:8px;pointer-events:none;">
+          <button id="mirrorEnableBtn" style="pointer-events:auto;font-family:Impact,'Arial Narrow',Arial,sans-serif;font-size:15px;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;padding:10px 20px;border:2px solid rgb(183,255,0);background:rgba(0,0,0,0.8);color:rgb(183,255,0);cursor:pointer;box-shadow:3px 3px 0 rgb(183,255,0);">Enable Camera</button>
+          <button id="mirrorLeaveBtn" onclick="leaveMirrorHead()" style="display:none;pointer-events:auto;font-family:'Courier New',Courier,monospace;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:10px 14px;border:2px solid rgb(255,79,123);background:rgba(0,0,0,0.8);color:rgb(255,79,123);cursor:pointer;box-shadow:2px 2px 0 rgb(255,79,123);">&#10005; Leave</button>
+          <button id="mirrorQuitBtn" onclick="quitMirrorHead()" style="display:none;pointer-events:auto;font-family:'Courier New',Courier,monospace;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:10px 14px;border:2px solid #FBAED2;background:rgba(0,0,0,0.8);color:#FBAED2;cursor:pointer;box-shadow:2px 2px 0 #FBAED2;">&#9632; Quit</button>
+        </div>
+      </div>
     <script>
+    function mirrorShowActive(){
+      document.getElementById('mirrorEnableBtn').style.display='none';
+      document.getElementById('mirrorLeaveBtn').style.display='';
+      document.getElementById('mirrorQuitBtn').style.display='';
+    }
+    function mirrorShowIdle(){
+      document.getElementById('mirrorEnableBtn').style.display='';
+      document.getElementById('mirrorLeaveBtn').style.display='none';
+      document.getElementById('mirrorQuitBtn').style.display='none';
+    }
     function leaveMirrorHead(){
       var iframe=document.getElementById('mirrorHeadIframe');
       iframe.src='mirrorhead_final/index.html';
-      document.getElementById('mirrorHeadLeave').style.display='none';
+      mirrorShowIdle();
     }
+    function quitMirrorHead(){
+      var iframe=document.getElementById('mirrorHeadIframe');
+      iframe.src='mirrorhead_final/index.html';
+      mirrorShowIdle();
+    }
+    document.getElementById('mirrorEnableBtn').addEventListener('click',function(){
+      var iframe=document.getElementById('mirrorHeadIframe');
+      iframe.onload=function(){
+        iframe.contentWindow.postMessage('mirrorhead:enableCamera','*');
+        iframe.onload=null;
+      };
+      iframe.src='mirrorhead_final/index.html';
+      mirrorShowActive();
+    });
     window.addEventListener('message',function(e){
-      if(e.data==='mirrorhead:active'){
-        document.getElementById('mirrorHeadLeave').style.display='';
-      }
+      if(e.data==='mirrorhead:active') mirrorShowActive();
     });
     </script>
     </div>
@@ -730,7 +819,7 @@
     </div>
     <style>@keyframes wiggle{0%,100%{transform:rotate(0deg);}25%{transform:rotate(-12deg);}75%{transform:rotate(12deg);}}</style>
 
-    <div class="section-head"><h2 style="background:#2a0a0a;border-color:#8b0000;color:#FBAED2;">// Cordyceps</h2><div class="section-head-line"></div></div>
+    <div id="cordyceps" class="section-head"><h2 style="background:#2a0a0a;border-color:#8b0000;color:#FBAED2;">// Cordyceps</h2><div class="section-head-line"></div></div>
     <div class="slideshow" id="zombieSlideshow">
       <div class="slideshow-viewport">
         <div class="slideshow-track" id="zombieTrack">
@@ -862,7 +951,7 @@
     })();
     </script>
 
-    <div class="section-head"><h2>// all works</h2><div class="section-head-line"></div></div>
+    <div id="all-works" class="section-head"><h2>// all works</h2><div class="section-head-line"></div></div>
 
     <section class="feed">
       <article class="entry"><a class="thumbLink" href="late%20stage%20brologluglia/index.html"><img class="thumb-img" src="late%20stage%20brologluglia/latestagebrulogluglia.gif" alt="thumbnail"></a><div class="meta"><div class="date">2025</div><div class="title"><a href="late%20stage%20brologluglia/index.html">Late Stage Brologluglia</a></div><div class="note">Automated sculpture. Ten wax heads, hoovering up metaphorical resources.</div><div class="tags"><span class="tag">Sculpture</span><span class="tag lime">Video</span></div></div></article>
@@ -870,14 +959,13 @@
       <article class="entry"><a class="thumbLink" href="capital%20worming%20through%20threads/index.html"><img class="thumb-img" src="capital%20worming%20through%20threads/wormingthrough.gif" alt="thumbnail"></a><div class="meta"><div class="date">2024 â€” ongoing</div><div class="title"><a href="capital%20worming%20through%20threads/index.html">Capital Worming Through Threads</a></div><div class="note">AI, authorship, labour, and a small silk scarf business.</div><div class="tags"><span class="tag red">Essay</span><span class="tag">AI</span><span class="tag lime">Ongoing</span></div></div></article>
       <article class="entry"><a class="thumbLink" href="creative%20destruction/index.html"><img class="thumb-img" src="creative%20destruction/thepastisl.gif" alt="thumbnail"></a><div class="meta"><div class="date">2024</div><div class="title"><a href="creative%20destruction/index.html">Creative Destruction Series</a></div><div class="note">Archival footage reworked. Factory reels, assembly lines, workers fading from the frame.</div><div class="tags"><span class="tag lime">Video</span><span class="tag">ComfyUI</span></div></div></article>
       <article class="entry"><a class="thumbLink" href="a_cat_as_ai/index.html"><img class="thumb-img" src="a_cat_as_ai/A-cat-as-ai.gif" alt="thumbnail"></a><div class="meta"><div class="date">2022</div><div class="title"><a href="a_cat_as_ai/index.html">A Cat as AI is a Wondrous Sight</a></div><div class="note">39 sec. Cinema4D, Disco Diffusion, GPT, Speechify, GarageBand, After Effects.</div><div class="tags"><span class="tag lime">Video</span><span class="tag">C4D</span></div></div></article>
-      <article class="entry"><a class="thumbLink" href="sketches%20from%20the%20metaverse/index.html"><img class="thumb-img" src="sketches%20from%20the%20metaverse/gifs/sketch01.gif" alt="thumbnail"></a><div class="meta"><div class="date">2021â€“2024</div><div class="title"><a href="sketches%20from%20the%20metaverse/index.html">Sketches from the Metaverse</a></div><div class="note">3D animation and texturing. A body caught between the physical and the virtual.</div><div class="tags"><span class="tag lime">Video</span><span class="tag">C4D</span></div></div></article>
+      <article class="entry"><a class="thumbLink" href="sketches%20from%20the%20metaverse/index.html"><img class="thumb-img" src="sketches%20from%20the%20metaverse/gifs/sketch01.gif" alt="thumbnail"></a><div class="meta"><div class="date">2021&ndash;2024</div><div class="title"><a href="sketches%20from%20the%20metaverse/index.html">Sketches from the Metaverse</a></div><div class="note">3D animation and texturing. A body caught between the physical and the virtual.</div><div class="tags"><span class="tag lime">Video</span><span class="tag">C4D</span></div></div></article>
     </section>
 
-    <footer class="siteFooter">
-      <p>Ongoing process â€“ pages remain as published.</p>
-      <a href="https://www.instagram.com/mrs_luvaluva/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:#FBAED2;text-decoration:none;font-style:normal;font-weight:700;letter-spacing:0.08em;font-size:11px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#FBAED2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="#FBAED2" stroke="none"/></svg> @mrs_luvaluva</a>
-      <span class="blinkText">â–Œ site in progress â–</span>
-      <span class="hitCounter">000001</span>
+    <footer class=”siteFooter” style=”background:#000!important;position:relative;z-index:1;”>
+      <p>Ongoing process &mdash; pages remain as published.</p>
+      <a href=”https://www.instagram.com/mrs_luvaluva/” target=”_blank” rel=”noopener” style=”display:inline-flex;align-items:center;gap:6px;color:#FBAED2;text-decoration:none;font-style:normal;font-weight:700;letter-spacing:0.08em;font-size:11px;”><svg xmlns=”http://www.w3.org/2000/svg” width=”14” height=”14” viewBox=”0 0 24 24” fill=”none” stroke=”#FBAED2” stroke-width=”2” stroke-linecap=”round” stroke-linejoin=”round”><rect x=”2” y=”2” width=”20” height=”20” rx=”5” ry=”5”/><circle cx=”12” cy=”12” r=”4”/><circle cx=”17.5” cy=”6.5” r=”1” fill=”#FBAED2” stroke=”none”/></svg> @mrs_luvaluva</a>
+      <span class=”blinkText”>site in progress</span>
     </footer>
   </div>
 
@@ -1141,6 +1229,26 @@
 
   <script>
     (function(){
+      var dropWrappers = document.querySelectorAll('.siteNav-threads, .siteNav-interactive');
+      dropWrappers.forEach(function(wrapper) {
+        var trigger = wrapper.querySelector(':scope > a');
+        trigger.addEventListener('click', function(e) {
+          e.preventDefault();
+          var isOpen = wrapper.classList.contains('open');
+          dropWrappers.forEach(function(w) { w.classList.remove('open'); });
+          if (!isOpen) wrapper.classList.add('open');
+        });
+      });
+      document.addEventListener('click', function(e) {
+        dropWrappers.forEach(function(wrapper) {
+          if (!wrapper.contains(e.target)) wrapper.classList.remove('open');
+        });
+      });
+    })();
+  </script>
+
+  <script>
+    (function(){
       const canvas=document.getElementById("bgCanvas"),ctx=canvas.getContext("2d",{alpha:false});
       const LIME=[183,255,0],PINK=[255,196,214];
       let w=0,h=0;
@@ -1159,6 +1267,8 @@
       resize();draw();
     })();
   </script>
+
+  <a href="#top" style="display:block;text-align:center;padding:22px 16px;background:#000;border-top:2px solid #FBAED2;font-family:Impact,'Arial Narrow',Arial,sans-serif;font-size:clamp(18px,4vw,28px);font-weight:900;text-transform:uppercase;letter-spacing:0.14em;color:rgb(183,255,0);text-decoration:none;text-shadow:2px 2px 0 rgb(255,79,123);">&#8593; Back to Top &#8593;</a>
 </body>
 </html>
 

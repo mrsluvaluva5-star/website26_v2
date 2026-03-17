@@ -31,7 +31,7 @@
 				inset: 0;
 				background: transparent;
 				color: #FBAED2;
-				display: flex;
+				display: none;
 				align-items: center;
 				justify-content: center;
 				padding: 24px;
@@ -109,7 +109,7 @@
 	<body ontouchstart="">
 		<div id="camera-consent" role="dialog" aria-modal="true">
 			<div class="panel">
-				<h1>Music Head</h1>
+				<h1>Noisy Head</h1>
 				<p>A digital face mirrors your expressions in real time. Smile, frown, blink, open your mouth, tilt your head — each movement generates sound and colour.</p>
 				<p>Head turns play xylophone and piano. Tilting triggers pan pipes. Smiling produces a warm shimmer, frowning a low drone, jaw opening an angelic choir, and blinking a percussive flash.</p>
 				<p>Your camera is used only to track facial movement — nothing is recorded, stored, or transmitted. All processing happens locally in your browser. Once loaded, this piece works offline.</p>
@@ -133,15 +133,28 @@
 			import { FaceLandmarker, FilesetResolver } from 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.15/vision_bundle.mjs';
 			import { APP } from './js/app.js';
 
-			window.THREE = THREE; // Used by APP Scripts.
+			window.THREE = THREE;
 			window.FaceLandmarker = FaceLandmarker;
 			window.FilesetResolver = FilesetResolver;
+
+			// Buffer the enable message in case it arrives before app.json finishes loading
+			var pendingEnable = false;
+			window.addEventListener( 'message', function ( e ) {
+				if ( e.data === 'mirrorhead:enableCamera' ) {
+					if ( window.__mirrorEnableCamera ) {
+						window.__mirrorEnableCamera();
+					} else {
+						pendingEnable = true;
+					}
+				}
+			} );
 
 			var loader = new THREE.FileLoader();
 			loader.load( 'app.json', function ( text ) {
 
 				var player = new APP.Player();
 				player.load( JSON.parse( text ) );
+
 				function getViewportSize() {
 					var vv = window.visualViewport;
 					return {
@@ -168,14 +181,8 @@
 				var enableButton = document.getElementById( 'camera-enable' );
 				var leaveButton = document.getElementById( 'camera-leave' );
 
-				// Init audio on first interaction with consent panel (user gesture required by browsers)
-				function initPreviewAudio() {
-					if ( player.initAudio ) player.initAudio();
-					document.removeEventListener( 'pointerdown', initPreviewAudio );
-				}
-				document.addEventListener( 'pointerdown', initPreviewAudio );
-
 				function enableCamera() {
+					if ( player.initAudio ) player.initAudio();
 					if ( consent ) consent.style.display = 'none';
 					try { window.parent.postMessage( 'mirrorhead:active', '*' ); } catch(e) {}
 					if ( window.__startCameraHandlers ) {
@@ -184,6 +191,13 @@
 					if ( player.startCamera ) {
 						player.startCamera();
 					}
+				}
+
+				// Register so the buffered listener above can call it
+				window.__mirrorEnableCamera = enableCamera;
+				if ( pendingEnable ) {
+					pendingEnable = false;
+					enableCamera();
 				}
 
 				if ( enableButton ) {
@@ -202,8 +216,6 @@
 				}
 
 			} );
-
-
 
 		</script>
 	</body>
