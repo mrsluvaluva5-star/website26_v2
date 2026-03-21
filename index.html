@@ -65,6 +65,7 @@
     .siteNav a.nav-about:hover { background: rgb(255,79,123); color: #fff; }
     .siteNav a.nav-contact:hover { background: rgb(183,255,0); color: #000; }
     .siteNav a.nav-works:hover { background: rgb(255,79,123); color: #fff; }
+    .siteNav a.nav-advertising:hover { background: rgb(183,255,0); color: #000; }
     .siteNav-threads { position: relative; display: block; }
     .siteNav-threads > a { border-right: 1px solid #FBAED2; }
     .siteNav-threads:hover > a, .siteNav-threads.open > a { background: #7b2fff; color: #fff; }
@@ -273,6 +274,15 @@
       .turntable-lyrics-prev, .turntable-lyrics-next { font-size: 11px; }
       .turntable-lyrics-current { font-size: 13px; }
     }
+    /* Noisy Head controls — desktop: overlaid on iframe corner; mobile: below iframe */
+    .mh-player-wrap { position: relative; }
+    #mirrorHeadOverlay { position: absolute; inset: 0; z-index: 10; display: flex; align-items: flex-end; justify-content: flex-start; padding: 12px; gap: 8px; pointer-events: none; }
+    #mirrorHeadOverlay button { pointer-events: auto; }
+    @media (max-width: 767px) {
+      .mh-desc-long { display: none; }
+      #mirrorHeadOverlay { display: none !important; }
+      #mhMobileTap { display: block !important; }
+    }
   </style>
 </head>
 <body id="top">
@@ -286,7 +296,7 @@
       </div>
       <nav class="siteNav">
         <a href="site-index/index.html">Index</a><a href="#all-works" class="nav-works">Works</a><div class="siteNav-threads"><a href="#">Threads</a><div class="siteNav-threads-drop"><a href="#tshirt-shop">T-shirts</a><a href="#shoe-drop">Shoes</a></div></div>
-        <div class="siteNav-interactive"><a href="#">Interactive</a><div class="siteNav-interactive-drop"><a href="#mirror-head-zone">Noisy Head</a></div></div><a href="about/index.html" class="nav-about">About</a><a href="contact/index.html" class="nav-contact">Contact</a>
+        <div class="siteNav-interactive"><a href="#">Interactive</a><div class="siteNav-interactive-drop"><a href="#mirror-head-zone">Noisy Head</a></div></div><a href="advertising/index.html" class="nav-advertising">Advertising</a><a href="about/index.html" class="nav-about">About</a><a href="contact/index.html" class="nav-contact">Contact</a>
       </nav>
       <p class="siteNote">New experiments popped in rendomly.</p>
     </header>
@@ -424,8 +434,10 @@
     var order=[],idx=0,clickCount=0;
     var slots={
       a:{key:'a',left:0.60,width:0.25,duration:'7s',container:null,style:null},
-      b:{key:'b',left:0.05,width:0.25,duration:'9s',container:null,style:null}
+      b:{key:'b',left:0.05,width:0.25,duration:'9s',container:null,style:null},
+      m:{key:'m',left:0.05,width:0.90,duration:'8s',container:null,style:null}
     };
+    function isMobile(){ return window.innerWidth < 768; }
     function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=b[i];b[i]=b[j];b[j]=t;}return b;}
     function next(){if(idx>=order.length){order=shuffle(haikus.map(function(_,i){return i;}));idx=0;}return haikus[order[idx++]];}
     function ensureSlots(wrapper){
@@ -533,7 +545,14 @@
       window.addEventListener('resize',function(){layoutSlots(wrapper);});
       wrapper.addEventListener('click',function(){
         clickCount++;
-        var slot=clickCount%2===1?slots.a:slots.b;
+        var slot;
+        if(isMobile()){
+          clearSlot(slots.a); clearSlot(slots.b);
+          slot=slots.m;
+        } else {
+          clearSlot(slots.m);
+          slot=clickCount%2===1?slots.a:slots.b;
+        }
         layoutSlots(wrapper);
         spawn(wrapper,slot);
       });
@@ -631,44 +650,22 @@
     <div style="background:#000;border:2px solid #FBAED2;box-shadow:5px 5px 0 #FBAED2;margin-top:28px;margin-bottom:28px;overflow:hidden;">
       <div style="padding:20px 20px 18px;border-bottom:2px solid #FBAED2;">
         <h2 style="font-family:Impact,'Arial Narrow',Arial,sans-serif;font-size:clamp(28px,6vw,48px);margin:0 0 14px;letter-spacing:0.08em;font-weight:900;text-transform:uppercase;color:rgb(255,79,123);text-shadow:3px 3px 0 rgb(183,255,0),-1px -1px 0 #000;line-height:1;">Noisy Head</h2>
-        <p style="margin:0 0 6px;font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:700;color:#FBAED2;letter-spacing:0.06em;">A digital face mirrors your expressions in real time. Smile, frown, blink, open your mouth, tilt your head &mdash; each movement generates sound and colour.</p>
-        <p style="margin:0 0 6px;font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:700;color:#FBAED2;letter-spacing:0.06em;">Turn left &amp; right for xylophone &middot; nod up &amp; down for piano &middot; tilt side to side for pan pipes &middot; smile for a warm shimmer &middot; frown for a low drone &middot; open mouth for a choir &middot; blink for a percussive flash.</p>
+        <p class="mh-desc-long" style="margin:0 0 6px;font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:700;color:#FBAED2;letter-spacing:0.06em;">A digital face mirrors your expressions in real time. Smile, frown, blink, open your mouth, tilt your head &mdash; each movement generates sound and colour.</p>
+        <p class="mh-desc-long" style="margin:0 0 6px;font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:700;color:#FBAED2;letter-spacing:0.06em;">Turn left &amp; right for xylophone &middot; nod up &amp; down for piano &middot; tilt side to side for pan pipes &middot; smile for a warm shimmer &middot; frown for a low drone &middot; open mouth for a choir &middot; blink for a percussive flash.</p>
         <p style="margin:0;font-family:'Courier New',Courier,monospace;font-size:11px;font-weight:700;color:#FBAED2;letter-spacing:0.06em;">Camera access required &mdash; nothing is recorded or transmitted.</p>
       </div>
-      <div style="position:relative;width:100%;aspect-ratio:16/9;">
-        <iframe id="mirrorHeadIframe" src="mirrorhead_final/index.html?embed=1" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allow="camera; microphone" title="Noisy Head interactive experience"></iframe>
-        <div id="mirrorHeadOverlay" style="position:absolute;inset:0;z-index:10;display:flex;align-items:flex-end;justify-content:flex-start;padding:12px;gap:8px;pointer-events:none;">
-          <button id="mirrorEnableBtn" style="pointer-events:auto;font-family:Impact,'Arial Narrow',Arial,sans-serif;font-size:15px;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;padding:10px 20px;border:2px solid rgb(183,255,0);background:rgba(0,0,0,0.8);color:rgb(183,255,0);cursor:pointer;box-shadow:3px 3px 0 rgb(183,255,0);">Enable Camera</button>
-          <button id="mirrorLeaveBtn" onclick="leaveMirrorHead()" style="display:none;pointer-events:auto;font-family:'Courier New',Courier,monospace;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:10px 14px;border:2px solid rgb(255,79,123);background:rgba(0,0,0,0.8);color:rgb(255,79,123);cursor:pointer;box-shadow:2px 2px 0 rgb(255,79,123);">&#10005; Leave</button>
-          <button id="mirrorQuitBtn" onclick="quitMirrorHead()" style="display:none;pointer-events:auto;font-family:'Courier New',Courier,monospace;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:10px 14px;border:2px solid #FBAED2;background:rgba(0,0,0,0.8);color:#FBAED2;cursor:pointer;box-shadow:2px 2px 0 #FBAED2;">&#9632; Quit</button>
+      <div class="mh-player-wrap">
+        <div style="position:relative;width:100%;aspect-ratio:16/9;">
+          <iframe id="mirrorHeadIframe" src="mirrorhead_final/index.html?embed=1" style="position:absolute;inset:0;width:100%;height:100%;border:none;" allow="camera; microphone" title="Noisy Head interactive experience"></iframe>
+          <div id="mhMobileTap" style="display:none;position:absolute;inset:0;z-index:5;" onclick="document.getElementById('mirrorEnableBtn').click()"></div>
+        </div>
+        <div id="mirrorHeadOverlay">
+          <button id="mirrorEnableBtn" style="font-family:Impact,'Arial Narrow',Arial,sans-serif;font-size:15px;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;padding:10px 20px;border:2px solid rgb(183,255,0);background:rgba(0,0,0,0.8);color:rgb(183,255,0);cursor:pointer;box-shadow:3px 3px 0 rgb(183,255,0);">Enable Camera</button>
         </div>
       </div>
     <script>
-    function mirrorShowActive(){
-      document.getElementById('mirrorEnableBtn').style.display='none';
-      document.getElementById('mirrorLeaveBtn').style.display='';
-      document.getElementById('mirrorQuitBtn').style.display='';
-    }
-    function mirrorShowIdle(){
-      document.getElementById('mirrorEnableBtn').style.display='';
-      document.getElementById('mirrorLeaveBtn').style.display='none';
-      document.getElementById('mirrorQuitBtn').style.display='none';
-    }
-    function leaveMirrorHead(){
-      var iframe=document.getElementById('mirrorHeadIframe');
-      iframe.src='mirrorhead_final/index.html?embed=1';
-      mirrorShowIdle();
-    }
-    function quitMirrorHead(){
-      var iframe=document.getElementById('mirrorHeadIframe');
-      iframe.src='mirrorhead_final/index.html?embed=1';
-      mirrorShowIdle();
-    }
     document.getElementById('mirrorEnableBtn').addEventListener('click',function(){
-      window.location.href='mirrorhead_final/index.html?autostart=1&returnTo=' + encodeURIComponent('../index.html#mirror-head-zone');
-    });
-    window.addEventListener('message',function(e){
-      if(e.data==='mirrorhead:active') mirrorShowActive();
+      window.location.href='mirrorhead_final/index.html?autostart=1&returnTo=' + encodeURIComponent(window.location.pathname + '#mirror-head-zone');
     });
     </script>
     </div>
@@ -800,14 +797,14 @@
     </script>
 
     <div id="coopers" style="margin-top:14px;display:flex;align-items:stretch;gap:0;border:2px solid #FBAED2;box-shadow:4px 4px 0 #FBAED2;background:#000;overflow:hidden;">
-      <div style="flex:1;min-width:0;position:relative;padding-top:56.25%;">
-        <iframe style="position:absolute;top:0;left:0;width:100%;height:100%;" src="https://www.youtube.com/embed/ofnOHSQG9OQ?autoplay=1&mute=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      <div style="flex:1;min-width:0;position:relative;">
+        <div style="padding:52.94% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/1175757050?title=0&amp;byline=0&amp;portrait=0&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Stepping into a live feed for an afternoon."></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
+        <a href="coopers/index.html" style="position:absolute;inset:0;z-index:5;" aria-label="Watch Stepping into a live feed for an afternoon"></a>
       </div>
       <div style="width:200px;flex-shrink:0;background:rgb(255,79,123);border-left:2px solid #FBAED2;padding:40px 14px;display:flex;align-items:center;position:relative;overflow:hidden;">
         <span style="position:absolute;top:8px;left:20px;font-size:24px;display:inline-block;animation:wiggle 1s ease-in-out infinite;">&#x1F600;</span>
-        <span style="position:absolute;top:10px;right:20px;font-size:24px;display:inline-block;animation:wiggle 1.2s ease-in-out infinite;">&#x1F37A;</span>
         <span style="position:absolute;bottom:8px;left:24px;font-size:24px;display:inline-block;animation:wiggle 0.9s ease-in-out infinite;">&#x1F377;</span>
-        <span style="position:absolute;bottom:10px;right:18px;font-size:24px;display:inline-block;animation:wiggle 1.1s ease-in-out infinite;">&#x1F37B;</span>
+        <a href="https://www.youtube.com/@Cooperstownhouseliverpool" target="_blank" rel="noopener" style="position:absolute;bottom:12px;right:12px;font-family:Impact,'Arial Narrow',Arial,sans-serif;font-size:12px;font-weight:900;letter-spacing:0.1em;text-transform:uppercase;text-decoration:none;padding:6px 10px;border:2px solid rgb(183,255,0);background:#000;color:rgb(183,255,0);box-shadow:2px 2px 0 rgb(183,255,0);">&#9654; Watch Live</a>
         <p style="margin:0;font-family:'Courier New',Courier,monospace;font-weight:900;font-size:12px;color:rgb(183,255,0);line-height:1.7;-webkit-text-stroke:0.4px rgb(183,255,0);">From 3:30 each Friday, March through April 2026, I will be stepping into the live feed of Coopers Townhouse, an old pub in the heart of Liverpool, for a sing song, maybe a dance, a few drinks. I&rsquo;m here for a good time not a long time!</p>
       </div>
     </div>

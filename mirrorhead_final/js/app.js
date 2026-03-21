@@ -281,8 +281,8 @@ var APP = {
 		var panPipeNoteLabels = [ 'F2','G2','A2','C3','D3','F3','G3','A3' ];
 		var panPipeActiveIndex = -1;
 		var panPipeFadeTime = 0.08;
-		var panPipeMaxVolume = 0.16;
-		var panPipeBreathVolume = 0.05;
+		var panPipeMaxVolume = 0.45;
+		var panPipeBreathVolume = 0.15;
 		var panPipeHoldStart = 0;
 		var panPipeHoldMaxMs = 3000;
 
@@ -308,11 +308,46 @@ var APP = {
 
 		// Frown audio state
 		var frownOsc = null;
-		var frownOsc2 = null;
 		var frownGain = null;
 		var frownActive = false;
 		var frownThreshold = 0.35;
-		var frownMaxVol = 0.1;
+		var frownMaxVol = 0.5;
+
+		// Hurdy gurdy audio state (eyebrows raised)
+		var hurdyOsc = null;
+		var hurdyOsc2 = null;
+		var hurdyGain = null;
+		var hurdyActive = false;
+		var hurdyThreshold = 0.25;
+		var hurdyMaxVol = 0.85;
+
+		// Acoustic guitar audio state (wide eyes)
+		var guitarOscs = [];
+		var guitarGain = null;
+		var guitarActive = false;
+		var guitarThreshold = 0.25;
+		var guitarMaxVol = 0.5;
+
+		// Banjo audio state (cheek puff)
+		var banjoOscs = [];
+		var banjoGain = null;
+		var banjoActive = false;
+		var banjoThreshold = 0.2;
+		var banjoMaxVol = 0.5;
+
+		// Concertina audio state (mouth pucker)
+		var concertinaOscs = [];
+		var concertinaMasterGain = null;
+		var concertinaActive = false;
+		var concertinaThreshold = 0.2;
+		var concertinaMaxVol = 0.5;
+
+		// Glockenspiel audio state (nose sneer)
+		var glockOscs = [];
+		var glockGain = null;
+		var glockActive = false;
+		var glockThreshold = 0.15;
+		var glockMaxVol = 0.5;
 
 		// Choir audio state (jaw open)
 		var choirOscs = [];
@@ -332,6 +367,11 @@ var APP = {
 		var vizSmileEl = null;
 		var vizFrownEl = null;
 		var vizChoirEl = null;
+		var vizHurdyEl = null;
+		var vizGuitarEl = null;
+		var vizBanjoEl = null;
+		var vizConcertinaEl = null;
+		var vizGlockEl = null;
 		var vizBlinkFlash = 0;
 		var vizLastFrameTime = 0;
 
@@ -619,34 +659,46 @@ var APP = {
 				p.life -= p.decay * dt;
 				if ( p.life <= 0 ) { bgParticles.splice( i, 1 ); continue; }
 
-				var a = p.alpha * Math.min( p.life * 2, 1 );
+				// Build/de-build: elements snap on one-by-one then off one-by-one. No alpha fade.
+				var pos = 1 - p.life; // 0 at spawn, 1 at death
+				var buildEnd = 0.30;
+				var deStart  = 0.38;
+				var buildProgress = clamp( pos / buildEnd, 0, 1 );
+				var deProgress    = clamp( ( pos - deStart ) / ( 1 - deStart ), 0, 1 );
+				var showT = Math.min( buildProgress, 1 - deProgress );
+
 				bgCtx.save();
-				bgCtx.globalAlpha = a;
+				bgCtx.globalAlpha = 1;
 
 				switch ( p.type ) {
 
-					case 'hstripes': // wide horizontal rainbow stripes
-						for ( var hi = 0; hi < p.rows.length; hi ++ ) {
+					case 'hstripes': {
+						var hsCount = Math.ceil( showT * p.rows.length );
+						for ( var hi = 0; hi < hsCount; hi ++ ) {
 							var r = p.rows[ hi ];
 							var rc = r.color;
 							bgCtx.fillStyle = 'rgb(' + rc[ 0 ] + ',' + rc[ 1 ] + ',' + rc[ 2 ] + ')';
 							bgCtx.fillRect( p.x + r.xOff, p.y + r.oy, r.w, r.h );
 						}
 						break;
+					}
 
-					case 'vstripes': // tall vertical colour bars
-						for ( var vi = 0; vi < p.cols.length; vi ++ ) {
+					case 'vstripes': {
+						var vsCount = Math.ceil( showT * p.cols.length );
+						for ( var vi = 0; vi < vsCount; vi ++ ) {
 							var col = p.cols[ vi ];
 							var vc = col.color;
 							bgCtx.fillStyle = 'rgb(' + vc[ 0 ] + ',' + vc[ 1 ] + ',' + vc[ 2 ] + ')';
 							bgCtx.fillRect( p.x + col.ox, p.y + col.yOff, col.w, col.h );
 						}
 						break;
+					}
 
-					case 'rainbowband': // flowing full-width rainbow gradient band
+					case 'rainbowband': {
 						p.phase += p.phaseSpeed * dt;
 						var yOsc = Math.sin( p.phase ) * 15;
-						for ( var rbi = 0; rbi < p.segs.length; rbi ++ ) {
+						var rbCount = Math.ceil( showT * p.segs.length );
+						for ( var rbi = 0; rbi < rbCount; rbi ++ ) {
 							var seg = p.segs[ rbi ];
 							var segC = seg.color;
 							bgCtx.fillStyle = 'rgb(' + segC[ 0 ] + ',' + segC[ 1 ] + ',' + segC[ 2 ] + ')';
@@ -654,57 +706,63 @@ var APP = {
 							bgCtx.fillRect( seg.x, segY, seg.w, p.h );
 						}
 						break;
+					}
 
-					case 'smilestripes': // thick undulating horizontal colour bands
-						p.phase += p.phaseSpeed * dt;
-						for ( var ssi = 0; ssi < p.bands.length; ssi ++ ) {
+					case 'smilestripes': {
+						var ssCount = Math.ceil( showT * p.bands.length );
+						for ( var ssi = 0; ssi < ssCount; ssi ++ ) {
 							var band = p.bands[ ssi ];
 							var bc = band.color;
-							bgCtx.fillStyle = 'rgb(' + bc[ 0 ] + ',' + bc[ 1 ] + ',' + bc[ 2 ] + ')';
-							// Each band undulates with a sine wave — offset per band creates a ripple
-							var waveY = Math.sin( p.phase + band.phaseOff ) * p.waveAmp;
-							// Draw the band as a series of horizontal slices for the wave effect
-							var sliceCount = 24;
-							var sliceW = w / sliceCount;
-							for ( var sli = 0; sli < sliceCount; sli ++ ) {
-								var slicePhase = p.phase + band.phaseOff + sli * 0.15;
-								var sliceY = p.y + band.oy + Math.sin( slicePhase ) * p.waveAmp;
-								bgCtx.fillRect( sli * sliceW, sliceY, sliceW + 1, band.h );
-							}
+							var bandY = p.y + band.oy;
+							var grad = bgCtx.createLinearGradient( 0, 0, w, 0 );
+							grad.addColorStop( 0,    'rgba(' + bc[0] + ',' + bc[1] + ',' + bc[2] + ',0)' );
+							grad.addColorStop( 0.15, 'rgba(' + bc[0] + ',' + bc[1] + ',' + bc[2] + ',1)' );
+							grad.addColorStop( 0.85, 'rgba(' + bc[0] + ',' + bc[1] + ',' + bc[2] + ',1)' );
+							grad.addColorStop( 1,    'rgba(' + bc[0] + ',' + bc[1] + ',' + bc[2] + ',0)' );
+							bgCtx.fillStyle = grad;
+							bgCtx.fillRect( 0, bandY, w, band.h );
 						}
 						break;
+					}
 
-					case 'glitchcascade': // dense magenta/purple glitch blocks
-						for ( var gci = 0; gci < p.rects.length; gci ++ ) {
+					case 'glitchcascade': {
+						var gcCount = Math.ceil( showT * p.rects.length );
+						for ( var gci = 0; gci < gcCount; gci ++ ) {
 							var gr = p.rects[ gci ];
 							var grc = gr.color;
 							bgCtx.fillStyle = 'rgb(' + grc[ 0 ] + ',' + grc[ 1 ] + ',' + grc[ 2 ] + ')';
 							bgCtx.fillRect( p.x + gr.ox, p.y + gr.oy, gr.w, gr.h );
 						}
-						// Scanline overlay on the glitch area
-						bgCtx.fillStyle = 'rgba(0,0,0,0.12)';
-						for ( var sli = 0; sli < 40; sli ++ ) {
-							bgCtx.fillRect( p.x - 180, p.y - 160 + sli * 8, 400, 2 );
+						if ( gcCount > 0 ) {
+							bgCtx.fillStyle = 'rgba(0,0,0,0.12)';
+							for ( var scli = 0; scli < 40; scli ++ ) {
+								bgCtx.fillRect( p.x - 180, p.y - 160 + scli * 8, 400, 2 );
+							}
 						}
 						break;
+					}
 
-					case 'glitchflash': // massive screen-wide glitch blocks
-						for ( var gfi = 0; gfi < p.blocks.length; gfi ++ ) {
+					case 'glitchflash': {
+						var gfCount = Math.ceil( showT * p.blocks.length );
+						for ( var gfi = 0; gfi < gfCount; gfi ++ ) {
 							var blk = p.blocks[ gfi ];
 							var blkc = blk.color;
 							bgCtx.fillStyle = 'rgb(' + blkc[ 0 ] + ',' + blkc[ 1 ] + ',' + blkc[ 2 ] + ')';
 							bgCtx.fillRect( blk.x, blk.y, blk.w, blk.h );
 						}
-						// Horizontal scanline banding across flash
-						bgCtx.fillStyle = 'rgba(0,0,0,0.1)';
-						for ( var sfi = 0; sfi < h; sfi += 6 ) {
-							bgCtx.fillRect( 0, sfi, w, 2 );
+						if ( gfCount > 0 ) {
+							bgCtx.fillStyle = 'rgba(0,0,0,0.1)';
+							for ( var sfi = 0; sfi < h; sfi += 6 ) {
+								bgCtx.fillRect( 0, sfi, w, 2 );
+							}
 						}
 						break;
+					}
 
-					case 'colwall': // wide stacked colour bar wall
+					case 'colwall': {
+						var cwCount = Math.ceil( showT * p.bars.length );
 						var stackY = p.y;
-						for ( var cwi = 0; cwi < p.bars.length; cwi ++ ) {
+						for ( var cwi = 0; cwi < cwCount; cwi ++ ) {
 							var bar = p.bars[ cwi ];
 							var brc = bar.color;
 							bgCtx.fillStyle = 'rgb(' + brc[ 0 ] + ',' + brc[ 1 ] + ',' + brc[ 2 ] + ')';
@@ -712,6 +770,7 @@ var APP = {
 							stackY += bar.h;
 						}
 						break;
+					}
 
 				}
 
@@ -844,29 +903,42 @@ var APP = {
 			saxOsc3.start();
 			saxVibLFO.start();
 
-			// Frown — low ominous drone
+			// Frown — low-range swanee whistle, single clean sine, slides down as frown deepens
 			frownOsc = audioCtx.createOscillator();
-			frownOsc.type = 'sawtooth';
-			frownOsc.frequency.value = 73.42; // D2
-
-			frownOsc2 = audioCtx.createOscillator();
-			frownOsc2.type = 'sine';
-			frownOsc2.frequency.value = 72.0; // slightly detuned for beating
+			frownOsc.type = 'sine';
+			frownOsc.frequency.value = 150;
 
 			frownGain = audioCtx.createGain();
 			frownGain.gain.value = 0;
 
-			var frownFilter = audioCtx.createBiquadFilter();
-			frownFilter.type = 'lowpass';
-			frownFilter.frequency.value = 300;
-			frownFilter.Q.value = 2;
-
-			frownOsc.connect( frownFilter );
-			frownOsc2.connect( frownFilter );
-			frownFilter.connect( frownGain );
+			frownOsc.connect( frownGain );
 			frownGain.connect( audioMasterGain );
 			frownOsc.start();
-			frownOsc2.start();
+
+			// Swanee whistle — pure sine that slides pitch with eyebrow intensity
+			// Low brow = low note, raised brow = pitch glides upward
+			hurdyOsc = audioCtx.createOscillator();
+			hurdyOsc.type = 'sine';
+			hurdyOsc.frequency.value = 300; // starting pitch (will be modulated in update)
+
+			// Slight breathiness via a second sine a few cents sharp
+			hurdyOsc2 = audioCtx.createOscillator();
+			hurdyOsc2.type = 'sine';
+			hurdyOsc2.frequency.value = 300;
+			hurdyOsc2.detune.value = 8;
+
+			var swaneeOsc2Gain = audioCtx.createGain();
+			swaneeOsc2Gain.gain.value = 0.25;
+
+			hurdyGain = audioCtx.createGain();
+			hurdyGain.gain.value = 0;
+
+			hurdyOsc.connect( hurdyGain );
+			hurdyOsc2.connect( swaneeOsc2Gain );
+			swaneeOsc2Gain.connect( hurdyGain );
+			hurdyGain.connect( audioMasterGain );
+			hurdyOsc.start();
+			hurdyOsc2.start();
 
 			// Choir — angelic pad triggered by jaw open
 			// Layer multiple detuned oscillators with vibrato for ethereal choir effect
@@ -908,6 +980,116 @@ var APP = {
 
 				choirOscs.push( voice );
 				choirGains.push( vGain );
+			}
+
+			// Acoustic guitar — warm shimmer on wide eyes
+			// G major chord: G2 B2 D3 G3 B3, triangle waves through a body-resonance filter
+			var guitarFreqs = [ 98.00, 123.47, 146.83, 196.00, 246.94 ];
+			var guitarDetunes = [ 0, -5, 3, -3, 5 ];
+			guitarGain = audioCtx.createGain();
+			guitarGain.gain.value = 0;
+			var guitarFilter = audioCtx.createBiquadFilter();
+			guitarFilter.type = 'bandpass';
+			guitarFilter.frequency.value = 220;
+			guitarFilter.Q.value = 0.6;
+			guitarFilter.connect( guitarGain );
+			guitarGain.connect( audioMasterGain );
+			for ( var gi = 0; gi < guitarFreqs.length; gi ++ ) {
+				var go = audioCtx.createOscillator();
+				go.type = 'triangle';
+				go.frequency.value = guitarFreqs[ gi ];
+				go.detune.value = guitarDetunes[ gi ];
+				var gg = audioCtx.createGain();
+				gg.gain.value = 0.3 + ( gi === 0 || gi === 3 ? 0.2 : 0 ); // root notes louder
+				go.connect( gg );
+				gg.connect( guitarFilter );
+				go.start();
+				guitarOscs.push( go );
+			}
+
+			// Banjo — bright twang on cheek puff (note: cheekPuffFinalValue currently disabled in detection)
+			// Open G banjo tuning: D3 B2 G3 D4 G4, sawtooth through highpass for brightness
+			var banjoFreqs = [ 146.83, 123.47, 196.00, 293.66, 392.00 ];
+			var banjoDetunes = [ 0, 4, -4, 0, 3 ];
+			banjoGain = audioCtx.createGain();
+			banjoGain.gain.value = 0;
+			var banjoFilter = audioCtx.createBiquadFilter();
+			banjoFilter.type = 'highpass';
+			banjoFilter.frequency.value = 200;
+			banjoFilter.Q.value = 0.5;
+			var banjoShelf = audioCtx.createBiquadFilter();
+			banjoShelf.type = 'highshelf';
+			banjoShelf.frequency.value = 1200;
+			banjoShelf.gain.value = 6;
+			banjoFilter.connect( banjoShelf );
+			banjoShelf.connect( banjoGain );
+			banjoGain.connect( audioMasterGain );
+			for ( var bi = 0; bi < banjoFreqs.length; bi ++ ) {
+				var bo = audioCtx.createOscillator();
+				bo.type = 'sawtooth';
+				bo.frequency.value = banjoFreqs[ bi ];
+				bo.detune.value = banjoDetunes[ bi ];
+				var bg = audioCtx.createGain();
+				bg.gain.value = 0.22;
+				bo.connect( bg );
+				bg.connect( banjoFilter );
+				bo.start();
+				banjoOscs.push( bo );
+			}
+
+			// Concertina — reedy reed-organ chord on mouth pucker
+			// D major: D4 F#4 A4 D5, sawtooth through bandpass for squeezebox tone
+			var concertinaFreqs = [ 293.66, 369.99, 440.00, 587.33 ];
+			var concertinaDetunes = [ -8, 5, -5, 8 ];
+			concertinaMasterGain = audioCtx.createGain();
+			concertinaMasterGain.gain.value = 0;
+			var concertinaFilter = audioCtx.createBiquadFilter();
+			concertinaFilter.type = 'bandpass';
+			concertinaFilter.frequency.value = 700;
+			concertinaFilter.Q.value = 1.0;
+			var concertinaShelf = audioCtx.createBiquadFilter();
+			concertinaShelf.type = 'lowshelf';
+			concertinaShelf.frequency.value = 300;
+			concertinaShelf.gain.value = 6;
+			concertinaFilter.connect( concertinaShelf );
+			concertinaShelf.connect( concertinaMasterGain );
+			concertinaMasterGain.connect( audioMasterGain );
+			for ( var coni = 0; coni < concertinaFreqs.length; coni ++ ) {
+				var coo = audioCtx.createOscillator();
+				coo.type = 'sawtooth';
+				coo.frequency.value = concertinaFreqs[ coni ];
+				coo.detune.value = concertinaDetunes[ coni ];
+				var cog = audioCtx.createGain();
+				cog.gain.value = 0.3;
+				coo.connect( cog );
+				cog.connect( concertinaFilter );
+				coo.start();
+				concertinaOscs.push( coo );
+			}
+
+			// Glockenspiel — bright bell tones on nose sneer
+			// C major upper register: C5 E5 G5 C6, pure sines for bell clarity
+			var glockFreqs = [ 523.25, 659.25, 784.00, 1046.50 ];
+			var glockDetunes = [ 0, 3, -3, 0 ];
+			glockGain = audioCtx.createGain();
+			glockGain.gain.value = 0;
+			var glockFilter = audioCtx.createBiquadFilter();
+			glockFilter.type = 'highpass';
+			glockFilter.frequency.value = 400;
+			glockFilter.Q.value = 0.5;
+			glockFilter.connect( glockGain );
+			glockGain.connect( audioMasterGain );
+			for ( var gli = 0; gli < glockFreqs.length; gli ++ ) {
+				var glo = audioCtx.createOscillator();
+				glo.type = 'sine';
+				glo.frequency.value = glockFreqs[ gli ];
+				glo.detune.value = glockDetunes[ gli ];
+				var glg = audioCtx.createGain();
+				glg.gain.value = gli === 0 ? 0.4 : 0.25;
+				glo.connect( glg );
+				glg.connect( glockFilter );
+				glo.start();
+				glockOscs.push( glo );
 			}
 
 			initViz();
@@ -1193,14 +1375,39 @@ var APP = {
 			var isFrowning = frownAmount > frownThreshold;
 
 			if ( isFrowning ) {
-				var vol = clamp( ( frownAmount - frownThreshold ) / ( 1 - frownThreshold ), 0, 1 ) * frownMaxVol;
-				frownGain.gain.setTargetAtTime( vol, now, 0.12 );
-				// Detune subtly with intensity for unsettling beating
-				frownOsc2.frequency.setTargetAtTime( 72.0 - frownAmount * 3, now, 0.2 );
+				var t = clamp( ( frownAmount - frownThreshold ) / ( 1 - frownThreshold ), 0, 1 );
+				var vol = t * frownMaxVol;
+				// Low swanee whistle: slides downward as frown deepens (150 Hz → 55 Hz)
+				var freq = 150 - t * 95;
+				frownGain.gain.setTargetAtTime( vol, now, 0.08 );
+				frownOsc.frequency.setTargetAtTime( freq, now, 0.1 );
 				frownActive = true;
 			} else if ( frownActive ) {
 				frownGain.gain.setTargetAtTime( 0, now, 0.25 );
 				frownActive = false;
+			}
+
+		}
+
+		function updateHurdyGurdyAudio( browAmount ) {
+
+			if ( ! audioCtx || ! hurdyGain ) return;
+
+			var now = audioCtx.currentTime;
+			var isRaised = browAmount > hurdyThreshold;
+
+			if ( isRaised ) {
+				var t = clamp( ( browAmount - hurdyThreshold ) / ( 1 - hurdyThreshold ), 0, 1 );
+				var vol = t * hurdyMaxVol;
+				// Swanee whistle: pitch slides from 300 Hz up to 900 Hz as brows raise
+				var freq = 300 + t * 600;
+				hurdyGain.gain.setTargetAtTime( vol, now, 0.08 );
+				hurdyOsc.frequency.setTargetAtTime( freq, now, 0.1 );
+				hurdyOsc2.frequency.setTargetAtTime( freq, now, 0.1 );
+				hurdyActive = true;
+			} else if ( hurdyActive ) {
+				hurdyGain.gain.setTargetAtTime( 0, now, 0.2 );
+				hurdyActive = false;
 			}
 
 		}
@@ -1223,6 +1430,70 @@ var APP = {
 				choirMasterGain.gain.setTargetAtTime( 0, now, 0.25 );
 				choirFilterNode.frequency.setTargetAtTime( 2400, now, 0.2 );
 				choirActive = false;
+			}
+
+		}
+
+		function updateGuitarAudio( wideAmount ) {
+
+			if ( ! audioCtx || ! guitarGain ) return;
+			var now = audioCtx.currentTime;
+			var isWide = wideAmount > guitarThreshold;
+			if ( isWide ) {
+				var vol = clamp( ( wideAmount - guitarThreshold ) / ( 1 - guitarThreshold ), 0, 1 ) * guitarMaxVol;
+				guitarGain.gain.setTargetAtTime( vol, now, 0.1 );
+				guitarActive = true;
+			} else if ( guitarActive ) {
+				guitarGain.gain.setTargetAtTime( 0, now, 0.3 );
+				guitarActive = false;
+			}
+
+		}
+
+		function updateBanjoAudio( puffAmount ) {
+
+			if ( ! audioCtx || ! banjoGain ) return;
+			var now = audioCtx.currentTime;
+			var isPuffing = puffAmount > banjoThreshold;
+			if ( isPuffing ) {
+				var vol = clamp( ( puffAmount - banjoThreshold ) / ( 1 - banjoThreshold ), 0, 1 ) * banjoMaxVol;
+				banjoGain.gain.setTargetAtTime( vol, now, 0.08 );
+				banjoActive = true;
+			} else if ( banjoActive ) {
+				banjoGain.gain.setTargetAtTime( 0, now, 0.2 );
+				banjoActive = false;
+			}
+
+		}
+
+		function updateConcertinaAudio( puckerAmount ) {
+
+			if ( ! audioCtx || ! concertinaMasterGain ) return;
+			var now = audioCtx.currentTime;
+			var isPuckering = puckerAmount > concertinaThreshold;
+			if ( isPuckering ) {
+				var vol = clamp( ( puckerAmount - concertinaThreshold ) / ( 1 - concertinaThreshold ), 0, 1 ) * concertinaMaxVol;
+				concertinaMasterGain.gain.setTargetAtTime( vol, now, 0.1 );
+				concertinaActive = true;
+			} else if ( concertinaActive ) {
+				concertinaMasterGain.gain.setTargetAtTime( 0, now, 0.25 );
+				concertinaActive = false;
+			}
+
+		}
+
+		function updateGlockAudio( sneerAmount ) {
+
+			if ( ! audioCtx || ! glockGain ) return;
+			var now = audioCtx.currentTime;
+			var isSneering = sneerAmount > glockThreshold;
+			if ( isSneering ) {
+				var vol = clamp( ( sneerAmount - glockThreshold ) / ( 1 - glockThreshold ), 0, 1 ) * glockMaxVol;
+				glockGain.gain.setTargetAtTime( vol, now, 0.06 );
+				glockActive = true;
+			} else if ( glockActive ) {
+				glockGain.gain.setTargetAtTime( 0, now, 0.15 );
+				glockActive = false;
 			}
 
 		}
@@ -1333,6 +1604,25 @@ var APP = {
 			frownSec.appendChild( frownTrack );
 			vizContainer.appendChild( frownSec );
 
+			// ── Hurdy gurdy bar (eyebrows raised)
+			var hurdySec = document.createElement( 'div' );
+			hurdySec.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:8px;';
+
+			var hurdyLbl = document.createElement( 'div' );
+			hurdyLbl.textContent = 'eyebrows';
+			hurdyLbl.style.cssText = 'font-size:12px;color:rgba(255,255,255,0.7);letter-spacing:1px;text-transform:uppercase;width:72px;text-align:right;';
+
+			var hurdyTrack = document.createElement( 'div' );
+			hurdyTrack.style.cssText = 'width:120px;height:11px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.35);border-radius:6px;overflow:hidden;';
+
+			vizHurdyEl = document.createElement( 'div' );
+			vizHurdyEl.style.cssText = 'height:100%;width:0%;background:linear-gradient(90deg,rgba(180,255,180,0.65),rgba(80,220,80,1));border-radius:4px;';
+			hurdyTrack.appendChild( vizHurdyEl );
+
+			hurdySec.appendChild( hurdyLbl );
+			hurdySec.appendChild( hurdyTrack );
+			vizContainer.appendChild( hurdySec );
+
 			// ── Choir bar (jaw open)
 			var choirSec = document.createElement( 'div' );
 			choirSec.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:8px;';
@@ -1351,6 +1641,29 @@ var APP = {
 			choirSec.appendChild( choirLbl );
 			choirSec.appendChild( choirTrack );
 			vizContainer.appendChild( choirSec );
+
+			// ── Helper to build a simple label+bar row
+			function buildSimpleBar( label, color, width ) {
+				var sec = document.createElement( 'div' );
+				sec.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:8px;';
+				var lbl = document.createElement( 'div' );
+				lbl.textContent = label;
+				lbl.style.cssText = 'font-size:12px;color:rgba(255,255,255,0.7);letter-spacing:1px;text-transform:uppercase;width:' + ( width || 72 ) + 'px;text-align:right;';
+				var track = document.createElement( 'div' );
+				track.style.cssText = 'width:120px;height:11px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.35);border-radius:6px;overflow:hidden;';
+				var fill = document.createElement( 'div' );
+				fill.style.cssText = 'height:100%;width:0%;background:' + color + ';border-radius:4px;';
+				track.appendChild( fill );
+				sec.appendChild( lbl );
+				sec.appendChild( track );
+				vizContainer.appendChild( sec );
+				return fill;
+			}
+
+			vizGuitarEl     = buildSimpleBar( 'wide eyes',   'linear-gradient(90deg,rgba(120,220,255,0.65),rgba(60,180,255,1))', 80 );
+			vizBanjoEl      = buildSimpleBar( 'cheek puff',  'linear-gradient(90deg,rgba(255,180,80,0.65),rgba(220,120,20,1))',  88 );
+			vizConcertinaEl = buildSimpleBar( 'pucker',      'linear-gradient(90deg,rgba(255,120,200,0.65),rgba(200,40,140,1))', 56 );
+			vizGlockEl      = buildSimpleBar( 'nose sneer',  'linear-gradient(90deg,rgba(200,255,120,0.65),rgba(140,220,40,1))', 88 );
 
 			// ── Blink dot
 			var blinkSec = document.createElement( 'div' );
@@ -1414,6 +1727,28 @@ var APP = {
 				var fa = Math.max( browDownLeftValue, browDownRightValue );
 				var fpct = clamp( ( fa - frownThreshold ) / ( 1 - frownThreshold ), 0, 1 ) * 100;
 				vizFrownEl.style.width = fpct.toFixed( 1 ) + '%';
+			}
+
+			// Hurdy gurdy bar (eyebrows raised)
+			if ( vizHurdyEl ) {
+				var ba = Math.max( browInnerUpValue, browOuterUpLeftValue, browOuterUpRightValue );
+				var bpct = clamp( ( ba - hurdyThreshold ) / ( 1 - hurdyThreshold ), 0, 1 ) * 100;
+				vizHurdyEl.style.width = bpct.toFixed( 1 ) + '%';
+			}
+
+			if ( vizGuitarEl ) {
+				var wa = Math.max( eyeWideLeftValue, eyeWideRightValue );
+				vizGuitarEl.style.width = ( clamp( ( wa - guitarThreshold ) / ( 1 - guitarThreshold ), 0, 1 ) * 100 ).toFixed( 1 ) + '%';
+			}
+			if ( vizBanjoEl ) {
+				vizBanjoEl.style.width = ( clamp( ( cheekPuffFinalValue - banjoThreshold ) / ( 1 - banjoThreshold ), 0, 1 ) * 100 ).toFixed( 1 ) + '%';
+			}
+			if ( vizConcertinaEl ) {
+				vizConcertinaEl.style.width = ( clamp( ( mouthPuckerValue - concertinaThreshold ) / ( 1 - concertinaThreshold ), 0, 1 ) * 100 ).toFixed( 1 ) + '%';
+			}
+			if ( vizGlockEl ) {
+				var sna = Math.max( noseSneerLeftValue, noseSneerRightValue );
+				vizGlockEl.style.width = ( clamp( ( sna - glockThreshold ) / ( 1 - glockThreshold ), 0, 1 ) * 100 ).toFixed( 1 ) + '%';
 			}
 
 			// Choir bar (jaw open)
@@ -1521,6 +1856,39 @@ var APP = {
 			updateFrownAudio( frownAmount );
 			if ( frownAmount > frownThreshold && Math.random() < 0.2 ) {
 				spawnBgParticle( 'frown', clamp( frownAmount, 0.3, 1 ) );
+			}
+
+			// ── HURDY GURDY: rasping drone on eyebrows raised ──
+			var browUpAmount = Math.max( browInnerUpValue, browOuterUpLeftValue, browOuterUpRightValue );
+			updateHurdyGurdyAudio( browUpAmount );
+			if ( browUpAmount > hurdyThreshold && Math.random() < 0.2 ) {
+				spawnBgParticle( 'frown', clamp( browUpAmount, 0.3, 1 ) );
+			}
+
+			// ── ACOUSTIC GUITAR: wide eyes ──
+			var eyeWideAmount = Math.max( eyeWideLeftValue, eyeWideRightValue );
+			updateGuitarAudio( eyeWideAmount );
+			if ( eyeWideAmount > guitarThreshold && Math.random() < 0.2 ) {
+				spawnBgParticle( 'smile', clamp( eyeWideAmount, 0.3, 1 ) );
+			}
+
+			// ── BANJO: cheek puff ──
+			updateBanjoAudio( cheekPuffFinalValue );
+			if ( cheekPuffFinalValue > banjoThreshold && Math.random() < 0.25 ) {
+				spawnBgParticle( 'xylophone', clamp( cheekPuffFinalValue, 0.3, 1 ) );
+			}
+
+			// ── CONCERTINA: mouth pucker ──
+			updateConcertinaAudio( mouthPuckerValue );
+			if ( mouthPuckerValue > concertinaThreshold && Math.random() < 0.2 ) {
+				spawnBgParticle( 'panPipes', clamp( mouthPuckerValue, 0.3, 1 ) );
+			}
+
+			// ── GLOCKENSPIEL: nose sneer ──
+			var sneerAmount = Math.max( noseSneerLeftValue, noseSneerRightValue );
+			updateGlockAudio( sneerAmount );
+			if ( sneerAmount > glockThreshold && Math.random() < 0.3 ) {
+				spawnBgParticle( 'blink', clamp( sneerAmount, 0.3, 1 ) );
 			}
 
 			// ── CHOIR: angelic pad on jaw open ──
