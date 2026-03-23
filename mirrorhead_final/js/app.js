@@ -1789,7 +1789,7 @@ var APP = {
 					'border-bottom:1px solid rgba(0,0,0,0.25)',
 					'color:#000',
 					'font-family:"Courier New",Courier,monospace',
-					'font-size:9px', 'letter-spacing:2.5px', 'text-transform:uppercase',
+					'font-size:9px', 'font-weight:700', 'letter-spacing:2.5px', 'text-transform:uppercase',
 					'cursor:pointer', 'pointer-events:auto', 'touch-action:manipulation',
 					'-webkit-tap-highlight-color:transparent',
 				].join( ';' );
