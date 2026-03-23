@@ -3458,6 +3458,15 @@ var APP = {
       lowerDownRawValue *= jawDiminish;
       cheekPuffRawValue *= jawDiminish;
 
+      // Suppress pucker when head is pitched down — MediaPipe false positive
+      var phRangeRad = headRotationRangeDeg * Math.PI / 180;
+      var normPitchDown = clamp( -headPosePitch / phRangeRad, 0, 1 );
+      if ( normPitchDown > 0.1 ) {
+        var pitchSuppress = clamp( 1 - ( normPitchDown - 0.1 ) / 0.35, 0, 1 );
+        puckerApertureValue *= pitchSuppress;
+        mouthPuckerRawValue *= pitchSuppress;
+      }
+
       mouthPuckerFiltered += ( puckerApertureValue - mouthPuckerFiltered ) * puckerInputSmoothing;
 
       var effectiveJawOpen = Math.max( 0, jawOpenValue - jawLipOffset );
