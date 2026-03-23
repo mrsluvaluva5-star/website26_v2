@@ -1751,6 +1751,8 @@ var APP = {
 					// Blink: very tight gap so label+dot read as one unit
 					item.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:5px;';
 					if ( c0 ) c0.style.cssText = 'font-size:8px;color:#000;letter-spacing:1px;text-transform:uppercase;flex:0 0 auto;';
+					c1.style.background = 'rgba(0,0,0,0.15)';
+					c1.style.borderColor = '#000';
 				} else {
 					// Expression bar: compact for 2-col grid
 					item.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:5px;overflow:hidden;';
@@ -1950,8 +1952,13 @@ var APP = {
 			if ( vizBlinkEl ) {
 				var bf = vizBlinkFlash;
 				var bAlpha = 0.07 + bf * 0.93;
-				vizBlinkEl.style.background = 'rgba(200,240,255,' + bAlpha.toFixed( 3 ) + ')';
-				vizBlinkEl.style.boxShadow = bf > 0.02 ? '0 0 ' + ( bf * 12 ).toFixed( 1 ) + 'px rgba(200,240,255,' + bf.toFixed( 3 ) + ')' : 'none';
+				if ( isMobileUI ) {
+					vizBlinkEl.style.background = 'rgba(0,0,0,' + bAlpha.toFixed( 3 ) + ')';
+					vizBlinkEl.style.boxShadow = 'none';
+				} else {
+					vizBlinkEl.style.background = 'rgba(200,240,255,' + bAlpha.toFixed( 3 ) + ')';
+					vizBlinkEl.style.boxShadow = bf > 0.02 ? '0 0 ' + ( bf * 12 ).toFixed( 1 ) + 'px rgba(200,240,255,' + bf.toFixed( 3 ) + ')' : 'none';
+				}
 			}
 
 			// Smile bar
