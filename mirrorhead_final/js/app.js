@@ -122,21 +122,21 @@ var APP = {
 		var jawSmoothingOpen = 0.75;
 		var jawSmoothingClose = 0.95;
 		var puckerSmoothingFactor = 0.35;
-		var mouthPuckerRelease = 0.35;
+		var mouthPuckerRelease = 0.55;
 		var puckerClearThreshold = 0.1;
 		var puckerActive = false;
 		var mouthPuckerActivate = 0.9;
 		var jawOpenPuckerBlock = 0.0;
-		var puckerInputSmoothing = 0.25;
+		var puckerInputSmoothing = 0.12;
 		var mouthPuckerFiltered = 0;
 		var jawLipOffset = 0.15;
 		var jawOpenPuckerHardBlock = 0.1;
-		var puckerMinHoldMs = 300;
+		var puckerMinHoldMs = 1000;
 		var puckerCandidateSince = 0;
 		var puckerSmoothingIn = 0.2;
 		var puckerSmoothingOut = 0.35;
 		var puckerJawSuppression = 0.0;
-		var mouthPuckerDeadzone = 0.15;
+		var mouthPuckerDeadzone = 0.35;
 		var jawOpenStrength = 0.935;
 		var jawOpenMorphName = 'jawOpen';
 		var jawOpenMorphIndex = null;
@@ -188,7 +188,7 @@ var APP = {
 		var browDownLeftMorphIndexOverride = 14;
 		var browDownRightMorphIndexOverride = 15;
 		var browMorphLogged = false;
-		var mouthPuckerStrength = 1.2;
+		var mouthPuckerStrength = 0.7;
 		var mouthFunnelStrength = 1.6;
 		var mouthFunnelDeadzone = 0.075;
 		var lowerDownStrength = 1.5;
@@ -339,7 +339,7 @@ var APP = {
 		var concertinaOscs = [];
 		var concertinaMasterGain = null;
 		var concertinaActive = false;
-		var concertinaThreshold = 0.65;
+		var concertinaThreshold = 0.75;
 		var concertinaMaxVol = 0.5;
 
 		// Glockenspiel audio state (nose sneer)
@@ -1475,18 +1475,21 @@ var APP = {
 
 		}
 
+		var shimmerCooldownUntil = 0;
 		function updateConcertinaAudio( puckerAmount ) {
 
 			if ( ! audioCtx || ! concertinaMasterGain ) return;
 			var now = audioCtx.currentTime;
-			var isPuckering = puckerAmount > concertinaThreshold;
+			var nowMs = performance.now();
+			var isPuckering = puckerAmount > concertinaThreshold && nowMs > shimmerCooldownUntil;
 			if ( isPuckering ) {
 				var vol = clamp( ( puckerAmount - concertinaThreshold ) / ( 1 - concertinaThreshold ), 0, 1 ) * concertinaMaxVol;
 				concertinaMasterGain.gain.setTargetAtTime( vol, now, 0.25 );
 				concertinaActive = true;
 			} else if ( concertinaActive ) {
-				concertinaMasterGain.gain.setTargetAtTime( 0, now, 0.25 );
+				concertinaMasterGain.gain.setTargetAtTime( 0, now, 0.4 );
 				concertinaActive = false;
+				shimmerCooldownUntil = nowMs + 1500;
 			}
 
 		}
