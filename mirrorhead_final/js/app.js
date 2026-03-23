@@ -125,7 +125,7 @@ var APP = {
 		var mouthPuckerRelease = 0.35;
 		var puckerClearThreshold = 0.1;
 		var puckerActive = false;
-		var mouthPuckerActivate = 0.8;
+		var mouthPuckerActivate = 0.9;
 		var jawOpenPuckerBlock = 0.0;
 		var puckerInputSmoothing = 0.25;
 		var mouthPuckerFiltered = 0;
@@ -339,7 +339,7 @@ var APP = {
 		var concertinaOscs = [];
 		var concertinaMasterGain = null;
 		var concertinaActive = false;
-		var concertinaThreshold = 0.45;
+		var concertinaThreshold = 0.65;
 		var concertinaMaxVol = 0.5;
 
 		// Glockenspiel audio state (nose sneer)
@@ -1482,7 +1482,7 @@ var APP = {
 			var isPuckering = puckerAmount > concertinaThreshold;
 			if ( isPuckering ) {
 				var vol = clamp( ( puckerAmount - concertinaThreshold ) / ( 1 - concertinaThreshold ), 0, 1 ) * concertinaMaxVol;
-				concertinaMasterGain.gain.setTargetAtTime( vol, now, 0.1 );
+				concertinaMasterGain.gain.setTargetAtTime( vol, now, 0.25 );
 				concertinaActive = true;
 			} else if ( concertinaActive ) {
 				concertinaMasterGain.gain.setTargetAtTime( 0, now, 0.25 );
@@ -1729,7 +1729,7 @@ var APP = {
 				if ( isNoteRow ) {
 					// Note row: bars spread full width
 					item.style.cssText = 'width:100%;display:flex;flex-direction:column;gap:3px;';
-					if ( c0 ) c0.style.cssText = 'font-size:9px;color:#000;letter-spacing:1px;text-transform:uppercase;text-align:left;';
+					if ( c0 ) c0.style.cssText = 'font-size:9px;font-weight:700;color:#000;letter-spacing:1px;text-transform:uppercase;text-align:left;';
 					c1.style.cssText = 'display:flex;flex-direction:row;align-items:flex-end;gap:2px;width:100%;';
 					for ( var i = 0; i < c1.children.length; i++ ) {
 						var pw = c1.children[ i ];
@@ -1737,16 +1737,12 @@ var APP = {
 						var bar = pw.children[ 0 ];
 						if ( bar ) {
 							var origH = parseInt( bar.style.height ) || 48;
-							bar.style.background = 'transparent';
-							bar.style.border = '1px solid #000';
-							bar.style.boxShadow = 'none';
-							bar.style.width = '100%';
-							bar.style.height = Math.round( origH * 0.6 ) + 'px';
+							bar.style.cssText = 'width:100%;height:' + Math.round( origH * 0.6 ) + 'px;background:transparent;border:1px solid #000;border-radius:3px 3px 0 0;position:relative;overflow:hidden;box-shadow:none;';
 							var fill = bar.children[ 0 ];
 							if ( fill && noteColors ) { fill.style.background = noteColors[ i ] || noteColors[ noteColors.length - 1 ]; }
 						}
 						var nLbl = pw.children[ 1 ];
-						if ( nLbl ) { nLbl.style.fontSize = '7px'; nLbl.style.textShadow = 'none'; nLbl.style.color = '#000'; }
+						if ( nLbl ) { nLbl.style.cssText = 'font-size:7px;font-weight:700;color:#000;white-space:nowrap;text-shadow:none;'; }
 					}
 				} else if ( isCircle ) {
 					// Blink: very tight gap so label+dot read as one unit
