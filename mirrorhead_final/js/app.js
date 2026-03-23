@@ -1776,7 +1776,7 @@ var APP = {
 
 			groups.forEach( function ( g ) {
 				var sec = document.createElement( 'div' );
-				sec.style.cssText = 'background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);';
+				sec.style.cssText = 'background:rgba(255,255,255,0.15);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);';
 
 				var hdr = document.createElement( 'button' );
 				hdr.type = 'button';
@@ -1808,14 +1808,14 @@ var APP = {
 					body.style.cssText = [
 						'display:' + ( g.open ? 'grid' : 'none' ),
 						'grid-template-columns:1fr 1fr',
-						'gap:8px', 'padding:4px 16px 10px',
+						'gap:8px', 'padding:4px 16px 48px',
 						'align-items:center', 'background:transparent',
 					].join( ';' );
 				} else {
 					body.style.cssText = [
 						'display:' + ( g.open ? 'flex' : 'none' ),
 						'flex-direction:column', 'align-items:stretch',
-						'gap:9px', 'padding:4px 16px 10px',
+						'gap:9px', 'padding:4px 16px 48px',
 						'background:transparent',
 					].join( ';' );
 				}
