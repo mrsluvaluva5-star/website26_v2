@@ -339,7 +339,7 @@ var APP = {
 		var concertinaOscs = [];
 		var concertinaMasterGain = null;
 		var concertinaActive = false;
-		var concertinaThreshold = 0.2;
+		var concertinaThreshold = 0.45;
 		var concertinaMaxVol = 0.5;
 
 		// Glockenspiel audio state (nose sneer)
@@ -1040,32 +1040,38 @@ var APP = {
 				banjoOscs.push( bo );
 			}
 
-			// Concertina — reedy reed-organ chord on mouth pucker
-			// D major: D4 F#4 A4 D5, sawtooth through bandpass for squeezebox tone
-			var concertinaFreqs = [ 293.66, 369.99, 440.00, 587.33 ];
-			var concertinaDetunes = [ -8, 5, -5, 8 ];
+			// Shimmer — crystalline sine pad on mouth pucker
+			// A major voicing: A4 C#5 E5 A5 E6, pure sines with chorus detune + slow tremolo LFO
+			var shimmerFreqs = [ 440.00, 554.37, 659.25, 880.00, 1318.51 ];
+			var shimmerDetunes = [ -9, 7, -5, 11, -6 ];
 			concertinaMasterGain = audioCtx.createGain();
 			concertinaMasterGain.gain.value = 0;
-			var concertinaFilter = audioCtx.createBiquadFilter();
-			concertinaFilter.type = 'bandpass';
-			concertinaFilter.frequency.value = 700;
-			concertinaFilter.Q.value = 1.0;
-			var concertinaShelf = audioCtx.createBiquadFilter();
-			concertinaShelf.type = 'lowshelf';
-			concertinaShelf.frequency.value = 300;
-			concertinaShelf.gain.value = 6;
-			concertinaFilter.connect( concertinaShelf );
-			concertinaShelf.connect( concertinaMasterGain );
 			concertinaMasterGain.connect( audioMasterGain );
-			for ( var coni = 0; coni < concertinaFreqs.length; coni ++ ) {
+			var shimmerHigh = audioCtx.createBiquadFilter();
+			shimmerHigh.type = 'highpass';
+			shimmerHigh.frequency.value = 380;
+			shimmerHigh.Q.value = 0.5;
+			var shimmerTremolo = audioCtx.createGain();
+			shimmerTremolo.gain.value = 0.88;
+			var shimmerLFO = audioCtx.createOscillator();
+			shimmerLFO.type = 'sine';
+			shimmerLFO.frequency.value = 3.8;
+			var shimmerLFOGain = audioCtx.createGain();
+			shimmerLFOGain.gain.value = 0.12;
+			shimmerLFO.connect( shimmerLFOGain );
+			shimmerLFOGain.connect( shimmerTremolo.gain );
+			shimmerHigh.connect( shimmerTremolo );
+			shimmerTremolo.connect( concertinaMasterGain );
+			shimmerLFO.start();
+			for ( var coni = 0; coni < shimmerFreqs.length; coni ++ ) {
 				var coo = audioCtx.createOscillator();
-				coo.type = 'sawtooth';
-				coo.frequency.value = concertinaFreqs[ coni ];
-				coo.detune.value = concertinaDetunes[ coni ];
+				coo.type = 'sine';
+				coo.frequency.value = shimmerFreqs[ coni ];
+				coo.detune.value = shimmerDetunes[ coni ];
 				var cog = audioCtx.createGain();
-				cog.gain.value = 0.3;
+				cog.gain.value = 0.22;
 				coo.connect( cog );
-				cog.connect( concertinaFilter );
+				cog.connect( shimmerHigh );
 				coo.start();
 				concertinaOscs.push( coo );
 			}
