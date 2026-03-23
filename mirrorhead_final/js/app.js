@@ -1723,7 +1723,7 @@ var APP = {
 				if ( isNoteRow ) {
 					// Note row: bars spread full width
 					item.style.cssText = 'width:100%;display:flex;flex-direction:column;gap:3px;';
-					if ( c0 ) c0.style.cssText = 'font-size:9px;color:#fff;letter-spacing:1px;text-transform:uppercase;text-align:left;text-shadow:0 0 6px rgba(0,0,0,1),0 1px 3px rgba(0,0,0,1);';
+					if ( c0 ) c0.style.cssText = 'font-size:9px;color:#000;letter-spacing:1px;text-transform:uppercase;text-align:left;';
 					c1.style.cssText = 'display:flex;flex-direction:row;align-items:flex-end;gap:2px;width:100%;';
 					for ( var i = 0; i < c1.children.length; i++ ) {
 						var pw = c1.children[ i ];
@@ -1731,25 +1731,27 @@ var APP = {
 						var bar = pw.children[ 0 ];
 						if ( bar ) {
 							var origH = parseInt( bar.style.height ) || 48;
-							bar.style.background = 'rgba(255,255,255,0.06)';
-							bar.style.boxShadow = '0 1px 4px rgba(0,0,0,0.8)';
+							bar.style.background = 'rgba(0,0,0,0.08)';
+							bar.style.border = '1px solid rgba(0,0,0,0.4)';
+							bar.style.boxShadow = 'none';
 							bar.style.width = '100%';
 							bar.style.height = Math.round( origH * 0.6 ) + 'px';
 						}
 						var nLbl = pw.children[ 1 ];
-						if ( nLbl ) { nLbl.style.fontSize = '7px'; nLbl.style.textShadow = '0 0 5px rgba(0,0,0,1),0 1px 2px rgba(0,0,0,1)'; nLbl.style.color = 'rgba(255,255,255,0.7)'; }
+						if ( nLbl ) { nLbl.style.fontSize = '7px'; nLbl.style.textShadow = 'none'; nLbl.style.color = '#000'; }
 					}
 				} else if ( isCircle ) {
 					// Blink: very tight gap so label+dot read as one unit
 					item.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:5px;';
-					if ( c0 ) c0.style.cssText = 'font-size:8px;color:#fff;letter-spacing:1px;text-transform:uppercase;flex:0 0 auto;text-shadow:0 0 6px rgba(0,0,0,1),0 1px 3px rgba(0,0,0,1);';
+					if ( c0 ) c0.style.cssText = 'font-size:8px;color:#000;letter-spacing:1px;text-transform:uppercase;flex:0 0 auto;';
 				} else {
 					// Expression bar: compact for 2-col grid
 					item.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:5px;overflow:hidden;';
-					if ( c0 ) c0.style.cssText = 'font-size:8px;color:#fff;letter-spacing:0.5px;text-transform:uppercase;flex:0 0 auto;min-width:0;max-width:56px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 6px rgba(0,0,0,1),0 1px 3px rgba(0,0,0,1);';
+					if ( c0 ) c0.style.cssText = 'font-size:8px;color:#000;letter-spacing:0.5px;text-transform:uppercase;flex:0 0 auto;min-width:0;max-width:56px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
 					c1.style.flex = '0 0 auto';
 					c1.style.width = '65px';
-					c1.style.boxShadow = '0 1px 5px rgba(0,0,0,0.9)';
+					c1.style.border = '1px solid rgba(0,0,0,0.35)';
+					c1.style.boxShadow = 'none';
 				}
 			}
 
@@ -1770,10 +1772,10 @@ var APP = {
 				hdr.setAttribute( 'data-nh-btn', '' );
 				hdr.style.cssText = [
 					'width:100%', 'display:flex', 'justify-content:space-between',
-					'align-items:center', 'padding:7px 16px 6px',
-					'background:none', 'border:none', 'border-bottom:none',
-					'color:rgba(255,255,255,0.75)',
-					'text-shadow:0 0 8px rgba(0,0,0,1),0 1px 4px rgba(0,0,0,1)',
+					'align-items:center', 'padding:6px 16px 5px',
+					'background:none', 'border:none',
+					'border-bottom:1px solid rgba(0,0,0,0.25)',
+					'color:#000',
 					'font-family:"Courier New",Courier,monospace',
 					'font-size:9px', 'letter-spacing:2.5px', 'text-transform:uppercase',
 					'cursor:pointer', 'pointer-events:auto', 'touch-action:manipulation',
@@ -1849,12 +1851,12 @@ var APP = {
 				'pointer-events:auto', 'touch-action:manipulation',
 				'-webkit-tap-highlight-color:transparent',
 				'font-family:"Courier New",Courier,monospace',
-				'font-size:10px', 'font-weight:700',
-				'letter-spacing:0.1em', 'text-transform:uppercase',
-				'padding:6px 12px',
-				'border:none', 'background:transparent',
-				'color:rgba(251,174,210,0.9)',
-				'text-shadow:0 0 8px rgba(0,0,0,1),0 1px 4px rgba(0,0,0,1)',
+				'font-size:10px', 'font-weight:900',
+				'letter-spacing:0.12em', 'text-transform:uppercase',
+				'padding:7px 14px',
+				'border:none', 'border-radius:4px 4px 0 0',
+				'background:rgb(183,255,0)',
+				'color:#000',
 				'cursor:pointer',
 			].join( ';' );
 
@@ -1878,23 +1880,31 @@ var APP = {
 			].join( '' );
 			document.head.appendChild( nhStyle );
 
-			// Fade + chevron scroll indicator at bottom of drawer
-			var scrollHint = document.createElement( 'div' );
-			scrollHint.style.cssText = [
+			// Sticky scroll bar at bottom with up/down arrows
+			var scrollBar = document.createElement( 'div' );
+			scrollBar.style.cssText = [
 				'position:sticky', 'bottom:0', 'left:0', 'right:0',
-				'height:28px', 'pointer-events:none',
-				'background:transparent',
-				'display:flex', 'align-items:flex-end', 'justify-content:center',
-				'padding-bottom:4px',
+				'display:flex', 'align-items:center', 'justify-content:center',
+				'gap:10px', 'padding:5px 0 6px',
+				'pointer-events:none',
+				'background:rgb(183,255,0)',
 			].join( ';' );
-			var chevron = document.createElement( 'span' );
-			chevron.textContent = '↕';
-			chevron.style.cssText = 'font-size:10px;color:rgba(251,174,210,0.6);letter-spacing:0;animation:nh-bob 1.8s ease-in-out infinite;';
-			scrollHint.appendChild( chevron );
-			vizContainer.appendChild( scrollHint );
+			var upArrow = document.createElement( 'span' );
+			upArrow.textContent = '↑';
+			upArrow.style.cssText = 'font-size:13px;font-weight:900;color:#000;animation:nh-bob-up 1.6s ease-in-out infinite;';
+			var scrollLbl = document.createElement( 'span' );
+			scrollLbl.textContent = 'scroll';
+			scrollLbl.style.cssText = 'font-family:"Courier New",Courier,monospace;font-size:8px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#000;';
+			var downArrow = document.createElement( 'span' );
+			downArrow.textContent = '↓';
+			downArrow.style.cssText = 'font-size:13px;font-weight:900;color:#000;animation:nh-bob-down 1.6s ease-in-out infinite;';
+			scrollBar.appendChild( upArrow );
+			scrollBar.appendChild( scrollLbl );
+			scrollBar.appendChild( downArrow );
+			vizContainer.appendChild( scrollBar );
 
 			var nhBobStyle = document.createElement( 'style' );
-			nhBobStyle.textContent = '@keyframes nh-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}';
+			nhBobStyle.textContent = '@keyframes nh-bob-up{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}@keyframes nh-bob-down{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}';
 			document.head.appendChild( nhBobStyle );
 
 		} )();
