@@ -1686,7 +1686,7 @@ var APP = {
 		dom.appendChild( vizContainer );
 		refreshVizVisibility();
 
-		// --- Mobile bottom-drawer refactor ------------------------------------------
+		// --- Mobile bottom-drawer (redesign) ----------------------------------------
 		( function () {
 			var mq = window.matchMedia( '(max-width: 768px)' );
 			if ( ! mq.matches ) return;
@@ -1696,16 +1696,17 @@ var APP = {
 			// [4]=smile  [5]=frown [6]=hurdy [7]=choir
 			// [8]=guitar [9]=banjo [10]=concertina [11]=glock [12]=blink
 
+			// Full-width glass drawer — lighter, edge-to-edge, pink top accent
 			vizContainer.id = 'nh-viz';
 			vizContainer.style.cssText = [
-				'position:fixed', 'bottom:0', 'left:50%',
-				'transform:translateX(-50%)',
-				'width:90vw', 'max-height:0', 'overflow:hidden',
+				'position:fixed', 'bottom:0', 'left:0', 'right:0',
+				'max-height:0', 'overflow:hidden',
 				'z-index:20', 'display:flex', 'flex-direction:column',
 				'align-items:stretch', 'gap:0',
-				'background:rgba(0,0,0,0.93)',
-				'border:1px solid rgba(255,255,255,0.18)',
-				'border-bottom:none', 'border-radius:12px 12px 0 0',
+				'background:rgba(0,0,0,0.78)',
+				'-webkit-backdrop-filter:blur(10px)',
+				'backdrop-filter:blur(10px)',
+				'border-top:2px solid rgba(251,174,210,0.55)',
 				'pointer-events:auto', 'touch-action:pan-y',
 				'transition:max-height 0.3s ease',
 				'padding-bottom:env(safe-area-inset-bottom,0px)',
@@ -1713,10 +1714,42 @@ var APP = {
 				'box-sizing:border-box',
 			].join( ';' );
 
-			function shrinkTracks( el ) {
-				var divs = el.getElementsByTagName( 'div' );
-				for ( var i = 0; i < divs.length; i++ ) {
-					if ( divs[ i ].style.width === '120px' ) divs[ i ].style.width = '70px';
+			// Restyle each item to use full width properly
+			function mobilizeItem( item ) {
+				var c0 = item.children[ 0 ];
+				var c1 = item.children[ 1 ];
+				if ( ! c1 ) return;
+
+				var isNoteRow = c1.children && c1.children.length > 2;
+				var isCircle  = c1.style.borderRadius && c1.style.borderRadius.indexOf( '50%' ) !== -1;
+
+				if ( isNoteRow ) {
+					// Note row: bars spread full width
+					item.style.cssText = 'width:100%;display:flex;flex-direction:column;gap:3px;';
+					if ( c0 ) c0.style.cssText = 'font-size:9px;color:rgba(255,255,255,0.45);letter-spacing:1px;text-transform:uppercase;text-align:left;';
+					c1.style.cssText = 'display:flex;flex-direction:row;align-items:flex-end;gap:2px;width:100%;';
+					for ( var i = 0; i < c1.children.length; i++ ) {
+						var pw = c1.children[ i ];
+						pw.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;min-width:0;';
+						var bar = pw.children[ 0 ];
+						if ( bar ) {
+							var origH = parseInt( bar.style.height ) || 48;
+							bar.style.width = '100%';
+							bar.style.height = Math.round( origH * 0.6 ) + 'px';
+						}
+						var nLbl = pw.children[ 1 ];
+						if ( nLbl ) nLbl.style.fontSize = '7px';
+					}
+				} else if ( isCircle ) {
+					// Blink: label left, dot right
+					item.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:10px;width:100%;';
+					if ( c0 ) c0.style.cssText = 'font-size:10px;color:rgba(255,255,255,0.6);letter-spacing:1px;text-transform:uppercase;flex:1;';
+				} else {
+					// Expression bar: label left, track fills remaining space
+					item.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:10px;width:100%;';
+					if ( c0 ) c0.style.cssText = 'font-size:10px;color:rgba(255,255,255,0.6);letter-spacing:1px;text-transform:uppercase;flex:0 0 auto;min-width:56px;';
+					c1.style.width = 'auto';
+					c1.style.flex = '1';
 				}
 			}
 
@@ -1730,7 +1763,6 @@ var APP = {
 
 			groups.forEach( function ( g ) {
 				var sec = document.createElement( 'div' );
-				sec.style.cssText = 'border-bottom:1px solid rgba(255,255,255,0.1);';
 
 				var hdr = document.createElement( 'button' );
 				hdr.type = 'button';
@@ -1738,11 +1770,12 @@ var APP = {
 				hdr.setAttribute( 'data-nh-btn', '' );
 				hdr.style.cssText = [
 					'width:100%', 'display:flex', 'justify-content:space-between',
-					'align-items:center', 'padding:10px 14px',
+					'align-items:center', 'padding:7px 16px 6px',
 					'background:none', 'border:none',
-					'color:rgba(255,255,255,0.75)',
-					'font-family:"Times New Roman",Times,serif',
-					'font-size:11px', 'letter-spacing:2px', 'text-transform:uppercase',
+					'border-bottom:1px solid rgba(255,255,255,0.07)',
+					'color:rgba(255,255,255,0.4)',
+					'font-family:"Courier New",Courier,monospace',
+					'font-size:9px', 'letter-spacing:2.5px', 'text-transform:uppercase',
 					'cursor:pointer', 'pointer-events:auto', 'touch-action:manipulation',
 					'-webkit-tap-highlight-color:transparent',
 				].join( ';' );
@@ -1751,7 +1784,7 @@ var APP = {
 				titleEl.textContent = g.title;
 				var arrowEl = document.createElement( 'span' );
 				arrowEl.textContent = g.open ? '\u25b4' : '\u25be';
-				arrowEl.style.cssText = 'font-size:9px;';
+				arrowEl.style.cssText = 'font-size:8px;opacity:0.6;';
 				hdr.appendChild( titleEl );
 				hdr.appendChild( arrowEl );
 
@@ -1759,12 +1792,12 @@ var APP = {
 				body.setAttribute( 'data-nh-body', '' );
 				body.style.cssText = [
 					'display:' + ( g.open ? 'flex' : 'none' ),
-					'flex-direction:column', 'align-items:flex-end',
-					'gap:6px', 'padding:4px 14px 10px',
+					'flex-direction:column', 'align-items:stretch',
+					'gap:9px', 'padding:10px 16px 14px',
 				].join( ';' );
 
 				g.items.forEach( function ( item ) {
-					shrinkTracks( item );
+					mobilizeItem( item );
 					body.appendChild( item );
 				} );
 
@@ -1791,6 +1824,7 @@ var APP = {
 				vizContainer.appendChild( sec );
 			} );
 
+			// Controls toggle: pink tinted, glass, bottom-right
 			var drawerOpen = false;
 			var toggleBtn = document.createElement( 'button' );
 			toggleBtn.id = 'nh-controls-btn';
@@ -1807,12 +1841,14 @@ var APP = {
 				'font-family:"Courier New",Courier,monospace',
 				'font-size:10px', 'font-weight:700',
 				'letter-spacing:0.1em', 'text-transform:uppercase',
-				'padding:7px 12px',
-				'border:1px solid rgba(255,255,255,0.35)',
+				'padding:7px 14px',
+				'border:1px solid rgba(251,174,210,0.45)',
 				'border-bottom:none', 'border-radius:6px 6px 0 0',
-				'background:rgba(0,0,0,0.88)',
-				'color:rgba(255,255,255,0.75)',
+				'background:rgba(0,0,0,0.72)',
+				'color:rgba(251,174,210,0.85)',
 				'cursor:pointer',
+				'-webkit-backdrop-filter:blur(6px)',
+				'backdrop-filter:blur(6px)',
 			].join( ';' );
 
 			toggleBtn.addEventListener( 'click', function () {
