@@ -1703,10 +1703,7 @@ var APP = {
 				'max-height:0', 'overflow:hidden',
 				'z-index:20', 'display:flex', 'flex-direction:column',
 				'align-items:stretch', 'gap:0',
-				'background:rgba(0,0,0,0.39)',
-				'-webkit-backdrop-filter:blur(10px)',
-				'backdrop-filter:blur(10px)',
-				'border-top:2px solid rgba(251,174,210,0.55)',
+				'background:transparent',
 				'pointer-events:auto', 'touch-action:pan-y',
 				'transition:max-height 0.3s ease',
 				'padding-bottom:env(safe-area-inset-bottom,0px)',
@@ -1726,7 +1723,7 @@ var APP = {
 				if ( isNoteRow ) {
 					// Note row: bars spread full width
 					item.style.cssText = 'width:100%;display:flex;flex-direction:column;gap:3px;';
-					if ( c0 ) c0.style.cssText = 'font-size:9px;color:rgba(255,255,255,0.45);letter-spacing:1px;text-transform:uppercase;text-align:left;';
+					if ( c0 ) c0.style.cssText = 'font-size:9px;color:#fff;letter-spacing:1px;text-transform:uppercase;text-align:left;text-shadow:0 0 6px rgba(0,0,0,1),0 1px 3px rgba(0,0,0,1);';
 					c1.style.cssText = 'display:flex;flex-direction:row;align-items:flex-end;gap:2px;width:100%;';
 					for ( var i = 0; i < c1.children.length; i++ ) {
 						var pw = c1.children[ i ];
@@ -1734,22 +1731,25 @@ var APP = {
 						var bar = pw.children[ 0 ];
 						if ( bar ) {
 							var origH = parseInt( bar.style.height ) || 48;
+							bar.style.background = 'rgba(255,255,255,0.06)';
+							bar.style.boxShadow = '0 1px 4px rgba(0,0,0,0.8)';
 							bar.style.width = '100%';
 							bar.style.height = Math.round( origH * 0.6 ) + 'px';
 						}
 						var nLbl = pw.children[ 1 ];
-						if ( nLbl ) nLbl.style.fontSize = '7px';
+						if ( nLbl ) { nLbl.style.fontSize = '7px'; nLbl.style.textShadow = '0 0 5px rgba(0,0,0,1),0 1px 2px rgba(0,0,0,1)'; nLbl.style.color = 'rgba(255,255,255,0.7)'; }
 					}
 				} else if ( isCircle ) {
 					// Blink: very tight gap so label+dot read as one unit
 					item.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:5px;';
-					if ( c0 ) c0.style.cssText = 'font-size:8px;color:rgba(255,255,255,0.6);letter-spacing:1px;text-transform:uppercase;flex:0 0 auto;';
+					if ( c0 ) c0.style.cssText = 'font-size:8px;color:#fff;letter-spacing:1px;text-transform:uppercase;flex:0 0 auto;text-shadow:0 0 6px rgba(0,0,0,1),0 1px 3px rgba(0,0,0,1);';
 				} else {
 					// Expression bar: compact for 2-col grid
 					item.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:5px;overflow:hidden;';
-					if ( c0 ) c0.style.cssText = 'font-size:8px;color:rgba(255,255,255,0.6);letter-spacing:0.5px;text-transform:uppercase;flex:0 0 auto;min-width:0;max-width:56px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+					if ( c0 ) c0.style.cssText = 'font-size:8px;color:#fff;letter-spacing:0.5px;text-transform:uppercase;flex:0 0 auto;min-width:0;max-width:56px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 6px rgba(0,0,0,1),0 1px 3px rgba(0,0,0,1);';
 					c1.style.flex = '0 0 auto';
 					c1.style.width = '65px';
+					c1.style.boxShadow = '0 1px 5px rgba(0,0,0,0.9)';
 				}
 			}
 
@@ -1771,9 +1771,9 @@ var APP = {
 				hdr.style.cssText = [
 					'width:100%', 'display:flex', 'justify-content:space-between',
 					'align-items:center', 'padding:7px 16px 6px',
-					'background:none', 'border:none',
-					'border-bottom:1px solid rgba(255,255,255,0.07)',
-					'color:rgba(255,255,255,0.4)',
+					'background:none', 'border:none', 'border-bottom:none',
+					'color:rgba(255,255,255,0.75)',
+					'text-shadow:0 0 8px rgba(0,0,0,1),0 1px 4px rgba(0,0,0,1)',
 					'font-family:"Courier New",Courier,monospace',
 					'font-size:9px', 'letter-spacing:2.5px', 'text-transform:uppercase',
 					'cursor:pointer', 'pointer-events:auto', 'touch-action:manipulation',
@@ -1794,14 +1794,15 @@ var APP = {
 					body.style.cssText = [
 						'display:' + ( g.open ? 'grid' : 'none' ),
 						'grid-template-columns:1fr 1fr',
-						'gap:8px', 'padding:10px 16px 14px',
-						'align-items:center',
+						'gap:8px', 'padding:4px 16px 10px',
+						'align-items:center', 'background:transparent',
 					].join( ';' );
 				} else {
 					body.style.cssText = [
 						'display:' + ( g.open ? 'flex' : 'none' ),
 						'flex-direction:column', 'align-items:stretch',
-						'gap:9px', 'padding:10px 16px 14px',
+						'gap:9px', 'padding:4px 16px 10px',
+						'background:transparent',
 					].join( ';' );
 				}
 
@@ -1850,14 +1851,11 @@ var APP = {
 				'font-family:"Courier New",Courier,monospace',
 				'font-size:10px', 'font-weight:700',
 				'letter-spacing:0.1em', 'text-transform:uppercase',
-				'padding:7px 14px',
-				'border:1px solid rgba(251,174,210,0.45)',
-				'border-bottom:none', 'border-radius:6px 6px 0 0',
-				'background:rgba(0,0,0,0.72)',
-				'color:rgba(251,174,210,0.85)',
+				'padding:6px 12px',
+				'border:none', 'background:transparent',
+				'color:rgba(251,174,210,0.9)',
+				'text-shadow:0 0 8px rgba(0,0,0,1),0 1px 4px rgba(0,0,0,1)',
 				'cursor:pointer',
-				'-webkit-backdrop-filter:blur(6px)',
-				'backdrop-filter:blur(6px)',
 			].join( ';' );
 
 			toggleBtn.addEventListener( 'click', function () {
@@ -1885,7 +1883,7 @@ var APP = {
 			scrollHint.style.cssText = [
 				'position:sticky', 'bottom:0', 'left:0', 'right:0',
 				'height:28px', 'pointer-events:none',
-				'background:linear-gradient(to bottom,transparent,rgba(0,0,0,0.55))',
+				'background:transparent',
 				'display:flex', 'align-items:flex-end', 'justify-content:center',
 				'padding-bottom:4px',
 			].join( ';' );
