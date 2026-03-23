@@ -1683,10 +1683,151 @@ var APP = {
 			blinkSec.appendChild( vizBlinkEl );
 			vizContainer.appendChild( blinkSec );
 
-			dom.appendChild( vizContainer );
-			refreshVizVisibility();
+		dom.appendChild( vizContainer );
+		refreshVizVisibility();
 
-			// bgAnim + vizLoop already started from play()
+		// --- Mobile bottom-drawer refactor ------------------------------------------
+		( function () {
+			var mq = window.matchMedia( '(max-width: 768px)' );
+			if ( ! mq.matches ) return;
+
+			var kids = Array.prototype.slice.call( vizContainer.children );
+			// [0]=header [1]=xylo [2]=piano [3]=pipes
+			// [4]=smile  [5]=frown [6]=hurdy [7]=choir
+			// [8]=guitar [9]=banjo [10]=concertina [11]=glock [12]=blink
+
+			vizContainer.id = 'nh-viz';
+			vizContainer.style.cssText = [
+				'position:fixed', 'bottom:0', 'left:50%',
+				'transform:translateX(-50%)',
+				'width:90vw', 'max-height:0', 'overflow:hidden',
+				'z-index:20', 'display:flex', 'flex-direction:column',
+				'align-items:stretch', 'gap:0',
+				'background:rgba(0,0,0,0.93)',
+				'border:1px solid rgba(255,255,255,0.18)',
+				'border-bottom:none', 'border-radius:12px 12px 0 0',
+				'pointer-events:auto', 'touch-action:pan-y',
+				'transition:max-height 0.3s ease',
+				'padding-bottom:env(safe-area-inset-bottom,0px)',
+				'font-family:"Times New Roman",Times,serif',
+				'box-sizing:border-box',
+			].join( ';' );
+
+			function shrinkTracks( el ) {
+				var divs = el.getElementsByTagName( 'div' );
+				for ( var i = 0; i < divs.length; i++ ) {
+					if ( divs[ i ].style.width === '120px' ) divs[ i ].style.width = '70px';
+				}
+			}
+
+			while ( vizContainer.firstChild ) vizContainer.removeChild( vizContainer.firstChild );
+
+			var groups = [
+				{ title: 'Instruments', items: [ kids[ 1 ], kids[ 2 ], kids[ 3 ] ], open: true },
+				{ title: 'Expressions', items: [ kids[ 4 ], kids[ 5 ], kids[ 7 ], kids[ 12 ] ], open: false },
+				{ title: 'Advanced',    items: [ kids[ 6 ], kids[ 8 ], kids[ 9 ], kids[ 10 ], kids[ 11 ] ], open: false },
+			];
+
+			groups.forEach( function ( g ) {
+				var sec = document.createElement( 'div' );
+				sec.style.cssText = 'border-bottom:1px solid rgba(255,255,255,0.1);';
+
+				var hdr = document.createElement( 'button' );
+				hdr.type = 'button';
+				hdr.setAttribute( 'aria-expanded', g.open ? 'true' : 'false' );
+				hdr.setAttribute( 'data-nh-btn', '' );
+				hdr.style.cssText = [
+					'width:100%', 'display:flex', 'justify-content:space-between',
+					'align-items:center', 'padding:10px 14px',
+					'background:none', 'border:none',
+					'color:rgba(255,255,255,0.75)',
+					'font-family:"Times New Roman",Times,serif',
+					'font-size:11px', 'letter-spacing:2px', 'text-transform:uppercase',
+					'cursor:pointer', 'pointer-events:auto', 'touch-action:manipulation',
+					'-webkit-tap-highlight-color:transparent',
+				].join( ';' );
+
+				var titleEl = document.createElement( 'span' );
+				titleEl.textContent = g.title;
+				var arrowEl = document.createElement( 'span' );
+				arrowEl.textContent = g.open ? '\u25b4' : '\u25be';
+				arrowEl.style.cssText = 'font-size:9px;';
+				hdr.appendChild( titleEl );
+				hdr.appendChild( arrowEl );
+
+				var body = document.createElement( 'div' );
+				body.setAttribute( 'data-nh-body', '' );
+				body.style.cssText = [
+					'display:' + ( g.open ? 'flex' : 'none' ),
+					'flex-direction:column', 'align-items:flex-end',
+					'gap:6px', 'padding:4px 14px 10px',
+				].join( ';' );
+
+				g.items.forEach( function ( item ) {
+					shrinkTracks( item );
+					body.appendChild( item );
+				} );
+
+				hdr.addEventListener( 'click', function () {
+					var isOpen = hdr.getAttribute( 'aria-expanded' ) === 'true';
+					var allBtns   = vizContainer.querySelectorAll( '[data-nh-btn]' );
+					var allBodies = vizContainer.querySelectorAll( '[data-nh-body]' );
+					for ( var i = 0; i < allBtns.length; i++ ) {
+						allBtns[ i ].setAttribute( 'aria-expanded', 'false' );
+						allBtns[ i ].lastChild.textContent = '\u25be';
+					}
+					for ( var j = 0; j < allBodies.length; j++ ) {
+						allBodies[ j ].style.display = 'none';
+					}
+					if ( ! isOpen ) {
+						hdr.setAttribute( 'aria-expanded', 'true' );
+						arrowEl.textContent = '\u25b4';
+						body.style.display = 'flex';
+					}
+				} );
+
+				sec.appendChild( hdr );
+				sec.appendChild( body );
+				vizContainer.appendChild( sec );
+			} );
+
+			var drawerOpen = false;
+			var toggleBtn = document.createElement( 'button' );
+			toggleBtn.id = 'nh-controls-btn';
+			toggleBtn.type = 'button';
+			toggleBtn.setAttribute( 'aria-expanded', 'false' );
+			toggleBtn.setAttribute( 'aria-controls', 'nh-viz' );
+			toggleBtn.textContent = 'Controls';
+			toggleBtn.style.cssText = [
+				'position:fixed',
+				'bottom:env(safe-area-inset-bottom,0px)',
+				'right:12px', 'z-index:21',
+				'pointer-events:auto', 'touch-action:manipulation',
+				'-webkit-tap-highlight-color:transparent',
+				'font-family:"Courier New",Courier,monospace',
+				'font-size:10px', 'font-weight:700',
+				'letter-spacing:0.1em', 'text-transform:uppercase',
+				'padding:7px 12px',
+				'border:1px solid rgba(255,255,255,0.35)',
+				'border-bottom:none', 'border-radius:6px 6px 0 0',
+				'background:rgba(0,0,0,0.88)',
+				'color:rgba(255,255,255,0.75)',
+				'cursor:pointer',
+			].join( ';' );
+
+			toggleBtn.addEventListener( 'click', function () {
+				drawerOpen = ! drawerOpen;
+				toggleBtn.setAttribute( 'aria-expanded', drawerOpen ? 'true' : 'false' );
+				toggleBtn.textContent = drawerOpen ? 'Close' : 'Controls';
+				vizContainer.style.maxHeight = drawerOpen ? '40svh' : '0';
+				vizContainer.style.overflowY = drawerOpen ? 'auto' : 'hidden';
+			} );
+
+			document.body.appendChild( toggleBtn );
+		} )();
+		// ---------------------------------------------------------------------------
+
+		// bgAnim + vizLoop already started from play()
 
 		}
 
