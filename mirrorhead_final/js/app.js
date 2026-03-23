@@ -1741,24 +1741,24 @@ var APP = {
 						if ( nLbl ) nLbl.style.fontSize = '7px';
 					}
 				} else if ( isCircle ) {
-					// Blink: label left, dot right
-					item.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:10px;width:100%;';
-					if ( c0 ) c0.style.cssText = 'font-size:10px;color:rgba(255,255,255,0.6);letter-spacing:1px;text-transform:uppercase;flex:1;';
+					// Blink: very tight gap so label+dot read as one unit
+					item.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:5px;';
+					if ( c0 ) c0.style.cssText = 'font-size:8px;color:rgba(255,255,255,0.6);letter-spacing:1px;text-transform:uppercase;flex:0 0 auto;';
 				} else {
-					// Expression bar: label left, track fills remaining space
-					item.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:10px;width:100%;';
-					if ( c0 ) c0.style.cssText = 'font-size:10px;color:rgba(255,255,255,0.6);letter-spacing:1px;text-transform:uppercase;flex:0 0 auto;min-width:56px;';
-					c1.style.width = 'auto';
-					c1.style.flex = '1';
+					// Expression bar: compact for 2-col grid
+					item.style.cssText = 'display:flex;flex-direction:row;align-items:center;gap:5px;overflow:hidden;';
+					if ( c0 ) c0.style.cssText = 'font-size:8px;color:rgba(255,255,255,0.6);letter-spacing:0.5px;text-transform:uppercase;flex:0 0 auto;min-width:0;max-width:56px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+					c1.style.flex = '0 0 auto';
+					c1.style.width = '65px';
 				}
 			}
 
 			while ( vizContainer.firstChild ) vizContainer.removeChild( vizContainer.firstChild );
 
 			var groups = [
-				{ title: 'Instruments', items: [ kids[ 1 ], kids[ 2 ], kids[ 3 ] ], open: true },
-				{ title: 'Expressions', items: [ kids[ 4 ], kids[ 5 ], kids[ 7 ], kids[ 12 ] ], open: false },
-				{ title: 'Advanced',    items: [ kids[ 6 ], kids[ 8 ], kids[ 9 ], kids[ 10 ], kids[ 11 ] ], open: false },
+				{ title: 'Instruments', items: [ kids[ 1 ], kids[ 2 ], kids[ 3 ] ], open: true,  grid: false },
+				{ title: 'Expressions', items: [ kids[ 4 ], kids[ 5 ], kids[ 7 ], kids[ 12 ] ], open: false, grid: true },
+				{ title: 'Advanced',    items: [ kids[ 6 ], kids[ 8 ], kids[ 9 ], kids[ 10 ], kids[ 11 ] ], open: false, grid: true },
 			];
 
 			groups.forEach( function ( g ) {
@@ -1790,11 +1790,20 @@ var APP = {
 
 				var body = document.createElement( 'div' );
 				body.setAttribute( 'data-nh-body', '' );
-				body.style.cssText = [
-					'display:' + ( g.open ? 'flex' : 'none' ),
-					'flex-direction:column', 'align-items:stretch',
-					'gap:9px', 'padding:10px 16px 14px',
-				].join( ';' );
+				if ( g.grid ) {
+					body.style.cssText = [
+						'display:' + ( g.open ? 'grid' : 'none' ),
+						'grid-template-columns:1fr 1fr',
+						'gap:8px', 'padding:10px 16px 14px',
+						'align-items:center',
+					].join( ';' );
+				} else {
+					body.style.cssText = [
+						'display:' + ( g.open ? 'flex' : 'none' ),
+						'flex-direction:column', 'align-items:stretch',
+						'gap:9px', 'padding:10px 16px 14px',
+					].join( ';' );
+				}
 
 				g.items.forEach( function ( item ) {
 					mobilizeItem( item );
@@ -1815,7 +1824,7 @@ var APP = {
 					if ( ! isOpen ) {
 						hdr.setAttribute( 'aria-expanded', 'true' );
 						arrowEl.textContent = '\u25b4';
-						body.style.display = 'flex';
+						body.style.display = g.grid ? 'grid' : 'flex';
 					}
 				} );
 
@@ -1855,7 +1864,7 @@ var APP = {
 				drawerOpen = ! drawerOpen;
 				toggleBtn.setAttribute( 'aria-expanded', drawerOpen ? 'true' : 'false' );
 				toggleBtn.textContent = drawerOpen ? 'Close' : 'Controls';
-				vizContainer.style.maxHeight = drawerOpen ? '40svh' : '0';
+				vizContainer.style.maxHeight = drawerOpen ? '28svh' : '0';
 				vizContainer.style.overflowY = drawerOpen ? 'auto' : 'hidden';
 			} );
 
