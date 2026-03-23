@@ -1732,7 +1732,7 @@ var APP = {
 						if ( bar ) {
 							var origH = parseInt( bar.style.height ) || 48;
 							bar.style.background = 'rgba(0,0,0,0.08)';
-							bar.style.border = '1px solid rgba(0,0,0,0.4)';
+							bar.style.border = '1px solid #000';
 							bar.style.boxShadow = 'none';
 							bar.style.width = '100%';
 							bar.style.height = Math.round( origH * 0.6 ) + 'px';
@@ -1750,7 +1750,7 @@ var APP = {
 					if ( c0 ) c0.style.cssText = 'font-size:8px;color:#000;letter-spacing:0.5px;text-transform:uppercase;flex:0 0 auto;min-width:0;max-width:56px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
 					c1.style.flex = '0 0 auto';
 					c1.style.width = '65px';
-					c1.style.border = '1px solid rgba(0,0,0,0.35)';
+					c1.style.border = '1px solid #000';
 					c1.style.boxShadow = 'none';
 				}
 			}
@@ -1765,6 +1765,7 @@ var APP = {
 
 			groups.forEach( function ( g ) {
 				var sec = document.createElement( 'div' );
+				sec.style.cssText = 'background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);';
 
 				var hdr = document.createElement( 'button' );
 				hdr.type = 'button';
