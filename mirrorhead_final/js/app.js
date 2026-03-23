@@ -787,7 +787,10 @@ var APP = {
 			audioInitialised = true;
 
 			try {
-				audioCtx = new ( window.AudioContext || window.webkitAudioContext )();
+				// Use a pre-created AudioContext if the tap-to-begin overlay made one
+				// inside a user gesture — this keeps mobile audio unlocked.
+				audioCtx = window.__preCreatedAudioCtx || new ( window.AudioContext || window.webkitAudioContext )();
+				window.__preCreatedAudioCtx = null;
 			} catch ( e ) {
 				console.warn( 'Web Audio not available', e );
 				return;

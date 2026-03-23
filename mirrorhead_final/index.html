@@ -140,9 +140,45 @@
 					padding: 12px 14px;
 				}
 			}
+		#tap-begin {
+			position: fixed;
+			inset: 0;
+			background: #000;
+			display: none;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			gap: 20px;
+			z-index: 300;
+			cursor: pointer;
+			-webkit-tap-highlight-color: transparent;
+		}
+		#tap-begin h2 {
+			font-family: Impact, "Arial Narrow", Arial, sans-serif;
+			font-size: clamp(36px, 10vw, 72px);
+			color: rgb(255,79,123);
+			text-shadow: 3px 3px 0 rgb(183,255,0), -1px -1px 0 #000;
+			letter-spacing: 0.08em;
+			font-weight: 900;
+			text-transform: uppercase;
+			margin: 0;
+			line-height: 1;
+		}
+		#tap-begin p {
+			font-family: "Courier New", Courier, monospace;
+			font-size: clamp(12px, 3vw, 16px);
+			font-weight: 700;
+			letter-spacing: 0.22em;
+			text-transform: uppercase;
+			color: #FBAED2;
+			margin: 0;
+			animation: tap-pulse 1.6s ease-in-out infinite;
+		}
+		@keyframes tap-pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
 		</style>
 	</head>
 	<body ontouchstart="">
+		<div id="tap-begin"><h2>Noisy Head</h2><p>Tap to begin</p></div>
 		<button id="page-exit" type="button" aria-label="Leave Noisy Head">Exit</button>
 		<div id="camera-consent" role="dialog" aria-modal="true">
 			<div class="panel">
@@ -157,6 +193,24 @@
 				</div>
 			</div>
 		</div>
+		<script>
+			(function () {
+				var params = new URLSearchParams( window.location.search );
+				if ( params.get( 'autostart' ) === '1' ) {
+					var overlay = document.getElementById( 'tap-begin' );
+					overlay.style.display = 'flex';
+					function onTap( e ) {
+						e.preventDefault();
+						try { window.__preCreatedAudioCtx = new ( window.AudioContext || window.webkitAudioContext )(); } catch ( err ) {}
+						overlay.style.display = 'none';
+						window.__noisyHeadPendingEnable = true;
+						if ( window.__mirrorEnableCamera ) window.__mirrorEnableCamera();
+					}
+					overlay.addEventListener( 'touchend', onTap, { once: true, passive: false } );
+					overlay.addEventListener( 'click', onTap, { once: true } );
+				}
+			} )();
+		</script>
 		<script type="importmap">
 			{
 				"imports": {
@@ -248,8 +302,9 @@
 
 				// Register so the buffered listener above can call it
 				window.__mirrorEnableCamera = enableCamera;
-				if ( pendingEnable ) {
+				if ( pendingEnable || window.__noisyHeadPendingEnable ) {
 					pendingEnable = false;
+					window.__noisyHeadPendingEnable = false;
 					enableCamera();
 				}
 
