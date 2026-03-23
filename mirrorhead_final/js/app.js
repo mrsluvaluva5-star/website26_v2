@@ -2006,7 +2006,7 @@ var APP = {
 						xe.bar.style.boxShadow = '0 0 14px rgba(255,180,50,0.8)';
 						xe.fill.style.height = '100%';
 					} else {
-						xe.bar.style.borderColor = 'rgba(255,255,255,0.35)';
+						xe.bar.style.borderColor = isMobileUI ? '#000' : 'rgba(255,255,255,0.35)';
 						xe.bar.style.boxShadow = 'none';
 						xe.fill.style.height = '0%';
 					}
@@ -2023,7 +2023,7 @@ var APP = {
 						ke.bar.style.boxShadow = '0 0 14px rgba(200,200,255,0.8)';
 						ke.fill.style.height = '100%';
 					} else {
-						ke.bar.style.borderColor = 'rgba(255,255,255,0.35)';
+						ke.bar.style.borderColor = isMobileUI ? '#000' : 'rgba(255,255,255,0.35)';
 						ke.bar.style.boxShadow = 'none';
 						ke.fill.style.height = '0%';
 					}
@@ -2046,7 +2046,7 @@ var APP = {
 						el.bar.style.boxShadow = '0 0 14px rgba(100,220,180,0.8)';
 						el.fill.style.height = ( breath * 100 ).toFixed( 1 ) + '%';
 					} else {
-						el.bar.style.borderColor = 'rgba(255,255,255,0.35)';
+						el.bar.style.borderColor = isMobileUI ? '#000' : 'rgba(255,255,255,0.35)';
 						el.bar.style.boxShadow = 'none';
 						el.fill.style.height = '0%';
 					}
