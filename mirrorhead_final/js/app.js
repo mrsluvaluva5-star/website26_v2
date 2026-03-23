@@ -1703,7 +1703,7 @@ var APP = {
 				'max-height:0', 'overflow:hidden',
 				'z-index:20', 'display:flex', 'flex-direction:column',
 				'align-items:stretch', 'gap:0',
-				'background:rgba(0,0,0,0.78)',
+				'background:rgba(0,0,0,0.39)',
 				'-webkit-backdrop-filter:blur(10px)',
 				'backdrop-filter:blur(10px)',
 				'border-top:2px solid rgba(251,174,210,0.55)',
@@ -1864,11 +1864,41 @@ var APP = {
 				drawerOpen = ! drawerOpen;
 				toggleBtn.setAttribute( 'aria-expanded', drawerOpen ? 'true' : 'false' );
 				toggleBtn.textContent = drawerOpen ? 'Close' : 'Controls';
-				vizContainer.style.maxHeight = drawerOpen ? '28svh' : '0';
+				vizContainer.style.maxHeight = drawerOpen ? '21svh' : '0';
 				vizContainer.style.overflowY = drawerOpen ? 'auto' : 'hidden';
 			} );
 
 			document.body.appendChild( toggleBtn );
+
+			// Scroll hint: inject scrollbar style + fade edges + chevron
+			var nhStyle = document.createElement( 'style' );
+			nhStyle.textContent = [
+				'#nh-viz::-webkit-scrollbar{width:3px}',
+				'#nh-viz::-webkit-scrollbar-track{background:transparent}',
+				'#nh-viz::-webkit-scrollbar-thumb{background:rgba(251,174,210,0.4);border-radius:2px}',
+				'#nh-viz{scrollbar-width:thin;scrollbar-color:rgba(251,174,210,0.4) transparent}',
+			].join( '' );
+			document.head.appendChild( nhStyle );
+
+			// Fade + chevron scroll indicator at bottom of drawer
+			var scrollHint = document.createElement( 'div' );
+			scrollHint.style.cssText = [
+				'position:sticky', 'bottom:0', 'left:0', 'right:0',
+				'height:28px', 'pointer-events:none',
+				'background:linear-gradient(to bottom,transparent,rgba(0,0,0,0.55))',
+				'display:flex', 'align-items:flex-end', 'justify-content:center',
+				'padding-bottom:4px',
+			].join( ';' );
+			var chevron = document.createElement( 'span' );
+			chevron.textContent = '↕';
+			chevron.style.cssText = 'font-size:10px;color:rgba(251,174,210,0.6);letter-spacing:0;animation:nh-bob 1.8s ease-in-out infinite;';
+			scrollHint.appendChild( chevron );
+			vizContainer.appendChild( scrollHint );
+
+			var nhBobStyle = document.createElement( 'style' );
+			nhBobStyle.textContent = '@keyframes nh-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(3px)}}';
+			document.head.appendChild( nhBobStyle );
+
 		} )();
 		// ---------------------------------------------------------------------------
 
