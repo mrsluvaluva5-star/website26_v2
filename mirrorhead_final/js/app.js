@@ -1718,7 +1718,7 @@ var APP = {
 			].join( ';' );
 
 			// Restyle each item to use full width properly
-			function mobilizeItem( item ) {
+			function mobilizeItem( item, noteColors ) {
 				var c0 = item.children[ 0 ];
 				var c1 = item.children[ 1 ];
 				if ( ! c1 ) return;
@@ -1737,11 +1737,13 @@ var APP = {
 						var bar = pw.children[ 0 ];
 						if ( bar ) {
 							var origH = parseInt( bar.style.height ) || 48;
-							bar.style.background = 'rgba(0,0,0,0.08)';
+							bar.style.background = 'transparent';
 							bar.style.border = '1px solid #000';
 							bar.style.boxShadow = 'none';
 							bar.style.width = '100%';
 							bar.style.height = Math.round( origH * 0.6 ) + 'px';
+							var fill = bar.children[ 0 ];
+							if ( fill && noteColors ) { fill.style.background = noteColors[ i ] || noteColors[ noteColors.length - 1 ]; }
 						}
 						var nLbl = pw.children[ 1 ];
 						if ( nLbl ) { nLbl.style.fontSize = '7px'; nLbl.style.textShadow = 'none'; nLbl.style.color = '#000'; }
@@ -1763,8 +1765,12 @@ var APP = {
 
 			while ( vizContainer.firstChild ) vizContainer.removeChild( vizContainer.firstChild );
 
+			var xyloColors  = [ '#ff2244','#ff7700','#ffdd00','#22cc44','#00bbee','#2266ff','#8833ff','#ff44cc' ];
+			var pianoColors = [ '#ff6600','#ffaa00','#ffee00','#aaee00','#00ccaa','#0088ff','#6644ff','#cc44ff' ];
+			var pipeColors  = [ '#00ffcc','#00eeff','#00aaff','#4488ff','#6655ff','#9944ff','#cc44ff','#ff44cc' ];
+
 			var groups = [
-				{ title: 'Instruments', items: [ kids[ 1 ], kids[ 2 ], kids[ 3 ] ], open: true,  grid: false },
+				{ title: 'Instruments', items: [ kids[ 1 ], kids[ 2 ], kids[ 3 ] ], itemColors: [ xyloColors, pianoColors, pipeColors ], open: true,  grid: false },
 				{ title: 'Expressions', items: [ kids[ 4 ], kids[ 5 ], kids[ 7 ], kids[ 12 ] ], open: false, grid: true },
 				{ title: 'Advanced',    items: [ kids[ 6 ], kids[ 8 ], kids[ 9 ], kids[ 10 ], kids[ 11 ] ], open: false, grid: true },
 			];
@@ -1815,8 +1821,8 @@ var APP = {
 					].join( ';' );
 				}
 
-				g.items.forEach( function ( item ) {
-					mobilizeItem( item );
+				g.items.forEach( function ( item, itemIdx ) {
+					mobilizeItem( item, g.itemColors ? g.itemColors[ itemIdx ] : null );
 					body.appendChild( item );
 				} );
 
